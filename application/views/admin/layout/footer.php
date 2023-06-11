@@ -146,7 +146,9 @@
                 case 'asyllabus_ficha_data':
                     include 'public/js/asyllabus_ficha_data.js.php';
                     break;
-                
+                case 'recursoaula':
+                    include 'public/js/recursoaula.js.php';
+                    break;
             }
     ?>
 

@@ -61,7 +61,14 @@
                                                         </span>
                                                     </a>
                                             </li>
-                                        
+
+                                            <li class="sidebar-item">
+                                                    <a href="<?= site_url('admin/maestros/RecursoAula') ?>" class="sidebar-link">
+                                                        <span
+                                                            class="hide-menu"><i class="fab fa-connectdevelop"></i> Recursos Aula
+                                                        </span>
+                                                    </a>
+                                            </li>
                                         
                                         </ul>
                                     </li>
