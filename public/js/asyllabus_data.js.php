@@ -2077,9 +2077,9 @@
             function Valida_form_6() {
                 var objGeneral = fnDataGeneral();
 
-                    if($(objGeneral.form_6+" "+'#nom_plataformas_herramientas').val().trim() === '') {
+                    if($(objGeneral.form_6+" "+'#cbx_basicos_nom_plataformas_herramientas').val().trim() === '') {
                     msgDate = 'Debe ingresar el nombre de la plataforma o herramienta ';
-                    inputFocus =objGeneral.form_6+" "+ '#nom_plataformas_herramientas';
+                    inputFocus =objGeneral.form_6+" "+ '#cbx_basicos_nom_plataformas_herramientas';
                     return false;
                 }
                 return true;
@@ -2103,7 +2103,7 @@
                                             ).then(function() {
 
                                                     Listar_form_6();
-                                                    $(objGeneral.form_6+" "+'#nom_plataformas_herramientas').val("");
+                                                    $(objGeneral.form_6+" "+'#cbx_basicos_nom_plataformas_herramientas').val("");
                                     
                                             });
                                     })

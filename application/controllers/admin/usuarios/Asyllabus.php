@@ -1762,6 +1762,42 @@ class Asyllabus extends CI_Controller {
     }
    
     //-------------------------------------------
+
+    
+    public function Listar_plataformas_herramientas(){
+        if ($this->session->userdata('usuario')) {
+            $id_version_sy        = $this->input->post("id_version_sy");
+                   
+            $datos =$this->Model_Syllabus->listar_plataformas_herramientas($id_version_sy);
+
+            $lista ="";
+            foreach ($datos as $row) {
+                $lista .="
+                <tr>
+                    <td WIDTH='95%' > <b>".$row['nom_recurso']."</b> :  ".$row['recurso_descrip']." </td> 
+                    <td WIDTH='5%' >
+                        <a style='cursor: pointer;' onclick='Eliminar_Herramienta(".$row['id_plataformas_herramientas'].")' id='delete' role='button' class='dropdown-item delay-toogle btn-table-modal'  title='Eliminar' ><span><svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-trash-2 text-danger'><polyline points='3 6 5 6 21 6'></polyline><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'></path><line x1='10' y1='11' x2='10' y2='17'></line><line x1='14' y1='11' x2='14' y2='17'></line></svg></span> </a>
+                    </td>
+   
+                </tr>";
+            }
+
+            /*
+            echo "<pre>";
+            print_r($datos);
+            echo "</pre>";
+
+            exit();
+            */
+            
+            echo $lista;
+
+        }
+        else{
+            redirect('/login');
+        }
+    }
+
     public function Insert_Asyllabus_plataformas_herramientas(){
         if ($this->session->userdata('usuario')) {
             
@@ -1769,7 +1805,7 @@ class Asyllabus extends CI_Controller {
 
             $id_version_sy        = $this->input->post("id_version_sy");
                          
-            $nom_plataformas_herramientas        = $this->input->post("nom_plataformas_herramientas");
+            $nom_plataformas_herramientas        = $this->input->post("cbx_basicos_nom_plataformas_herramientas");
 
             $user_reg = $_SESSION['usuario'][0]['id_usuario'];
 
@@ -1922,45 +1958,6 @@ class Asyllabus extends CI_Controller {
     }
 
 
-    public function Listar_plataformas_herramientas(){
-        if ($this->session->userdata('usuario')) {
-            $id_version_sy        = $this->input->post("id_version_sy");
-                   
-            $datos =$this->Model_Syllabus->listar_plataformas_herramientas($id_version_sy);
-
-            $lista ="";
-            foreach ($datos as $row) {
-                $lista .="
-                <tr>
-                    <td WIDTH='90%' >   <input type='text' class='form-control' value='".$row['nom_plataformas_herramientas']."'>  </td> 
-                    <td WIDTH='10%' >
-                        <a style='cursor: pointer;' onclick='Eliminar_Herramienta(".$row['id_plataformas_herramientas'].")' id='delete' role='button' class='dropdown-item delay-toogle btn-table-modal'  title='Eliminar' ><span><svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-trash-2 text-danger'><polyline points='3 6 5 6 21 6'></polyline><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'></path><line x1='10' y1='11' x2='10' y2='17'></line><line x1='14' y1='11' x2='14' y2='17'></line></svg></span> </a>
-                    </td>
-                    <td WIDTH='90%' >
-                        <a  style='cursor: pointer;width: auto' title='Editar Fila'  onclick=Editar_plataformas_herramientas(".$row['id_plataformas_herramientas'].",this)  class='dropdown-item delay-toogle btn-table-modal'>
-                            <span  class='fa fa-pencil-square-o'> </span>
-                        </a>
-                    </td> 
-
-                    
-                </tr>";
-            }
-
-            /*
-            echo "<pre>";
-            print_r($datos);
-            echo "</pre>";
-
-            exit();
-            */
-            
-            echo $lista;
-
-        }
-        else{
-            redirect('/login');
-        }
-    }
     //---------------------------------------------------
 
     public function Asyllabus_data_revision($id_syllabus,$id_version_sy){

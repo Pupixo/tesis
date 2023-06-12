@@ -69,6 +69,10 @@
                 case 'lista_plan_estudios_aginado_usu':
                     $objeto    = $CI->contenedor->get_lista_plan_estudios_aginado_usu($valor,$id_selected);
                     break;   
+
+                case 'lista_recursos_aula':
+                    $objeto    = $CI->contenedor->get_recursos_aula($valor,$id_selected);
+                    break;   
             }
 
             $disabled = ($bool) ? ' disabled="disabled"' : "";

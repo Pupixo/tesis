@@ -1114,14 +1114,33 @@ class Contenedor_Model extends CI_Model {
     
     function get_sumilla_by_version($id_version_sy){
 
-        $sql = "select * from sumilla
-        where 
-        id_version_sy=".$id_version_sy;     
+            $sql = "select * from sumilla
+            where 
+            id_version_sy=".$id_version_sy;     
 
 
-    $query = $this->db->query($sql)->result_Array();
-    return $query;
-}
+        $query = $this->db->query($sql)->result_Array();
+        return $query;
+    }
 
-    
+
+    function get_recursos_aula($id_recursos_aula=0,$id_selected)
+    {
+        if(isset($id_recursos_aula ) && $id_recursos_aula  > 0){      
+        
+            if($id_selected==true){
+                $sql = "select * from recursos_aula  where estado IN(2) order by id_recursos_aula DESC";
+            }else{
+
+                $sql = "select * from recursos_aula where id_recursos_aula not in ((select pl.nom_plataformas_herramientas from plataformas_herramientas pl LEFT JOIN recursos_aula ra on pl.nom_plataformas_herramientas= ra.id_recursos_aula where pl.id_version_sy=".$id_recursos_aula." and pl.estado=2)) order by id_recursos_aula DESC";
+
+            }
+        }
+        else
+        {
+            $sql = "select * from recursos_aula  WHERE estado IN(2) order by id_recursos_aula DESC";
+        }
+        $query = $this->db->query($sql)->result_Array();
+        return $query;
+    }
 }

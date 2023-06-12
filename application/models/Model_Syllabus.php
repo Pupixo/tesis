@@ -910,7 +910,10 @@ class Model_Syllabus extends CI_Model {
     //-------------------------------
 
     function listar_plataformas_herramientas($id_version_sy){
-        $sql = "select * from plataformas_herramientas where id_version_sy=".$id_version_sy." and estado=2";
+        $sql = "
+        select pl.*,ra.nom_recurso,ra.recurso_descrip from plataformas_herramientas pl
+LEFT JOIN recursos_aula ra on pl.nom_plataformas_herramientas= ra.id_recursos_aula
+        where pl.id_version_sy=".$id_version_sy." and pl.estado=2";
         $query = $this->db->query($sql)->result_Array();
         return $query;
     }

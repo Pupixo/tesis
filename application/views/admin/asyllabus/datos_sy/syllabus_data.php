@@ -1464,7 +1464,9 @@
 
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    <input class="form-control" type="text" name="nom_plataformas_herramientas" id="nom_plataformas_herramientas">
+                                                                    <!-- <input class="form-control" type="text" name="nom_plataformas_herramientas" id="nom_plataformas_herramientas"> -->
+                                                                    <?= cbx_basicos('nom_plataformas_herramientas',$id_version_sy,false,'lista_recursos_aula',null,'id_recursos_aula','nom_recurso'); ?>
+
                                                                 </div>
                                                             </div>
                                                         </div>

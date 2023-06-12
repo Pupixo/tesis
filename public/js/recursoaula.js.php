@@ -232,12 +232,7 @@
             return false;
         }
 
-            
-        if($(objGeneral.modal_principal+" "+'#analisis_pertinencia').val().trim() === '') {
-            msgDate = 'Debe ingresar el analisis de pertinencia del recurso';
-            inputFocus = '#analisis_pertinencia';
-            return false;
-        }
+          
 
         if($(objGeneral.modal_principal+" "+'#recurso_coment').val().trim() === '') {
             msgDate = 'Debe ingresar comentario sobre el recurso';
