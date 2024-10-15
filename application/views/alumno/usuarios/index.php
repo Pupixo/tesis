@@ -64,11 +64,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class='row col-12 h-100 m-0 p-3 table-responsive ' id="limpiar_tabla">
                                 <table id="tbl<?php echo $abrev; ?>"  class="table table-striped table-bordered table-hover table-primary" style="width:100%"  role="grid" aria-describedby="example1_info">
                                     <thead>
-                                        <tr>
+                                    <tr>
                                             <th class="text-center"> <b>ID_SILABUS </b></th>
                                             <th class="text-center"> <b>ID_FACULTAD </b></th>
 
                                             <th class="text-center"> <b>NOMBRE SILABUS </b></th>
+                                            <th class="text-center"> <b>NOMBRE CURSO </b></th>
+
+                                            <th class="text-center"> <b>NOMBRE CICLO </b></th>
+
                                             <th class="text-center"> <b>PERIODO</b></th>
 
                                             <th class="text-center"> <b>PERIODO ANIO</b></th>
@@ -91,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                           
                                             <th class="text-center"> <b>ESTADO </b></th>
                                           
-                                            <th class="text-center"> <b>FECHA CREACIÓN </b></th>
+                                            <th class="text-center"> <b>DURACIÓN DEL PROCESO DE CREACIÓN</b></th>
                                           
                                             <th class="text-center"> <b>USER_REG </b></th>
                                             <th class="text-center"> <b>FEC_ACT </b></th>
@@ -99,9 +103,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                           
                                             <th class="text-center"> <b>ESTADO SILABUS </b></th>
 
-                                            <th class="text-center"> <b>ACCIONES</b></th>
+                                            <th class="text-center"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACCIONES</b></th>
 
-                                            <th class="text-center"> <b>NOM_CICLO </b></th>
+                                            <th class="text-center"> <b>VERSION_PRINCIPAL </b></th>
+                                            <th class="text-center"> <b>FECHA_REG </b></th>
 
 
                                         </tr>

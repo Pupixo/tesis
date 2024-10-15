@@ -45,7 +45,11 @@
             "columns": [
                 {"data": "ID_SILABUS", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "ID_FACULTAD", "className": "never", "autoWidth": true, "orderable": false, "visible": false},
-                {"data": "NOMBRE_SILABUS" },
+                {"data": "NOMBRE_SILABUS", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
+                {"data": "NOM_CURSO" },
+
+                {"data": "NOM_CICLO"},
+
                 {"data": "PERIODO" },
 
                 {"data": "PERIODO_ANIO", "className": "never", "autoWidth": true, "orderable": false, "visible": false},
@@ -61,15 +65,18 @@
                 {"data": "ID_DOCENTE", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "ID_CURSO", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "ID_PLAN_ESTUDIOS", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
-                {"data": "REQUISITO" },
+                {"data": "REQUISITO", "className": "never", "autoWidth": true, "orderable": false, "visible": false  },
                 {"data": "ESTADO", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
-                {"data": "FECHA_REG" },
+                {"data": "DURACION" },
                 {"data": "USER_REG", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "FEC_ACT", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "USER_ACT", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
-                {"data": "ESTADO_SILABUS_HTML" , "className": "never", "autoWidth": true, "orderable": false, "visible": true},
+                {"data": "ESTADO_SILABUS_HTML" },
                 {"data": "ACCION" },
-                {"data": "NOM_CICLO", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
+                {"data": "VERSION_PRINCIPAL", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
+
+                {"data": "FECHA_REG", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
+            
             ]          
         });
         return false;

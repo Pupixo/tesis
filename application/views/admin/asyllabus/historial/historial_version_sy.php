@@ -604,7 +604,7 @@ $CI->load->library('fechaespanol');
             </div>
 
                                 <!-- Full width modal content -->
-                                <div id="full-width-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+                                <div id="full-width-modal" class="modal fade"  role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-full-width">
                                         <div class="modal-content">
                                             <div class="modal-header modal-colored-header bg-primary">

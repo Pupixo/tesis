@@ -70,10 +70,13 @@
             "columns": [
                 {"data": "ID_PLAN_ESTUDIOS" , "className": "never", "autoWidth": true, "orderable": false, "visible": false},
                 {"data": "NOM_PLAN_ESTUDIOS"},
+                {"data": "ANIO"},
+
+
                 {"data": "ID_FACULTAD" , "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "ID_CARRERA" , "className": "never", "autoWidth": true, "orderable": false, "visible": false},
                 {"data": "CODIGO_PLAN_ES" },
-                {"data": "ID_CURSO" , "className": "never", "autoWidth": true, "orderable": false, "visible": false},
+                // {"data": "ID_CURSO" , "className": "never", "autoWidth": true, "orderable": false, "visible": false},
                 {"data": "MODALIDAD" },
                 {"data": "GRADO_OTORGA" },
                 {"data": "TITULO_PROFE"},
@@ -113,13 +116,102 @@
             var datos_Generales = fnDataGeneral();
             $(datos_Generales.modal_principal+" "+"#cbx_multiple_id_carrera").select2();
 
-            $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_carrera_original").select2();     
+            $(datos_Generales.modal_principal+" "+"#cbx_basicos_periodo_anio").select2({
+                width: 'resolve',
+                dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+            });
 
-        
+            $("#cbx_basicos_id_carrera_original").select2({
+                dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+            });
+            console.log("🚀 ~ file: plan_estudios.js.php:119 ~ $ ~ datos_Generales.modal_principal:", datos_Generales.modal_principal)
+
+            $("#info-excel"+" "+"#cbx_basicos_id_carrera_info").select2();
+
     });
+
+
+    function checkfile(sender) {
+        var validExts = new Array(".xlsx", ".xls");
+        var fileExt = sender.value;
+        fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+        if (validExts.indexOf(fileExt) < 0) {
+                alert("Archivo no válido seleccionado, los archivos válidos son de " +
+                validExts.toString() + " tipos.");
+                $('#import_file_excel').val('');
+                
+                setTimeout(function(){  
+                    $('#import_file_excel_title').text('Escoger archivo Excel')
+                }, 1000);
+
+                
+        return false;
+        }
+        else return true;
+    }
+
+    function fn_ImportarExcel(){
+        var objGeneral = fnDataGeneral();
+        $('#import_form').prop('disabled', true);
+
+        var datafile  = $('input#import_file_excel[type=file]')[0].files[0];
+
+        switch (datafile) { 
+            case undefined: 
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '!Debes cargar un archivo¡',
+                })
+                $('#import_form').prop('disabled', false);
+
+                break;
+            case '': 
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '!Debes cargar un archivo¡',
+                })
+                $('#import_form').prop('disabled', false);
+
+                break;
+            default:
+            $('.preloader').show();
+
+                var formData = new FormData();
+                formData.append('excel_file', $('input#import_file_excel[type=file]')[0].files[0]); 
+
+                $.ajax({
+                    url:objGeneral.__wurl + "PlanEstudios_excel_importar",
+                    method:"POST",
+                    data:formData,
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    success:function(data){
+                        setTimeout(function(){  
+                            $('#import_file_excel_title').text('Escoger archivo Excel');
+                            $('#import_form').prop('disabled', false);
+                            $('#import_file_excel').val('');
+                            $(objGeneral._tabla).DataTable().ajax.reload();
+                            $('.preloader').hide();
+
+                        }, 1000);
+                    }
+                })
+
+        }
+        //outputs "jQuery Wins!"
+
+
+	}
+
+
 
     function fn_limpiarPopup(){
         var objGeneral = fnDataGeneral();
+        $(objGeneral.modal_principal+" "+'#cbx_basicos_id_tipo_estudios').val(0)
 
         $(objGeneral.modal_principal+" "+"#cbx_multiple_id_carrera > option").removeAttr("selected");
         $(objGeneral.modal_principal+" "+"#cbx_multiple_id_carrera").trigger("change");
@@ -132,7 +224,14 @@
 		$(objGeneral.modal_principal+" "+'#plan_estudios').val('');
     	$(objGeneral.modal_principal+" "+'#grado_otorga').val('');
         $(objGeneral.modal_principal+" "+'#titulo_prof').val('');
-        $(objGeneral.modal_principal+" "+'#modalidad').val('');
+        $(objGeneral.modal_principal+" "+'#modalidad').val(0);
+
+        $(objGeneral.modal_principal+" "+"#cbx_basicos_id_carrera_original").val(0);
+        $(objGeneral.modal_principal+" "+"#cbx_basicos_id_carrera_original").trigger("change");
+
+        $(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val(0);
+
+
 
         /*id para actualizar */
         $(objGeneral.modal_principal+" "+'#id_'+objGeneral._abrev).val('');
@@ -165,15 +264,20 @@
 
         if( Accion === 'I'){
 
-            $(objGeneral.modal_principal+" "+"#titulo_modal_xl").text('Registrar Plan de Estudios');
+            $(objGeneral.modal_principal+" "+"#titulo_modal_xl_full").text('Registrar Plan de Estudios');
 
         }else if(Accion === 'A') {
 
                 var data = $(objGeneral._tabla).DataTable().row(fila).data();
                 /* Poner data en modal */
-                $(objGeneral.modal_principal+" "+"#titulo_modal_xl").text('Actualizar Plan de Estudios '+data['NOM_PLAN_ESTUDIOS']);
+                $(objGeneral.modal_principal+" "+"#titulo_modal_xl_full").text('Actualizar Plan de Estudios '+data['NOM_PLAN_ESTUDIOS']);
                 /*id para actualizar */
                 $(objGeneral.modal_principal+" "+'#id_'+objGeneral._abrev).val(id_row);
+
+
+                
+                $(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val(data['ANIO']).trigger("change");
+
                 $(objGeneral.modal_principal+" "+'#cbx_basicos_id_carrera_original').val(data['ID_CARRERA']).trigger("change");
                 $(objGeneral.modal_principal+" "+'#codigo_plan_estudios').val(data['CODIGO_PLAN_ES']);
                 $(objGeneral.modal_principal+" "+'#modalidad').val(data['MODALIDAD']);
@@ -182,12 +286,9 @@
                 $(objGeneral.modal_principal+" "+'#plan_estudios').val(data['NOM_PLAN_ESTUDIOS']);
                 $(objGeneral.modal_principal+" "+'#cbx_basicos_id_tipo_estudios').val(data['TIPO_ESTUDIOS'])
 
-               
                 $(objGeneral.modal_principal+" "+'#vista_ciclo').empty();
 
-
                 $(objGeneral.modal_principal+" "+'button#boton_agregar_ciclo_edit').prop('disabled', true);
-
 
                 $(objGeneral.modal_principal+" "+'#vista_ciclo').html(`
                         <div style="height: 30pc; display: flex;   justify-content: center; align-items: center;">
@@ -212,7 +313,6 @@
 
                                 var num_ciclo = Agrupar_por(data['DATA_MAIN'], 'nom_ciclo'); 
                                 var num_ciclo_data_tratada =Object.entries(num_ciclo);
-                                
 
                                 var htmldata='';
                                 
@@ -317,7 +417,10 @@
                                                                         `;
 
                                                                             $.each(value[1], function(index1, value1) {
+                                                                   
 
+
+                                                                                
                                                                                 var cursos='<option value="'+0+'" selected>'+ 'Seleccionar' +'</option>';
                                                                                 $.each(data['CURSOS'], function(index, value) {
 
@@ -365,19 +468,22 @@
                                                                                         curso_importancia+='<option value="'+value['id_curso_importancia']+'">'+value['nom_curso_importancia'] +'</option>';
 
                                                                                     }
-
-
                                                                                 });
+
+
+                                                                                var requisitos_array = value1.requisitos.split(',');
+
 
                                                                                 var curso_requisito='';
                                                                                 $.each(data['CURSO_REQUISITOS'], function(index, value) {
-                                                                                
-                                                                                    if(value1.requisitos==value['id_curso']){
-                                                                                        curso_requisito+='<option selected value="'+value['id_curso']+'">'+value['nom_curso'] +'</option>';
-                                                                                    }else{
-                                                                                        curso_requisito+='<option value="'+value['id_curso']+'">'+value['nom_curso'] +'</option>';
-                                                                                    }
 
+                                                                                    if ($.inArray(value['id_curso'], requisitos_array) >= 0) {
+                                                                                        curso_requisito+='<option selected value="'+value['id_curso']+'">'+value['nom_curso'] +'</option>';
+
+                                                                                    } else {
+                                                                                        curso_requisito+='<option value="'+value['id_curso']+'">'+value['nom_curso'] +'</option>';
+
+                                                                                    }
 
                                                                                 });
 
@@ -497,8 +603,17 @@
     function Valida_<?php echo $opcion; ?>() {
         var objGeneral = fnDataGeneral();
 
+
+       
+
+         
+        if( $(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val() == 0) {
+            msgDate = 'Debe seleccionar el Año';
+            inputFocus = '#cbx_basicos_periodo_anio';
+            return false;
+        }
         
-        if($(objGeneral.modal_principal+" "+'#cbx_basicos_id_tipo_estudios').val().length == 0) {
+        if($(objGeneral.modal_principal+" "+'#cbx_basicos_id_tipo_estudios').val() == 0) {
             msgDate = 'Debe seleccionar tipo de estudio';
             inputFocus = '#cbx_basicos_id_tipo_estudios';
             return false;
@@ -517,7 +632,7 @@
         }
 
 
-        if($(objGeneral.modal_principal+" "+'#modalidad').val().trim() === '') {
+        if($(objGeneral.modal_principal+" "+'#modalidad').val() == 0) {
             msgDate = 'Debe ingresar la modalidad';
             inputFocus = '#modalidad';
             return false;
@@ -535,8 +650,8 @@
             return false;
         }
 
-        if( $(objGeneral.modal_principal+" "+'#cbx_basicos_id_carrera_original').val().length == 0) {
-            msgDate = 'Debe seleccionar una carreras para el filtro';
+        if( $(objGeneral.modal_principal+" "+'#cbx_basicos_id_carrera_original').val() == 0) {
+            msgDate = 'Debe seleccionar una carrera';
             inputFocus = '#cbx_basicos_id_carrera_original';
             return false;
         }
@@ -554,6 +669,7 @@
             modalidad:$(objGeneral.modal_principal+" "+'#modalidad').val(),
             grado_otorga:$(objGeneral.modal_principal+" "+'#grado_otorga').val(),
             titulo_prof: $(objGeneral.modal_principal+" "+'#titulo_prof').val(),
+            anio:  $(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val(),
             id_carrera: carreras_ids,
             ciclo: [],
             accion:'I',
@@ -602,7 +718,10 @@
                          num_columna += 1;
 
 
-                        if( $(element).find('td').eq(num_columna).find("input:text").val() === '' || parseInt($(element).find('td').eq(num_columna).find("input:text").val()) == 0 ){
+                        if( $(element).find('td').eq(16).find("select").val() === '2'){
+                            codigo= null;
+                        }else{
+                            if( $(element).find('td').eq(num_columna).find("input:text").val() === '' || parseInt($(element).find('td').eq(num_columna).find("input:text").val()) == 0 ){
 
 
                                 if($(element).find('td').eq(num_columna).find("input:text").val() === '' ){
@@ -612,17 +731,18 @@
 
                                 }
 
+                                inputFocus = $(element).find('td').eq(num_columna).find("input:text");
+                                fila_ciclo ++;
+                                return false;
+                            }else{
 
-                                    inputFocus = $(element).find('td').eq(num_columna).find("input:text");
-                                    fila_ciclo ++;
-                                    return false;
+                                codigo = $(element).find('td').eq(num_columna).find('input:text').val() ;                      
 
-
-                        }else{
-
-                            codigo = $(element).find('td').eq(num_columna).find('input:text').val() ;                      
+                            }                        
 
                         }
+
+                        
 
                         num_columna += 1;
                         //---2
@@ -657,7 +777,6 @@
                         //---
                         //---3
                         num_columna += 1;
-                        console.log("🚀 ~ file: plan_estudios.js.php:659 ~ $ ~ num_columna:", num_columna)
                         if( $(element).find('td').eq(num_columna).find("input").val() === '' ){
 
 
@@ -997,7 +1116,6 @@
 
 
             if(Obj_data['ciclo'].length === 0){
-                console.log("ciclo vacio");
                 
                     msgDate = 'Debe generar subdata en los ciclos creados para guardar el plan de estudios';
                     inputFocus = '#cbx_multiple_id_carrera';
@@ -1030,7 +1148,6 @@
                 if (Valida_<?php echo $opcion; ?>()) {
 
                     obj= (Valida_<?php echo $opcion; ?>());
-                    console.log("🚀 ~ file: asyllabus_data.js.php ~ line 1345 ~ Insert_Update_form_5 ~ obj", obj)
 
                     // return;
                     if(Accion === "A"){
@@ -1205,7 +1322,6 @@
 
     $(document).on("hidden.bs.modal", ".bootbox.modal", function (e) {
 
-        console.log('2nd level modal closed');
         jQuery("body").addClass("modal-open");
     });
 
@@ -1240,16 +1356,13 @@
 
 
     function Selec_Todo_Ciclo(th){
-        console.log("🚀 ~ file: plan_estudios.js.php:1262 ~ Selec_Todo_Ciclo ~ th:", th)
         var objGeneral = fnDataGeneral();
 
         if($(th).is(':checked')){
-                    console.log("🚀 ~ file: plan_estudios.js.php:1262 ~ Selec_Todo_Ciclo ~ th:", 1)
 
             $(objGeneral.modal_principal+" "+'#cbx_multiple_id_carrera > option').prop("selected", "selected");
             $(objGeneral.modal_principal+" "+'#cbx_multiple_id_carrera' ).trigger("change");
         } else {
-                    console.log("🚀 ~ file: plan_estudios.js.php:1262 ~ Selec_Todo_Ciclo ~ th:", 2)
 
             $(objGeneral.modal_principal+" "+'#cbx_multiple_id_carrera > option').prop('selected', false);;
             $(objGeneral.modal_principal+" "+'#cbx_multiple_id_carrera' ).trigger("change");
@@ -1517,11 +1630,9 @@
         var ciclo_div =$(th).parent().parent().parent();
         
         var num_ciclo =$(ciclo_div).attr('num_ciclo_capa');
-        console.log("🚀 ~ file: plan_estudios.js.php:1481 ~ EliminarCICLO ~ num_ciclo:", num_ciclo)
         
         var objGeneral = fnDataGeneral();
         var id_plan_estudios =$(objGeneral.modal_principal+" "+'#id_'+objGeneral._abrev).val();
-        console.log("🚀 ~ file: plan_estudios.js.php:1485 ~ EliminarCICLO ~ id_plan_estudios:", id_plan_estudios)
 
         // return false;
 
@@ -1680,7 +1791,6 @@
         $(th).css({"background-color": "brown", "border": "1px solid red"});
 
         var fila_tr_vista =$(th).parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent().parent();
-        console.log("🚀 ~ file: plan_estudios.js.php:1693 ~ Activarselect2 ~ fila_tr_vista:", fila_tr_vista)
 
         /** */
         let timerInterval
@@ -1808,53 +1918,85 @@
     }
 
     function Recoger_data_curso(th){       
+ 
+        var texto_nombre =th.options[th.selectedIndex].text
 
         var id= th.value;
         var fila_tr =$(th).parent().parent();
 
 
-                            $.ajax({
-                            type  : "POST",
-                            headers: {
-                                "X-API-KEY":api_key
-                            },
-                            url: url_restapi+'listar_cursos_by_id',
-                            data: {'id_curso':id},
-                            })
-                            .done(function(data) {
+        if(texto_nombre === 'ELECTIVO 1' || texto_nombre === 'ELECTIVO 2' ||  texto_nombre === 'ELECTIVO 3' ||  texto_nombre === 'ELECTIVO' ){
 
-                                 $(fila_tr).find("td").eq(1).find('input:text').val(data[0]['codigo']);
+            $(fila_tr).find("td").eq(1).find('input:text').val('').prop( "disabled", true );;
 
-                                 $(fila_tr).find("td").eq(3).find('input').val(data[0]['horas_teoricas_presencial']);
-                                 $(fila_tr).find("td").eq(4).find('input').val(data[0]['horas_sincronas_teoricas']);
-                                 $(fila_tr).find("td").eq(5).find('input').val(data[0]['horas_asincronas_teoricas']);
-                                 $(fila_tr).find("td").eq(6).find('input').val(data[0]['horas_practicas_presencial']);
-                                 $(fila_tr).find("td").eq(7).find('input').val(data[0]['horas_sincronas_practicas']);
-                                 $(fila_tr).find("td").eq(8).find('input').val(data[0]['horas_asincronas_practicas']);
-  
-                                $(fila_tr).find("td").eq(9).find('input').val(data[0]['horas_totales']);  
+            $(fila_tr).find("td").eq(3).find('input').val(0);
+            $(fila_tr).find("td").eq(4).find('input').val(0);
+            $(fila_tr).find("td").eq(5).find('input').val(0);
+            $(fila_tr).find("td").eq(6).find('input').val(0);
+            $(fila_tr).find("td").eq(7).find('input').val(0);
+            $(fila_tr).find("td").eq(8).find('input').val(0);
 
-                                $(fila_tr).find("td").eq(10).find('input').val(data[0]['creditos_presencial']);  
-                                $(fila_tr).find("td").eq(11).find('input').val(data[0]['creditos_virtual']);  
+            $(fila_tr).find("td").eq(9).find('input').val(0);  
 
-                                 $(fila_tr).find("td").eq(12).find('input').val(data[0]['creditos']);   
+            $(fila_tr).find("td").eq(10).find('input').val(0);  
+            $(fila_tr).find("td").eq(11).find('input').val(0);  
+
+            $(fila_tr).find("td").eq(12).find('input').val(0);  
+            
+            $(fila_tr).find("td").eq(13).find('select').val('')
+            $(fila_tr).find("td").eq(13).find('select').trigger("change");
+
+            $(fila_tr).find("td").eq(14).find('select').val(0);   
+            $(fila_tr).find("td").eq(15).find('select').val(0);   
+            $(fila_tr).find("td").eq(16).find('select').val(2).prop( "disabled", true );
+
+        }else{
+
+                $.ajax({
+                    type  : "POST",
+                    headers: {
+                        "X-API-KEY":api_key
+                    },
+                    url: url_restapi+'listar_cursos_by_id',
+                    data: {'id_curso':id},
+                })
+                .done(function(data) {
+
+                        $(fila_tr).find("td").eq(1).find('input:text').val(data[0]['codigo']).prop( "disabled", false );;
+
+                        $(fila_tr).find("td").eq(3).find('input').val(data[0]['horas_teoricas_presencial']);
+                        $(fila_tr).find("td").eq(4).find('input').val(data[0]['horas_sincronas_teoricas']);
+                        $(fila_tr).find("td").eq(5).find('input').val(data[0]['horas_asincronas_teoricas']);
+                        $(fila_tr).find("td").eq(6).find('input').val(data[0]['horas_practicas_presencial']);
+                        $(fila_tr).find("td").eq(7).find('input').val(data[0]['horas_sincronas_practicas']);
+                        $(fila_tr).find("td").eq(8).find('input').val(data[0]['horas_asincronas_practicas']);
+
+                    $(fila_tr).find("td").eq(9).find('input').val(data[0]['horas_totales']);  
+
+                    $(fila_tr).find("td").eq(10).find('input').val(data[0]['creditos_presencial']);  
+                    $(fila_tr).find("td").eq(11).find('input').val(data[0]['creditos_virtual']);  
+
+                        $(fila_tr).find("td").eq(12).find('input').val(data[0]['creditos']);   
 
 
-                                /*select multiple */
-                                var ids_cursos = data[0]['requisitos'];
-                                    var ids_cursos_data = ids_cursos.split(','); 
-                                        $.each(ids_cursos_data, function(index, value) {
-                                            $(fila_tr).find("td").eq(13).find('select').val(value).prop("selected","selected")
-                                            $(fila_tr).find("td").eq(13).find('select').trigger("change");
-                                        });
-                                /* */
+                    /*select multiple */
+                    var ids_cursos = data[0]['requisitos'];
+                        var ids_cursos_data = ids_cursos.split(','); 
+                            $.each(ids_cursos_data, function(index, value) {
+                                $(fila_tr).find("td").eq(13).find('select').val(value).prop("selected","selected")
+                                $(fila_tr).find("td").eq(13).find('select').trigger("change");
+                            });
+                    /* */
 
-                                 $(fila_tr).find("td").eq(14).find('select').val(data[0]['tipo_curso']);   
-                                $(fila_tr).find("td").eq(15).find('select').val(data[0]['presencialidad']);   
-                                 $(fila_tr).find("td").eq(16).find('select').val(data[0]['obligatoriedad']);
-                              
-                            })
-                            .fail(function(jqXHR, textStatus, errorThrown) { }).always(function() {});
+                        $(fila_tr).find("td").eq(14).find('select').val(data[0]['tipo_curso']);   
+                    $(fila_tr).find("td").eq(15).find('select').val(data[0]['presencialidad']);   
+                        $(fila_tr).find("td").eq(16).find('select').val(data[0]['obligatoriedad']).prop( "disabled", false );
+                    
+                }).fail(function(jqXHR, textStatus, errorThrown) { }).always(function() {});
+
+
+        }
+                           
     }
 
     //--------------- 
@@ -2238,7 +2380,6 @@
     function Cantidad_Electivos_Agregar(th){
 
         var cant = th.value;
-        console.log("🚀 ~ file: plan_estudios.js.php:1624 ~ Cantidad_Electivos_Agregar ~ cant:", cant)
         
         var ciclos = $(modal_nombre_elec+" #formulario_plan_estudios_electivos  .ciclo"); 
 
@@ -2530,10 +2671,8 @@
         var objGeneral = fnDataGeneral();
 
         var num_ciclo =$(ciclo_div).attr('num_ciclo_capa');
-        console.log("🚀 ~ file: plan_estudios.js.php:1481 ~ EliminarCICLO ~ num_ciclo:", num_ciclo)
         
         var id_plan_estudios =$(modal_nombre_elec+' #formulario_plan_estudios_electivos #id_plan_estudios').val();
-        console.log("🚀 ~ file: plan_estudios.js.php:1485 ~ EliminarCICLO ~ id_plan_estudios:", id_plan_estudios)
 
         // return false;
 
@@ -2817,7 +2956,6 @@
                 if (Valida_Electivo_<?php echo $opcion; ?>()) {
 
                     obj= (Valida_Electivo_<?php echo $opcion; ?>());
-                    console.log("🚀 ~ file: asyllabus_data.js.php ~ line 1345 ~ Insert_Update_form_5 ~ obj", obj)
 
                     // return false;
 
@@ -2833,7 +2971,6 @@
                                     'Haga clic en el botón!',
                                     'success'
                                     ).then(function() {
-                                        return false;
                                         window.location = objGeneral.__wurl;
                                     });
                             })
@@ -2968,18 +3105,13 @@
                         //---
                         //---3
                         num_columna += 1;
-                        console.log("🚀 ~ file: plan_estudios.js.php:659 ~ $ ~ num_columna:", num_columna)
                         if( $(element).find('td').eq(num_columna).find("input").val() === '' ){
 
-
-                            
                                 msgDate =  `Porfavor rellene el campo que esta en la tabla  <b> ${index0+1}</b> especificamente en la <strong>fila:${index1+1}</strong> </br> en la <strong> columna ${num_columna}  </strong>  `;
                            
-                        
                                 inputFocus = $(element).find('td').eq(num_columna).find("input");
                                 fila_ciclo ++;
                                 return false;
-
 
                         }else{
 
@@ -3154,19 +3286,31 @@
                         //---
                         //---13
                         //---
-                        if( $(element).find('td').eq(num_columna).find("select").val().length == 0 ){
 
-                            msgDate =  `Porfavor rellene el campo que esta en la tabla  <b> ${index0+1}</b> especificamente en la <strong>fila:${index1+1}</strong> </br> en la <strong> columna  ${num_columna} </strong>  `;
-                         
-                            inputFocus = $(element).find('td').eq(num_columna).find("select");
-                            fila_ciclo ++;
-                            return false;
+                        if( $(element).find('td').eq(16).find("select").val() === '2'){
+
+                          
+
+                            requisitos = null;
 
                         }else{
 
-                            requisitos = $(element).find('td').eq(num_columna).find('select').val() ;                      
+                            if( $(element).find('td').eq(num_columna).find("select").val().length == 0 ){
+
+                                msgDate =  `Porfavor rellene el campo que esta en la tabla  <b> ${index0+1}</b> especificamente en la <strong>fila:${index1+1}</strong> </br> en la <strong> columna  ${num_columna} </strong>  `;
+
+                                inputFocus = $(element).find('td').eq(num_columna).find("select");
+                                fila_ciclo ++;
+                                return false;
+
+                            }else{
+
+                                requisitos = $(element).find('td').eq(num_columna).find('select').val() ;                      
+
+                            }
 
                         }
+                       
                         num_columna += 1;
                         //---14
                         if( $(element).find('td').eq(num_columna).find("select").val() === '' || parseInt($(element).find('td').eq(num_columna).find("select").val()) == 0  ){
@@ -3282,7 +3426,6 @@
 
 
             if(Obj_data['ciclo'].length === 0){
-                console.log("ciclo vacio");
                 
                     msgDate = 'Debe generar subdata en los ciclos creados para guardar el plan de estudios';
                     inputFocus = '#cbx_multiple_id_carrera_electivo';
@@ -3325,19 +3468,23 @@
     
     function Articulacion_<?php echo $opcion; ?>(id,fila,boton){
             var objGeneral = fnDataGeneral();
-            $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #tabla_articulacion tbody" ).empty();
             $(modal_articulacion).modal('show');       
 
-            $(modal_articulacion+" "+"#titulo_modal_xl").text('Seleccion de competencias de Plan de Estudios');
+            $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion  #vista_articula").html(`
+                <div style="height: 30pc; display: flex;   justify-content: center; align-items: center;">
+                    <div class="spinner_seccion"></div>
+                </div>
+            `);   
+
+
+            $(modal_articulacion+" "+"#titulo_modal_xl_full").text('Seleccion de competencias de Plan de Estudios');
 
             $( modal_articulacion+' '+objGeneral.formulario_principal+'_articulacion #id_plan_estudios_articulacion').val(id);
 
             var data = $(objGeneral._tabla).DataTable().row(fila).data();
             $( modal_articulacion+' '+objGeneral.formulario_principal+'_articulacion'+' '+'#nombre_plan_estudios_text').text(data['NOM_PLAN_ESTUDIOS']);
 
-            var parametros =    {
-                                    "ID_PLAN_ESTUDIOS":id,
-                                };
+            var parametros =    {  "ID_PLAN_ESTUDIOS":id  };
 
             $.ajax({
                     type  : "POST",
@@ -3345,14 +3492,52 @@
                     data  : parametros, 
             })
             .done(function(obj) {
-                    
-                $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #tabla_articulacion tbody" ).append(obj);
 
-                                                
-                $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #tabla_articulacion").find('select.custom-select').select2({
-        dropdownParent: $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #tabla_articulacion")
+                $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion  #vista_articula").html(`
+                    
+                        <table id="tabla_articulacion" class="table table-hover table-info mb-0">
+                            <thead class="bg-info text-white">
+                                <tr>
+                                    <th colspan="1"></th>
+                                    <th colspan="4" class="text-center" style="background: cadetblue;border-bottom: 1px solid black; border-left: 1px solid black; border-top: 1px solid black;">Competencias Generales</th>
+                                    <th colspan="6" class="text-center"  style="background: chocolate;border-bottom: 1px solid black; border-left: 4px solid black; border-top: 1px solid black;border-right: 1px solid black;">Competencias Especificas</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col" class="text-center">CURSO</th>
+
+
+                                    <th scope="col" class="text-center" style="background: #006e8f; border-bottom: 1px solid black; border-left: 1px solid black; border-top: 1px solid black; ">Competencia nombre</th>
+                                    <th scope="col" class="text-center" style="background: #006e8f; border-bottom: 1px solid black; border-right: 1px solid black; border-top: 1px solid black;">Nivel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th scope="col" class="text-center"  style="background: #006e8f; border-bottom: 1px solid black; border-left: 2px solid black; border-top: 1px solid black; ">Competencia nombre</th>
+                                    <th scope="col" class="text-center" style="background: #006e8f; border-bottom: 1px solid black; border-right: 1px solid black; border-top: 1px solid black;">Nivel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th scope="col" class="text-center"  style="background: #c49b14; border-bottom: 1px solid black; border-left: 4px solid black; border-top: 1px solid black; ">Competencia nombre</th>
+                                    <th scope="col" class="text-center" style="background: #c49b14; border-bottom: 1px solid black; border-right: 1px solid black; border-top: 1px solid black;">Nivel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th scope="col" class="text-center"  style="background: #c49b14; border-bottom: 1px solid black; border-left: 2px solid black; border-top: 1px solid black;">Competencia nombre</th>
+                                    <th scope="col" class="text-center" style="background: #c49b14; border-bottom: 1px solid black; border-right: 1px solid black; border-top: 1px solid black;">Nivel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th scope="col" class="text-center"  style="background: #c49b14; border-bottom: 1px solid black; border-left: 2px solid black; border-top: 1px solid black;">Competencia nombre</th>
+                                    <th scope="col" class="text-center" style="background: #c49b14; border-bottom: 1px solid black; border-right: 1px solid black; border-top: 1px solid black;">Nivel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th scope="col" class="text-center">Acción </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                            ${obj}
+                            </tbody>
+                        </table>
+
+                `);   
+                               
+                // $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #vista_articula" ).empty();
+
+                // $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #tabla_articulacion tbody" ).append(obj);
 
                 
+                // $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #tabla_articulacion").dataTable( {
+                //     "searching": false
+                // } );
+                
+                $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #tabla_articulacion").find('select.custom-select').select2({
+                    dropdownParent: $(modal_articulacion+' '+objGeneral.formulario_principal+"_articulacion #tabla_articulacion")                
                 })
 
             })
@@ -3367,81 +3552,102 @@
     function Guardar_Articulacion_Fila(id_curso,th,id_ciclo){
 
 
-        var fila_tr =$(th).parent().parent();
-        console.log("🚀 ~ file: plan_estudios.js.php:3351 ~ Guardar_Articulacion_Fila ~ fila_tr:", fila_tr)
+         
+        Swal.fire({
+        title: '¿Esta Seguro de continuar?',
+        text: "",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, guardar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-        id_ciclo = id_ciclo;    
-
-        id_compet_detalle = $(fila_tr).attr('data-id');                     
-       
-        comp_general_uno = $(fila_tr).find('td').eq(1).find('select').val();                     
-        niveles_comp_general_uno = $(fila_tr).find('td').eq(2).find('select').val();                     
-
-        comp_general_dos = $(fila_tr).find('td').eq(3).find('select').val();                     
-        niveles_comp_general_dos = $(fila_tr).find('td').eq(4).find('select').val();                     
-
-        ///----
-        comp_especifica_uno = $(fila_tr).find('td').eq(5).find('select').val();                     
-        niveles_comp_especif_uno = $(fila_tr).find('td').eq(6).find('select').val();                     
-
-        
-        comp_especifica_dos = $(fila_tr).find('td').eq(7).find('select').val();                     
-        niveles_comp_especif_dos = $(fila_tr).find('td').eq(8).find('select').val();                     
-
-        
-        comp_especifica_tres = $(fila_tr).find('td').eq(9).find('select').val();                     
-        niveles_comp_especif_tres = $(fila_tr).find('td').eq(10).find('select').val();                     
-
-
-           var parametros =    {
-                                    "comp_general_uno":comp_general_uno,
-                                    "niveles_comp_general_uno":niveles_comp_general_uno,
-                                    
-                                    "comp_general_dos":comp_general_dos,
-                                    "niveles_comp_general_dos":niveles_comp_general_dos,
-
-                                    "comp_especifica_uno":comp_especifica_uno,
-                                    "niveles_comp_especif_uno":niveles_comp_especif_uno,
-
-                                    "comp_especifica_dos":comp_especifica_dos,
-                                    "niveles_comp_especif_dos":niveles_comp_especif_dos,
-
-                                    "comp_especifica_tres":comp_especifica_tres,
-                                    "niveles_comp_especif_tres":niveles_comp_especif_tres,
-
-                                    "id_ciclo":id_ciclo,
-                                    "id_compet_detalle":id_compet_detalle
-                                };
-
-                            var objGeneral = fnDataGeneral();
-
-                            $.ajax({
-                                    type  : "POST",
-                                    url   : objGeneral.__wurl+'Guardar_PlanEstudios_articulacion',
-                                    data  : parametros, 
-                            })
-                            .done(function(obj) {
-
-                                
-                                  Swal.fire(
-                                    (id_compet_detalle == 0 ? 'Guardado!' : 'Actualizado'),
-                                        'El registro ha sido '+(id_compet_detalle ==='' ? 'guardado' : 'actualizado')+' satisfactoriamente.',
-                                        'success'
-                                    ).then(function() {
-                                      
-                                        $(fila_tr).find("td").eq(11).find("button").html(
-                                            ` 
-                                                <i class="fa fa-pencil"></i>
-                                            `
-                                        );
-
-                                    });
             
-                            })
-                            .fail(function(jqXHR, textStatus, errorThrown) {
-                                someErrorFunction();
-                            })
-                            .always(function() {});
+                    var fila_tr =$(th).parent().parent();
+
+                    id_ciclo = id_ciclo;    
+
+                    id_compet_detalle = $(fila_tr).attr('data-id');                     
+
+                    comp_general_uno = $(fila_tr).find('td').eq(1).find('select').val();                     
+                    niveles_comp_general_uno = $(fila_tr).find('td').eq(2).find('select').val();                     
+
+                    comp_general_dos = $(fila_tr).find('td').eq(3).find('select').val();                     
+                    niveles_comp_general_dos = $(fila_tr).find('td').eq(4).find('select').val();                     
+
+                    ///----
+                    comp_especifica_uno = $(fila_tr).find('td').eq(5).find('select').val();                     
+                    niveles_comp_especif_uno = $(fila_tr).find('td').eq(6).find('select').val();                     
+
+
+                    comp_especifica_dos = $(fila_tr).find('td').eq(7).find('select').val();                     
+                    niveles_comp_especif_dos = $(fila_tr).find('td').eq(8).find('select').val();                     
+
+
+                    comp_especifica_tres = $(fila_tr).find('td').eq(9).find('select').val();                     
+                    niveles_comp_especif_tres = $(fila_tr).find('td').eq(10).find('select').val();                     
+
+
+                    var parametros =    {
+                            "comp_general_uno":comp_general_uno,
+                            "niveles_comp_general_uno":niveles_comp_general_uno,
+                            
+                            "comp_general_dos":comp_general_dos,
+                            "niveles_comp_general_dos":niveles_comp_general_dos,
+
+                            "comp_especifica_uno":comp_especifica_uno,
+                            "niveles_comp_especif_uno":niveles_comp_especif_uno,
+
+                            "comp_especifica_dos":comp_especifica_dos,
+                            "niveles_comp_especif_dos":niveles_comp_especif_dos,
+
+                            "comp_especifica_tres":comp_especifica_tres,
+                            "niveles_comp_especif_tres":niveles_comp_especif_tres,
+
+                            "id_ciclo":id_ciclo,
+                            "id_compet_detalle":id_compet_detalle
+                        };
+
+                    var objGeneral = fnDataGeneral();
+
+                    $.ajax({
+                            type  : "POST",
+                            url   : objGeneral.__wurl+'Guardar_PlanEstudios_articulacion',
+                            data  : parametros, 
+                    })
+                    .done(function(obj) {
+
+                        
+                          Swal.fire(
+                            (id_compet_detalle == 0 ? 'Guardado!' : 'Actualizado'),
+                                'El registro ha sido '+(id_compet_detalle ==='' ? 'guardado' : 'actualizado')+' satisfactoriamente.',
+                                'success'
+                            ).then(function() {
+                              
+                                $(fila_tr).find("td").eq(11).find("button").html(
+                                    ` 
+                                        <i class="fa fa-pencil"></i>
+                                    `
+                                );
+
+                            });
+    
+                    })
+                    .fail(function(jqXHR, textStatus, errorThrown) {
+                        someErrorFunction();
+                    })
+                    .always(function() {});
+
+
+            }
+        }) 
+
+
+
+
 
 
     }

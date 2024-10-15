@@ -56,7 +56,6 @@ class TusSyllabus extends CI_Controller {
         if ($this->session->userdata('usuario')) {
             date_default_timezone_set('America/Lima');
             $fechaActual = date('Y-m-d H:i:s');
-            
                 $parametros = array(
                     'vACCION'        =>'LISTAR_SYLLABUS_CICLO',
                     'vID_SYLLABUS'         => '',
@@ -84,12 +83,11 @@ class TusSyllabus extends CI_Controller {
                     'vCICLOS' => '',
                     'vID_TIPO_ESTUDIOS' => '',
                     'vID_VERSION_PRINCIPAL' => '',
+                    'vID_ASIGNACION_CURSO' => '',
+                    'vID_USUARIO_ASIG' => ''
                 );
 
-
-                   
             $data = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
-
 
             // print_r($data);
 
@@ -111,7 +109,7 @@ class TusSyllabus extends CI_Controller {
                                                     ."</div>"     
                                                     
                                                     ."<div class='btn-group' >"
-                                                    . "<a title='Ficha de Evalacuación PDF' href='". site_url($this->url.$this->opcion.'/Ficha_eval_pdf/'. $row['id_syllabus'] ) ."' target='_blank' id='verpdf_ficha_".$this->opcion."' type='button' class='btn bg-cyan rueda_pdf_ficha ' style='width: auto'>"
+                                                    . "<a title='Ficha de Evalacuaciï¿½n PDF' href='". site_url($this->url.$this->opcion.'/Ficha_eval_pdf/'. $row['id_syllabus'] ) ."' target='_blank' id='verpdf_ficha_".$this->opcion."' type='button' class='btn bg-cyan rueda_pdf_ficha ' style='width: auto'>"
                                                         . "<span  class='fas fa-file-pdf'></span>"
                                                     . "</a>"
                                                     ."</div>";
@@ -123,33 +121,40 @@ class TusSyllabus extends CI_Controller {
                             $periodo = $row['periodo_anio'] .'-'.$row['periodo_ciclo'] ;
                     
                             $texto .= '{"ID_SILABUS":' . json_encode($row['id_syllabus']) . ','
-                                    . '"ID_FACULTAD":' . json_encode($row['id_facultad']) . ','
-                                    . '"NOMBRE_SILABUS":' .  json_encode($row['nombre_syllabus'])  . ','
-                                    . '"PERIODO":' . json_encode($periodo) . ','
+                                . '"ID_FACULTAD":' . json_encode($row['id_facultad']) . ','
+                                . '"NOMBRE_SILABUS":' .  json_encode($row['nombre_syllabus'])  . ','
+                                . '"NOM_CURSO"                 :' . json_encode($row['nom_curso'])  . ','
 
-                                    . '"PERIODO_ANIO":' .  json_encode($row['periodo_anio'])  . ','
-                                    . '"PERIODO_CICLO":' .  json_encode($row['periodo_ciclo'])  . ','
+                                . '"NOM_CICLO"                 :' . json_encode($row['nom_ciclo'])  . ','
+                                . '"PERIODO":' . json_encode($periodo) . ','
 
-                                    . '"ID_DEPART_UNIVER":' .  json_encode($row['id_depart_univer'])  . ','
-                                    . '"ID_CARRERA":' .  json_encode($row['id_carrera'])  . ','
-                                    . '"ID_CONDICION":' .  json_encode($row['id_condicion'])  . ','
-                                    . '"CREDITOS":' .  json_encode($row['creditos'])  . ','
-                                    . '"HORAS_TEORICAS":' .  json_encode($row['horas_teoricas'])  . ','
-                                    . '"HORAS_PRACTICAS":' .  json_encode($row['horas_practicas'])  . ','
-                                    . '"ID_DIRECTOR":' .  json_encode($row['id_director'])  . ','
-                                    . '"ID_DOCENTE":' .  json_encode($row['id_docente'])  . ','
-                                    . '"ID_CURSO":' .  json_encode($row['id_curso'])  . ','
-                                    . '"ID_PLAN_ESTUDIOS":' .  json_encode($row['id_plan_estudios'])  . ','
-                                    . '"REQUISITO":' .  json_encode($row['requisito'])  . ','
-                                    . '"ESTADO":' .  json_encode($row['estado'])  . ','
-                                    . '"FECHA_REG":' .  json_encode($row['fec_reg'])  . ','
-                                    . '"USER_REG":' .  json_encode($row['user_reg'])  . ','
-                                    . '"FEC_ACT":' .  json_encode($row['fec_act'])  . ','
-                                    . '"USER_ACT":' .  json_encode($row['user_act'])  . ','
-                                    
-                                    . '"ESTADO_SILABUS_HTML":"' .  $estado . '",'
-                                    . '"ACCION"                 :"' . $botones . '",'
-                                    . '"NOM_CICLO"                 :' . json_encode($row['nom_ciclo'])  . '},';
+                                . '"PERIODO_ANIO":' .  json_encode($row['periodo_anio'])  . ','
+                                . '"PERIODO_CICLO":' .  json_encode($row['periodo_ciclo'])  . ','
+
+                                . '"ID_DEPART_UNIVER":' .  json_encode($row['id_depart_univer'])  . ','
+                                . '"ID_CARRERA":' .  json_encode($row['id_carrera'])  . ','
+                                . '"ID_CONDICION":' .  json_encode($row['id_condicion'])  . ','
+                                . '"CREDITOS":' .  json_encode($row['creditos'])  . ','
+                                . '"HORAS_TEORICAS":' .  json_encode($row['horas_teoricas'])  . ','
+                                . '"HORAS_PRACTICAS":' .  json_encode($row['horas_practicas'])  . ','
+                                . '"ID_DIRECTOR":' .  json_encode($row['id_director'])  . ','
+                                . '"ID_DOCENTE":' .  json_encode($row['id_docente'])  . ','
+                                . '"ID_CURSO":' .  json_encode($row['id_curso'])  . ','
+                                . '"ID_PLAN_ESTUDIOS":' .  json_encode($row['id_plan_estudios'])  . ','
+                                . '"REQUISITO":' .  json_encode($row['requisito'])  . ','
+                                . '"ESTADO":' .  json_encode($row['estado'])  . ','
+                                . '"DURACION":"' .  $duracion_html  . '",'
+                                . '"USER_REG":' .  json_encode($row['user_reg'])  . ','
+                                . '"FEC_ACT":' .  json_encode($row['fec_act'])  . ','
+                                . '"USER_ACT":' .  json_encode($row['user_act'])  . ','
+                                
+                                . '"ESTADO_SILABUS_HTML":"' .  $estado . '",'
+                                
+                                . '"ACCION"                 :"' . $botones . '",'
+                                . '"VERSION_PRINCIPAL"                 :' . json_encode($row['version_principal'])  . ','
+                                . '"FECHA_REG"                 :' . json_encode($row['fec_reg'])  . '},';
+
+
 
 
                         $fila++; 
@@ -174,9 +179,12 @@ class TusSyllabus extends CI_Controller {
             
             $accion = 'LISTAR_SYLLABUS_ID';
         
+
             $parametros = array(
                 $accion,
                 $id_syllabus,
+                '',
+                '',
                 '',
                 '',
                 '',

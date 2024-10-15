@@ -8,6 +8,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     background-color:  #f3f1f1 ;
     border-radius:20px;
     }
+
+    .container_tabla_td {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-auto-rows: 100px;
+        height: 20px;
+    }
+
+    .container_tabla_td > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1em;
+        height: 20px;
+        /* color: #ffeead; */
+    }
    
 </style>
             <!-- ============================================================== -->
@@ -92,8 +109,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             
 
             <!-- Full width modal content -->
-            <div id="modal_asignar_plan_estudio_usu" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-full-width">
+            <div id="modal_asignar_plan_estudio_usu" class="modal fade"  role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-full-width modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header modal-colored-header bg-primary">
                             <h4 class="modal-title" >ASIGNAR PLANES DE ESTUDIOS</h4>
@@ -124,26 +141,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             </div>
 
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 text-center">
                                                 <label>Lista de Planes agregados al usuario</label>
                                             </div>
 
 
                                             <div class="form-group col-md-12">
 
-                                            <div class="row col-12 h-100 m-0 p-3 table-responsive" >
-                                                <table id="Lista_plan_estudios_usu_tbl"  class="table table-striped table-bordered  table-hover table-primary" style="width:100%"  role="grid" aria-describedby="example1_info">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-center">NOMBRE PLAN ESTUDIOS</th>
-                                                            <th class="text-center">ACCIÓN</th>
+                                                <div class="row col-12 h-100 m-0 p-3 table-responsive" >
+                                                    <table id="Lista_plan_estudios_usu_tbl"  class="table table-striped table-bordered  table-hover table-primary" style="width:100%"  role="grid" aria-describedby="example1_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">NOMBRE PLAN ESTUDIOS</th>
+                                                                <th class="text-center">ACCIÓN</th>
 
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="lista_asignacion_plan_estudos_usu">
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody >
+                                                        </tbody>
+                                                    </table>
+                                                </div>
 
                                             </div>
 
@@ -164,10 +181,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             
             <!-- Full width modal content -->
-            <div id="modal_asignar_curso" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-full-width">
+            <div id="modal_asignar_curso" class="modal fade"  role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
-                        <div class="modal-header modal-colored-header bg-primary">
+                        <div class="modal-header  modal-colored-header bg-warning">
                             <h4 class="modal-title" >ASIGNAR CURSOS</h4>
                             <button type="button" class="close" data-dismiss="modal"
                                 aria-hidden="true">×</button>
@@ -177,27 +194,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                            
                                             <input name="id_asignacion_plan_estudios" type="hidden" id="id_asignacion_plan_estudios" value="">    
                                             <input name="id_plan_estudios" type="hidden" id="id_plan_estudios" value="">    
+                                            <input name="id_usuario" type="hidden" id="id_usuario" value="">        
 
                                             
                                             <div class="form-group col-md-12">
-                                                <label>Ciclo:</label>
+                                                <label>Cursos:</label>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <select class="form-control" id="nom_ciclo" name="nom_ciclo" onchange="Ciclo(this)">
+                                                <select class="form-control" id="nom_ciclo" name="nom_ciclo" multiple>
                                                     <option value="0">Seleccionar</option>
                                                 </select>
                                             </div>
 
                                              
-                                            <div class="form-group col-md-12">
-                                                <label>Curso ciclo:</label>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <select class="form-control" id="id_curso" name="id_curso">
-                                                    <option value="0">Seleccionar</option>
-                                                </select>
-                                            </div>
-
+                        
                                             <div class="form-group col-md-3">
 
                                                     <button type="button" onclick="AddAsignarCurso()"  class="btn waves-effect waves-light btn-outline-info">
@@ -210,7 +220,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <br>
                                         <br>
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 text-center">
                                                 <label>Lista de Cursos agregados al usuario</label>
                                             </div>
 

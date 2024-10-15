@@ -5,7 +5,7 @@
             <label>CÓDIGO  :</label>
         </div>
         <div class="form-group col-md-12">
-            <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Ingresar Código" autofocus>
+            <input type="text" class="form-control"  maxlength="8"  id="codigo" name="codigo" placeholder="Ingresar Código" autofocus>
         </div>
 
 
@@ -25,31 +25,32 @@
             <label>HORAS TEÓRICAS :</label>
         </div>
         <div class="form-group col-md-2">
-            <input type="text" class="form-control" readonly id="horas_teoricas" name="horas_teoricas" placeholder="Ingresar horas teóricas" autofocus>
+            <input type="text" class="form-control"  readonly id="horas_teoricas" name="horas_teoricas" placeholder="Ingresar horas teóricas" autofocus>
         </div>
         <div class="form-group col-md-4">
         </div>
 
-        <div class="form-group col-md-2">
-            <label>H. T. P.:</label>
+        <div class="form-group col-md-2" >
+            <label data-toggle="tooltip" data-placement="top" title="HORAS TEÓRICAS PRESECNIALES"> H. T. P.:</label>
+
         </div>
         <div class="form-group col-md-2">
-            <input type="text" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_teoricas_presencial" name="horas_teoricas_presencial" placeholder="Ingresar horas teóricas presencial" autofocus>
+            <input type="text" maxlength="2" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_teoricas_presencial" name="horas_teoricas_presencial" placeholder="Ingresar horas teóricas presencial" autofocus>
         </div>
 
         
         <div class="form-group col-md-2">
-            <label>H. S.:</label>
+            <label  data-toggle="tooltip" data-placement="top" title="HORAS TEÓRICAS SÍNCRONAS">H. S.:</label>
         </div>
         <div class="form-group col-md-2">
-            <input type="text" class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_sincronas_teoricas" name="horas_sincronas_teoricas" placeholder="Ingresar" autofocus>
+            <input type="text"  maxlength="2"  class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_sincronas_teoricas" name="horas_sincronas_teoricas" placeholder="Ingresar" autofocus>
         </div>
 
         <div class="form-group col-md-2">
-            <label>H. A.:</label>
+            <label   data-toggle="tooltip" data-placement="top" title="HORAS TEÓRICAS ASÍNCRONAS">H. A.:</label>
         </div>
         <div class="form-group col-md-2">
-            <input type="text" class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_asincronas_teoricas" name="horas_asincronas_teoricas" placeholder="Ingresar" autofocus>
+            <input type="text"  maxlength="2"  class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_asincronas_teoricas" name="horas_asincronas_teoricas" placeholder="Ingresar" autofocus>
         </div>
 
     <!-- 
@@ -72,24 +73,24 @@
         </div>
 
         <div class="form-group col-md-2">
-            <label>H. P. P. :</label>
+            <label   data-toggle="tooltip" data-placement="top" title="HORAS PRÁCTICAS PRESENCIALES">H. P. P. :</label>
         </div>
         <div class="form-group col-md-2">
-            <input type="text" class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_practicas_presencial" name="horas_practicas_presencial" placeholder="Ingresar horas prácticas presencial"  autofocus>
+            <input type="text"  maxlength="2"  class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_practicas_presencial" name="horas_practicas_presencial" placeholder="Ingresar horas prácticas presencial"  autofocus>
         </div>  
         
         <div class="form-group col-md-2">
-            <label>H.S.:</label>
+            <label data-toggle="tooltip" data-placement="top" title="HORAS PRÁCTICAS SÍNCRONAS">H.S.:</label>
         </div>
         <div class="form-group col-md-2">
-            <input type="text" class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_sincronas_practicas" name="horas_sincronas_practicas" placeholder="Ingresar" autofocus>
+            <input type="text"  maxlength="2"  class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="horas_sincronas_practicas" name="horas_sincronas_practicas" placeholder="Ingresar" autofocus>
         </div>
 
         <div class="form-group col-md-2">
-            <label>H.A.:</label>
+            <label data-toggle="tooltip" data-placement="top" title="HORAS PRÁCTICAS ASÍNCRONAS">H.A.:</label>
         </div>
         <div class="form-group col-md-2">
-            <input type="text" class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  id="horas_asincronas_practicas" name="horas_asincronas_practicas" placeholder="Ingresar" autofocus>
+            <input type="text"  maxlength="2"  class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  id="horas_asincronas_practicas" name="horas_asincronas_practicas" placeholder="Ingresar" autofocus>
         </div>
 
         <!-- <div class="form-group col-md-2">

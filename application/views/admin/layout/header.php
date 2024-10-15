@@ -202,7 +202,7 @@
     </div>
 
     		<!-- Modals -->
-        <div id="acceso_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div id="acceso_modal" class="modal fade bs-example-modal-lg"  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
               <div class="modal-content">
               
@@ -210,7 +210,7 @@
             </div>
         </div>
 
-        <div class="modal fade bd-example-modal-lg"  id="RegistrarModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal fade bd-example-modal-lg"  id="RegistrarModal"  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     
@@ -218,7 +218,7 @@
             </div>
         </div>
      
-        <div class="modal fade bd-example-modal-lg" id="editarModal"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal fade bd-example-modal-lg" id="editarModal"   role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     
@@ -226,7 +226,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modal_photo_crop" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal fade" id="modal_photo_crop"  role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg estilo_modal" role="document">
                 <div class="modal-content">
                     <div class="modal-header">

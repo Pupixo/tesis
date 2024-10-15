@@ -23,14 +23,37 @@ class Asyllabus extends CI_Controller {
         $this->url_carpeta       = 'admin/asyllabus/';        /* NOMBRE DE LA ABREVIATURA QUE SE INDENTIFICARA EN "footer" y js   */
 
         //php mailer datos
-        $this->CharSet       = 'utf-8';
-        $this->SMTPDebug       = 0;
-        $this->Host       = 'smtp.gmail.com'; 
-        $this->SMTPAuth       =  true; 
-        $this->Username       = 'pupixoxd@gmail.com';  
-        $this->Password       = 'ppufozjajyxavcpk';  
+        // $this->CharSet       = 'utf-8';
+        // $this->SMTPDebug       = 0;
+        // $this->Host       = 'smtp.gmail.com'; 
+        // $this->SMTPAuth       =  true; 
+        // $this->Username       = 'pupixoxd@gmail.com';  
+        // $this->Password       = 'ppufozjajyxavcpk';  
         $this->SMTPSecure     = 'tls'; 
         $this->Port       = 587;
+
+
+            //php mailer datos
+            $this->CharSet       = 'utf-8';
+            // $this->SMTPDebug       = SMTP::DEBUG_SERVER; 
+            $this->SMTPDebug       = 2;
+
+            // $this->Host       = 'smtp.gmail.com'; 
+
+            // $this->Host       = 'smtp-mail.outlook.com';                // Specify Outlook's SMTP server
+            $this->Host ='smtp.office365.com'; // servidor outlook
+
+            $this->SMTPAuth       =  true; 
+            $this->Username       = 'acuario_16_sp@hotmail.com';  
+            // $this->Password       = 'ulnwjgfxlqfdafel';  
+            
+            $this->Password       = 'ap2XAfuqUt';  
+
+            // $this->SMTPSecure     = PHPMailer::ENCRYPTION_SMTPS; 
+            // $this->SMTPSecure = "ssl";
+    
+            // $this->Port       = 465;
+
 
         $this->load->model('Contenedor_Model','contenedor');
         $this->load->model('Model_Syllabus');
@@ -74,13 +97,9 @@ class Asyllabus extends CI_Controller {
             $fechaActual = date('Y-m-d H:i:s');
 
                 if($_SESSION['usuario'][0]['id_nivel'] == 3){
-
                     $accion_text='LISTAR_SYLLABUS_USER';
                     $accion_text_esta='LISTAR_SYLLABUS_POR_ESTADOS_USER';
-
                 }else{
-                   
-
                     $accion_text='LISTAR_SYLLABUS';
                     $accion_text_esta='LISTAR_SYLLABUS_POR_ESTADOS';
                 }
@@ -105,14 +124,16 @@ class Asyllabus extends CI_Controller {
                     'vID_PLAN_ESTUDIOS' => '',
                     'vREQUISITO' => '',
                     'vESTADO' => '',
-                    'vID_USUARIO' => $_SESSION['usuario'][0]['id_usuario'],
+                    'vID_USUARIO' => '',
                     'vNOM_CICLO' => '',
                     'vPRESENCIALIDAD' => '',
                     'vTIPOCICLO' => '',
                     'vTOTALHORAS' => '',
                     'vCICLOS' => '',
                     'vID_TIPO_ESTUDIOS' => '',
-                    'vID_VERSION_PRINCIPAL' => ''
+                    'vID_VERSION_PRINCIPAL' => '',
+                    'vID_ASIGNACION_CURSO'=> '',
+                    'vID_USUARIO_ASIG'=> $_SESSION['usuario'][0]['id_usuario'],
                 );
 
             if($param == 0){
@@ -200,22 +221,7 @@ class Asyllabus extends CI_Controller {
                                                     if($_SESSION['usuario'][0]['id_nivel'] == 4  ){
                                                      
                                                     }else if($_SESSION['usuario'][0]['id_nivel'] == 3) {
-                                                        $botones .="<div class='btn-group' role='group' >"
-                                                                
-                                                            . "<button id='btnGroupDrop".$this->opcion."' type='button' class='btn bg-accion dropdown-toggle rueda_focus' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'  style='width: auto'>"
-                                                                . "<span  class='fa fa-gear'></span>"
-                                                            . "</button>"
-                                                        
-                                                            . "<div  style='background:rgb(215, 211, 211) none repeat scroll 0% 0%;border-radius:20px;' class='dropdown-menu rueda-accion color-0' aria-labelledby='btnGroupDrop".$this->opcion."'>"
-                                                        
-                                                                       
-                                                                            ."<a style='cursor: pointer;' onclick='Eliminar_".$this->opcion."(".$row['id_syllabus'].")' id='delete' role='button' class='dropdown-item delay-toogle btn-table-modal'  title='Eliminar ".$this->abrev ."' >"
-                                                                            ."<span>"
-                                                                            ." <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-trash-2 text-danger'><polyline points='3 6 5 6 21 6'></polyline><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'></path><line x1='10' y1='11' x2='10' y2='17'></line><line x1='14' y1='11' x2='14' y2='17'></line></svg>"
-                                                                            ."Eliminar Fila</span>"
-                                                                            ."</a>"
-                                                            . "</div>"
-                                                        ."</div>";
+                                                     
                                                     }else{
 
                                                         $botones .="<div class='btn-group' role='group' >"
@@ -250,6 +256,9 @@ class Asyllabus extends CI_Controller {
                             $texto .= '{"ID_SILABUS":' . json_encode($row['id_syllabus']) . ','
                                     . '"ID_FACULTAD":' . json_encode($row['id_facultad']) . ','
                                     . '"NOMBRE_SILABUS":' .  json_encode($row['nombre_syllabus'])  . ','
+                                    . '"NOM_CURSO"                 :' . json_encode($row['nom_curso'])  . ','
+
+                                    . '"NOM_CICLO"                 :' . json_encode($row['nom_ciclo'])  . ','
                                     . '"PERIODO":' . json_encode($periodo) . ','
 
                                     . '"PERIODO_ANIO":' .  json_encode($row['periodo_anio'])  . ','
@@ -275,7 +284,6 @@ class Asyllabus extends CI_Controller {
                                     . '"ESTADO_SILABUS_HTML":"' .  $estado . '",'
                                     
                                     . '"ACCION"                 :"' . $botones . '",'
-                                    . '"NOM_CICLO"                 :' . json_encode($row['nom_ciclo'])  . ','
                                     . '"VERSION_PRINCIPAL"                 :' . json_encode($row['version_principal'])  . ','
                                     . '"FECHA_REG"                 :' . json_encode($row['fec_reg'])  . '},';
 
@@ -296,7 +304,171 @@ class Asyllabus extends CI_Controller {
             $data_compt_det= $this->Model_Syllabus->listar_compet_detalle($id_ciclo);  
             
             
-            
+            if(!empty($data_compt_det)){
+
+                $data_diccion = array();
+                if($data_compt_det[0]['compet_gene_uno']== 0 || $data_compt_det[0]['compet_gene_nivel_uno'] === ''){
+                    $data_diccion['general_uno']= array();
+                }else{
+                    $data_diccion['general_uno']= $this->Model_Syllabus->listar_diccionario_compte($data_compt_det[0]['compet_gene_uno'],$data_compt_det[0]['compet_gene_nivel_uno']);
+                }
+                if($data_compt_det[0]['compet_gene_dos']== 0 ||$data_compt_det[0]['compet_gene_nivel_dos']=== ''){
+                    $data_diccion['general_dos']= array();
+                }else{
+                    $data_diccion['general_dos']= $this->Model_Syllabus->listar_diccionario_compte($data_compt_det[0]['compet_gene_dos'],$data_compt_det[0]['compet_gene_nivel_dos']);    
+                }
+                if($data_compt_det[0]['compet_espec_uno']== 0 || $data_compt_det[0]['compet_espec_nivel_uno']=== ''){
+                    $data_diccion['especif_dos']= array();
+                }else{
+                    $data_diccion['especif_uno']= $this->Model_Syllabus->listar_diccionario_compte($data_compt_det[0]['compet_espec_uno'],$data_compt_det[0]['compet_espec_nivel_uno']);    
+                }
+                if( $data_compt_det[0]['compet_espec_dos']== 0  || $data_compt_det[0]['compet_espec_nivel_dos']=== ''){
+                    $data_diccion['especif_dos']= array();
+                }else{
+                    $data_diccion['especif_dos']= $this->Model_Syllabus->listar_diccionario_compte( $data_compt_det[0]['compet_espec_dos'],$data_compt_det[0]['compet_espec_nivel_dos']);      
+                }
+                if( $data_compt_det[0]['compet_espec_tres']== 0  || $data_compt_det[0]['compet_espec_nivel_tres']=== ''){
+                    $data_diccion['especif_tres']= array();
+                }else{
+                    $data_diccion['especif_tres']= $this->Model_Syllabus->listar_diccionario_compte( $data_compt_det[0]['compet_espec_tres'],$data_compt_det[0]['compet_espec_nivel_tres']);
+                }
+                $compt_gene='';
+                $compt_gene_descr='';
+                $compt_espec_1='';
+                $compt_espec_descr_1='';
+                $compt_espec_2='';
+                $compt_espec_descr_2='';
+                $compt_gene_2='';
+                $compt_gene_descr_2='';
+                $compt_espec_3='';
+                $compt_espec_descr_3='';
+                if (!empty($data_diccion['general_uno'])) {
+                    $compt_gene= $data_diccion['general_uno'][0]['nom_compet'];
+                    $compt_gene_descr = (!isset($data_diccion['general_uno'][0]['nivel_uno']) ? '' : $data_diccion['general_uno'][0]['nivel_uno']).' '.(!isset($data_diccion['general_uno'][0]['nivel_dos']) ? '' : $data_diccion['general_uno'][0]['nivel_dos']).' '.(!isset($data_diccion['general_uno'][0]['nivel_tres']) ? '' : $data_diccion['general_uno'][0]['nivel_tres']);
+                }
+                if (!empty($data_diccion['general_dos'])) {
+                    $compt_gene_2= $data_diccion['general_dos'][0]['nom_compet'];
+                    $compt_gene_descr_2 = (!isset($data_diccion['general_dos'][0]['nivel_uno']) ? '' : $data_diccion['general_dos'][0]['nivel_uno']).' '.(!isset($data_diccion['general_dos'][0]['nivel_dos']) ? '' : $data_diccion['general_dos'][0]['nivel_dos']).' '.(!isset($data_diccion['general_dos'][0]['nivel_tres']) ? '' : $data_diccion['general_dos'][0]['nivel_tres']);
+                }
+                //------------------------------------            
+                if (!empty($data_diccion['especif_uno'])) {
+                    $compt_espec_1= $data_diccion['especif_uno'][0]['nom_compet'];
+                    $compt_espec_descr_1 = (!isset($data_diccion['especif_uno'][0]['nivel_uno']) ? '' : $data_diccion['especif_uno'][0]['nivel_uno']).' '.(!isset($data_diccion['especif_uno'][0]['nivel_dos']) ? '' : $data_diccion['especif_uno'][0]['nivel_dos']).' '.(!isset($data_diccion['especif_uno'][0]['nivel_tres']) ? '' : $data_diccion['especif_uno'][0]['nivel_tres']);
+                }
+                if (!empty($data_diccion['especif_dos'])) {
+                    $compt_espec_2= $data_diccion['especif_dos'][0]['nom_compet'];
+                    $compt_espec_descr_2 = (!isset($data_diccion['especif_dos'][0]['nivel_uno']) ? '' : $data_diccion['especif_dos'][0]['nivel_uno']).' '.(!isset($data_diccion['especif_dos'][0]['nivel_dos']) ? '' : $data_diccion['especif_dos'][0]['nivel_dos']).' '.(!isset($data_diccion['especif_dos'][0]['nivel_tres']) ? '' : $data_diccion['especif_dos'][0]['nivel_tres']);
+                }
+                if (!empty($data_diccion['especif_tres'])) {
+                    $compt_espec_3= $data_diccion['especif_tres'][0]['nom_compet'];
+                    $compt_espec_descr_3 = (!isset($data_diccion['especif_tres'][0]['nivel_uno']) ? '' : $data_diccion['especif_tres'][0]['nivel_uno']).' '.(!isset($data_diccion['especif_tres'][0]['nivel_dos']) ? '' : $data_diccion['especif_tres'][0]['nivel_dos']).' '.(!isset($data_diccion['especif_tres'][0]['nivel_tres']) ? '' : $data_diccion['especif_tres'][0]['nivel_tres']);
+                }
+
+                // $parametros_ac = array(
+                //     $accion,
+                //     $id_version_sy,
+                //     $compt_gene,
+                //     $compt_gene_descr,
+                //     $compt_espec_1,
+                //     $compt_espec_descr_1,
+                //     $compt_espec_2,
+                //     $compt_espec_descr_2,
+                //     $user_reg,
+                //     $id_compt_asoci_curso,
+                //     $compt_gene_2,
+                //     $compt_gene_descr_2,                
+                //     $compt_espec_3,
+                //     $compt_espec_descr_3
+                // );
+                // $id_ac =$this->Model_Syllabus->insert_update_compt_asoci_curso($parametros_ac);
+
+                
+                $parametros = array(
+                    'vACCION'        =>'COMPT_ASOCI_CURSO',
+                    'p_id_1'         => $id_compt_asoci_curso,
+                    'p_id_2'       =>  $id_version_sy,
+                    'p_id_3'     => '',
+    
+                    'p_texto1' =>    $compt_gene,
+                    'p_texto2' =>  $compt_gene_descr,
+    
+                    'p_texto3'    => $compt_espec_1,
+                    'p_texto4' =>  $compt_espec_descr_1,
+    
+                    'p_texto5' =>    $compt_espec_2,
+    
+                    'p_estado' => '2',
+                    'p_user' =>  $user_reg,
+    
+                    'p_texto6' =>  $compt_espec_descr_2,
+                    'p_texto7' => $compt_gene_2,
+                    'p_texto8' =>  $compt_gene_descr_2,
+                    'p_texto9' =>  $compt_espec_3,   
+                    'p_texto10' =>  $compt_espec_descr_3,   
+    
+                );
+    
+                $id = $this->contenedor->procedureUpdateOrInsertTables($parametros);
+    
+            }
+
+            $sumilla_curso =$this->Model_Cursos->mirar_sumilla_curso($id_curso);        
+
+            $sumilla_data =$this->Contenedor_Model->get_sumilla_by_version($id_version_sy);        
+                
+
+                if(count($sumilla_data)==0){
+                    $id_sumilla='';
+                }else{
+                    $id_sumilla=$sumilla_data[0]['id_sumilla'];
+                }
+    
+                if(count($sumilla_curso)==0){
+                    $sumilla_curso='';
+                }else{
+                    $sumilla_curso=  $sumilla_curso[0]['descrip_sumilla'];
+                }
+    
+                // $parametros = array(
+                //     $id_version_sy,
+                //     $sumilla_curso,
+                //     $user_reg,
+                //     $id_sumilla
+                // );
+                
+            // $id =$this->Model_Syllabus->update_insert_sumilla($parametros);
+            $parametros = array(
+                'vACCION'        =>'SUMILLA',
+                'p_id_1'         => $id_sumilla,
+                'p_id_2'       =>  $id_version_sy,
+                'p_id_3'     => '',
+                'p_texto1' =>  $sumilla_curso,
+                'p_texto2' => '',
+                'p_texto3'    => '',
+                'p_texto4' =>  '',
+                'p_texto5' => '',
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+
+                'p_texto6' => '',
+                'p_texto7' => '',
+                'p_texto8' =>  '',
+                'p_texto9' =>  '',   
+                'p_texto10' =>  '',   
+            );
+
+            $id = $this->contenedor->procedureUpdateOrInsertTables($parametros);
+
+    }
+
+
+
+    
+    public function Actualizar_compt_aso_curso_only($id_ciclo,$id_version_sy,$user_reg,$accion,$id_compt_asoci_curso='',$id_curso){
+        $data_compt_det= $this->Model_Syllabus->listar_compet_detalle($id_ciclo);  
+        
+        if(!empty($data_compt_det)){
+
             $data_diccion = array();
             if($data_compt_det[0]['compet_gene_uno']== 0 || $data_compt_det[0]['compet_gene_nivel_uno'] === ''){
                 $data_diccion['general_uno']= array();
@@ -355,48 +527,94 @@ class Asyllabus extends CI_Controller {
                 $compt_espec_descr_3 = (!isset($data_diccion['especif_tres'][0]['nivel_uno']) ? '' : $data_diccion['especif_tres'][0]['nivel_uno']).' '.(!isset($data_diccion['especif_tres'][0]['nivel_dos']) ? '' : $data_diccion['especif_tres'][0]['nivel_dos']).' '.(!isset($data_diccion['especif_tres'][0]['nivel_tres']) ? '' : $data_diccion['especif_tres'][0]['nivel_tres']);
             }
 
-            $parametros_ac = array(
-                $accion,
-                $id_version_sy,
-                $compt_gene,
-                $compt_gene_descr,
-                $compt_espec_1,
-                $compt_espec_descr_1,
-                $compt_espec_2,
-                $compt_espec_descr_2,
-                $user_reg,
-                $id_compt_asoci_curso,
-                $compt_gene_2,
-                $compt_gene_descr_2,                
-                $compt_espec_3,
-                $compt_espec_descr_3
+            $parametros = array(
+                'vACCION'        =>'COMPT_ASOCI_CURSO',
+                'p_id_1'         => $id_compt_asoci_curso,
+                'p_id_2'       =>  $id_version_sy,
+                'p_id_3'     => '',
+
+                'p_texto1' =>    $compt_gene,
+                'p_texto2' =>  $compt_gene_descr,
+
+                'p_texto3'    => $compt_espec_1,
+                'p_texto4' =>  $compt_espec_descr_1,
+
+                'p_texto5' =>    $compt_espec_2,
+
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+
+                'p_texto6' =>  $compt_espec_descr_2,
+                'p_texto7' => $compt_gene_2,
+                'p_texto8' =>  $compt_gene_descr_2,
+                'p_texto9' =>  $compt_espec_3,   
+                'p_texto10' =>  $compt_espec_descr_3,   
+
             );
-            $id_ac =$this->Model_Syllabus->insert_update_compt_asoci_curso($parametros_ac);
-   
 
-            $sumilla_curso =$this->Model_Cursos->mirar_sumilla_curso($id_curso);        
+            $id = $this->contenedor->procedureUpdateOrInsertTables($parametros);
 
-            $sumilla_data =$this->Contenedor_Model->get_sumilla_by_version($id_version_sy);        
 
+
+        }
+
+    }
+
+
+    public function Actualizar_sumilla_curso_only($id_ciclo,$id_version_sy,$user_reg,$accion,$id_compt_asoci_curso='',$id_curso){       
+        
+        $sumilla_curso =$this->Model_Cursos->mirar_sumilla_curso($id_curso);        
+
+        $sumilla_data =$this->Contenedor_Model->get_sumilla_by_version($id_version_sy);        
+            
 
             if(count($sumilla_data)==0){
-               $id_sumilla='';
+                $id_sumilla='';
             }else{
                 $id_sumilla=$sumilla_data[0]['id_sumilla'];
             }
 
-        $parametros = array(
-            $id_version_sy,
-            $sumilla_curso[0]['descrip_sumilla'],
-            $user_reg,
-            $id_sumilla
-        );
-               
-        $id =$this->Model_Syllabus->update_insert_sumilla($parametros);
-        
-   
-   
+            if(count($sumilla_curso)==0){
+                $sumilla_curso='';
+            }else{
+                $sumilla_curso=  $sumilla_curso[0]['descrip_sumilla'];
+            }
+
+            // $parametros = array(
+            //     $id_version_sy,
+            //     $sumilla_curso,
+            //     $user_reg,
+            //     $id_sumilla
+            // );
+            
+            
+            // $id =$this->Model_Syllabus->update_insert_sumilla($parametros);
+
+            $parametros = array(
+                'vACCION'        =>'SUMILLA',
+                'p_id_1'         => $id_sumilla,
+                'p_id_2'       =>  $id_version_sy,
+                'p_id_3'     => '',
+                'p_texto1' =>  $sumilla_curso,
+                'p_texto2' => '',
+                'p_texto3'    => '',
+                'p_texto4' =>  '',
+                'p_texto5' => '',
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+
+                'p_texto6' => '',
+                'p_texto7' => '',
+                'p_texto8' =>  '',
+                'p_texto9' =>  '',   
+                'p_texto10' =>  '',   
+            );
+
+            $id = $this->contenedor->procedureUpdateOrInsertTables($parametros);
+
+
     }
+
 
     //------------------Crud ---------------------------------------------------------
     public function Insert_Asyllabus(){
@@ -426,8 +644,10 @@ class Asyllabus extends CI_Controller {
             
             $version_principal        = $this->input->post("version_principal");
 
-            $id_facultad        = 0;
-            $id_depart_univer               = 0;
+            $id_facultad        = null;
+            $id_depart_univer               = null;
+            $id_asignacion_curso               = null;
+
 
             $id_ciclo              = $this->input->post("id_ciclo");
             $id_tipo_estudios              = $this->input->post("id_tipo_estudios");
@@ -436,6 +656,10 @@ class Asyllabus extends CI_Controller {
 
 
 
+           
+           
+           
+           
             $accion = 'INSERTAR_SYLLABUS';
             $parametros = array(
                 $accion,
@@ -463,7 +687,9 @@ class Asyllabus extends CI_Controller {
             	$horas_totales,
                 $id_ciclo,
                 $id_tipo_estudios,
-                $version_principal
+                $version_principal,
+                $id_asignacion_curso,
+                ''
             );
         
             $data=$this->Model_Syllabus->procedureCrud_Syllabus($parametros);
@@ -613,6 +839,13 @@ class Asyllabus extends CI_Controller {
             $user_reg = $_SESSION['usuario'][0]['id_usuario'];
             $version_principal        = $this->input->post("version_principal");
 
+
+
+
+
+
+
+
             $accion = 'ACTUALIZAR_SYLLABUS';
             $parametros = array(
                 $accion,
@@ -640,13 +873,21 @@ class Asyllabus extends CI_Controller {
             	$horas_totales,
                 $id_ciclo,
                 $id_tipo_estudios,
-                $version_principal
+                $version_principal,
+                '',
+                ''
             );
      
             $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
                 //-------------------------------------------------------------------------
             $acciondos = 'LISTAR_SYLLABUS_ID';
-                        $parametrosdos = array(
+            
+            
+            
+            
+            
+
+            $parametrosdos = array(
                 $acciondos,
                 $id_syllabus,
                 '',
@@ -672,11 +913,13 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
+                '',
+                '',
                 ''
             );
 
-            $data =$this->Model_Syllabus->procedureCrud_Syllabus($parametrosdos);
-                 $data =$this->Model_Syllabus->listar_compt_asoci_curso($version_principal);
+            $this->Model_Syllabus->procedureCrud_Syllabus($parametrosdos);
+            $data =$this->Model_Syllabus->listar_compt_asoci_curso($version_principal);
 
             
             $this->Seleccionar_compt_aso($id_ciclo,$version_principal,$user_reg,'E',$data[0]['id_compt_asoci_curso'],$id_curso);
@@ -693,8 +936,16 @@ class Asyllabus extends CI_Controller {
     public function Delete_Asyllabus(){
         if ($this->session->userdata('usuario')) {
             $user_eli = $_SESSION['usuario'][0]['id_usuario'];
-            $id_syllabus =$this->input->post("id_syllabus");
+            $id_syllabus =$this->input->post("id_syllabus");          
             
+
+
+
+
+
+
+
+
             $accion = 'ELIMINAR_SYLLABUS';
               $parametros = array(
                 $accion,
@@ -720,6 +971,8 @@ class Asyllabus extends CI_Controller {
                 '',
                 '',
             	'',
+                '',
+                '',
                 '',
                 '',
                 ''
@@ -773,7 +1026,9 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
-                $version_principal
+                $version_principal,
+                '',
+                ''
             );
 
                 //     echo '<pre>';
@@ -786,6 +1041,8 @@ class Asyllabus extends CI_Controller {
             sleep(1);
             $acciondos = 'LISTAR_SYLLABUS_ID';
             
+
+
 
 
 
@@ -814,6 +1071,8 @@ class Asyllabus extends CI_Controller {
                 '',
                 '',
             	'',
+                '',
+                '',
                 '',
                 '',
                 ''
@@ -861,11 +1120,11 @@ class Asyllabus extends CI_Controller {
                 // exit();
 
             $mail = new PHPMailer(true);
+            $mail->isSMTP();                                      // Set mailer to use SMTP
             try {
                 $mail->CharSet = $this->CharSet;
                 //Server settings
                 $mail->SMTPDebug =  $this->SMTPDebug;                                 // Enable verbose debug output
-                $mail->isSMTP();                                      // Set mailer to use SMTP
                 $mail->Host = $this->Host;                  // Specify main and backup SMTP servers
                 $mail->SMTPAuth = $this->SMTPAuth;                                 // Enable SMTP authentication
                 $mail->Username = $this->Username;                // SMTP username
@@ -912,7 +1171,13 @@ class Asyllabus extends CI_Controller {
 
               $accion = 'LISTAR_SYLLABUS_ID';   
 
-            $parametros = array(
+            
+            
+            
+            
+            
+            
+              $parametros = array(
                 $accion,
                 $id_syllabus,
                 '',
@@ -938,18 +1203,14 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
+                '',
+                '',
                 ''
             );
          
             $data_pdf["data_silabus"] = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
 
-
-           
-
-
             $data_pdf['id_version_sy'] = $data_pdf["data_silabus"][0]['version_principal'];
-
-
             
             $nombres_requisitos=datos_sillabus( $data_pdf['id_version_sy'] ,'requisito');
 
@@ -964,35 +1225,24 @@ class Asyllabus extends CI_Controller {
                 $data_pdf['requisitos_text'] = $cursos_nombres_text;
             }else{
                 $data_pdf['requisitos_text'] = '';
-
             }
        
-
-
-
-
             $nombres_docentes=datos_sillabus( $data_pdf['id_version_sy'] ,'id_docente');
      
-      
             if( $nombres_docentes != null){ 
-
                 $ids_docentes = explode(",", $nombres_docentes );
                 $docentes_nom = array();
                 foreach ($ids_docentes as $key => $valor) {
                         $docente =$this->contenedor->get_lista_docentes_id($valor);
-                        array_push($docentes_nom, $docente[0]['nom_docente']);
+                        array_push($docentes_nom, $docente[0]['nom_usu_docente']);
                 }
                 $docentes_nombres_text   = implode(",", $docentes_nom);                        
                 $data_pdf['docentes_text'] = $docentes_nombres_text;
 
             }else{
                 $data_pdf['docentes_text'] = '';
-
             }
    
-
-
-
             $data_pdf["compt_asoci_curso"] = $this->Model_Syllabus->listar_compt_asoci_curso($data_pdf["data_silabus"][0]['version_principal']);
             $data_pdf["forma_herrami_eval"] = $this->Model_Syllabus->listar_forma_herrami_eval($data_pdf["data_silabus"][0]['version_principal']);
             $data_pdf["lista_org_aprendizaje"] = $this->Model_Syllabus->listar_compt_org_aprendizaje($data_pdf["data_silabus"][0]['version_principal']);
@@ -1005,13 +1255,10 @@ class Asyllabus extends CI_Controller {
             $data_pdf["biblio_obliga"] =$this->Model_Syllabus->listar_referencias_bibliograficas($data_pdf["data_silabus"][0]['version_principal'],'obligatorio');
             $data_pdf["biblio_consult"] =$this->Model_Syllabus->listar_referencias_bibliograficas($data_pdf["data_silabus"][0]['version_principal'],'consulta');
 
-
-
-
-             // echo '<pre>';
+            //  echo '<pre>';
             // print_r($data_pdf["data_silabus"][0]);
             // echo '</pre>';
-
+            // exit();
 
             $defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
             $fontData = $defaultFontConfig['fontdata'];
@@ -1058,6 +1305,8 @@ class Asyllabus extends CI_Controller {
             $datos['id_syllabus'] = $id_syllabus;
 
             $accion = 'LISTAR_SYLLABUS_ID';
+            
+            
             $parametros = array(
                 $accion,
                 $id_syllabus,
@@ -1084,11 +1333,19 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
+                '',
+                '',
                 ''
             );
 
 
             $datos["data_silabus"] = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
+
+
+            if(empty($datos["data_silabus"] )){
+                redirect('/login');
+            }
+
             $datos["data_silabus_version"] = $this->Model_Syllabus->listar_syversion_id_sy($id_syllabus);
 
             $id_syllabus_version = $datos["data_silabus"][0]['version_principal'];
@@ -1175,7 +1432,7 @@ class Asyllabus extends CI_Controller {
             $datos['tituloSecundario2']  = 'Syllabus Secciones';
 
             $accion = 'LISTAR_SYLLABUS_ID_VERSION';
-            
+        
             $parametros = array(
                 $accion,
                 $id_syllabus,
@@ -1202,11 +1459,18 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
-                $id_version_sy
+                $id_version_sy,
+                '',
+                ''
             );
          
 
             $datos["data_silabus"] = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
+
+            
+            if(empty($datos["data_silabus"] )){
+                redirect('/login');
+            }
             
             $datos["compt_asoci_curso"] = $this->Model_Syllabus->listar_compt_asoci_curso($id_version_sy);
             $datos["forma_herrami_eval"] = $this->Model_Syllabus->listar_forma_herrami_eval($id_version_sy);
@@ -1259,6 +1523,12 @@ class Asyllabus extends CI_Controller {
             $id_compt_asoci_curso  = $this->input->post("id_compt_asoci_curso");           
 
             $accion = 'ACTUALIZAR_SYLLABUS_DATOS_GENERALES';
+           
+           
+
+
+
+
             $parametros = array(
                 $accion,
                 $id_version_sy,
@@ -1285,19 +1555,18 @@ class Asyllabus extends CI_Controller {
             	$horas_totales,
                  $id_ciclo,
                  $id_tipo_estudios,
+                 $version_sy_principal ,
+                 '',
                  ''
             );
                      
             $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
-            $this->Seleccionar_compt_aso($id_ciclo,$id_version_sy,$user_reg,'E',$id_compt_asoci_curso,$id_curso);
-        //-----------------------------------------------
-
-            $nombre_syllabus =datos_sillabus($id_version_sy,'nombre_syllabus');
+         
+            $nombre_syllabus =datos_sillabus($id_version_sy,'nom_curso');
             $periodo_ciclo=datos_sillabus($id_version_sy,'periodo_ciclo');
             $periodo_anio=datos_sillabus($id_version_sy,'periodo_anio');
 
-        
-            echo  $nombre_syllabus.','.$periodo_ciclo.','.$periodo_anio;
+            echo  $nombre_syllabus.','.$periodo_anio.','.$periodo_ciclo;
 
         }
         else{
@@ -1331,25 +1600,53 @@ class Asyllabus extends CI_Controller {
 
             $user_reg = $_SESSION['usuario'][0]['id_usuario'];
 
-            $accion    = $this->input->post("accion");  
-            $parametros = array(
-                $accion,
-                $id_version_sy,
-                $compt_gene,
-                $compt_gene_descr,
-                $compt_espec_1,
-                $compt_espec_descr_1,
-                $compt_espec_2,
-                $compt_espec_descr_2,
-                $user_reg,
-                $id_compt_asoci_curso,
-                $compt_gene_2,
-                $compt_gene_descr_2,
-                $compt_espec_3,
-                $compt_espec_descr_3
-            );
+            // $accion    = $this->input->post("accion");  
+            // $parametros = array(
+            //     $accion,
+            //     $id_version_sy,
+            //     $compt_gene,
+            //     $compt_gene_descr,
+            //     $compt_espec_1,
+            //     $compt_espec_descr_1,
+            //     $compt_espec_2,
+            //     $compt_espec_descr_2,
+            //     $user_reg,
+            //     $id_compt_asoci_curso,
+            //     $compt_gene_2,
+            //     $compt_gene_descr_2,
+            //     $compt_espec_3,
+            //     $compt_espec_descr_3
+            // );
                    
-            $id =$this->Model_Syllabus->insert_update_compt_asoci_curso($parametros);
+            // $id =$this->Model_Syllabus->insert_update_compt_asoci_curso($parametros);
+
+            
+            $parametros = array(
+                'vACCION'        =>'COMPT_ASOCI_CURSO',
+                'p_id_1'         => $id_compt_asoci_curso,
+                'p_id_2'       =>  $id_version_sy,
+                'p_id_3'     => '',
+
+                'p_texto1' =>    $compt_gene,
+                'p_texto2' =>  $compt_gene_descr,
+
+                'p_texto3'    => $compt_espec_1,
+                'p_texto4' =>  $compt_espec_descr_1,
+
+                'p_texto5' =>    $compt_espec_2,
+
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+
+                'p_texto6' =>  $compt_espec_descr_2,
+                'p_texto7' => $compt_gene_2,
+                'p_texto8' =>  $compt_gene_descr_2,
+                'p_texto9' =>  $compt_espec_3,   
+                'p_texto10' =>  $compt_espec_descr_3,   
+
+            );
+
+            $id = $this->contenedor->procedureUpdateOrInsertTables($parametros);
             
           
             /*
@@ -1372,6 +1669,47 @@ class Asyllabus extends CI_Controller {
         }
     }
 
+
+    public function Actualizar_compet_curso(){
+        if ($this->session->userdata('usuario')) {
+            $id_ciclo              = $this->input->post("id_ciclo");
+            $id_version_sy        = $this->input->post("id_version_sy");
+            $user_reg = $_SESSION['usuario'][0]['id_usuario'];
+            $id_compt_asoci_curso  = $this->input->post("id_compt_asoci_curso");           
+            $id_curso               = $this->input->post("cbx_basicos_id_curso");
+
+            $this->Actualizar_compt_aso_curso_only($id_ciclo,$id_version_sy,$user_reg,'E',$id_compt_asoci_curso,$id_curso);
+        
+            $data =$this->Model_Syllabus->listar_compt_asoci_curso($id_version_sy);
+            echo json_encode($data);
+
+        }
+        else{
+            redirect('/login');
+        }
+    }
+
+
+    public function Actualizar_sumilla_curso(){
+        if ($this->session->userdata('usuario')) {
+            $id_ciclo              = $this->input->post("id_ciclo");
+            $id_version_sy        = $this->input->post("id_version_sy");
+            $user_reg = $_SESSION['usuario'][0]['id_usuario'];
+            $id_compt_asoci_curso  = $this->input->post("id_compt_asoci_curso");           
+            $id_curso               = $this->input->post("cbx_basicos_id_curso");
+
+            $this->Actualizar_sumilla_curso_only($id_ciclo,$id_version_sy,$user_reg,'E',$id_compt_asoci_curso,$id_curso);
+            
+            $data =$this->Model_Syllabus->listar_sumilla_sy($id_version_sy);
+            echo json_encode($data);
+
+        
+        }
+        else{
+            redirect('/login');
+        }
+    }
+
     public function Insert_Update_Asyllabus_sumilla(){
         if ($this->session->userdata('usuario')) {
             
@@ -1381,16 +1719,42 @@ class Asyllabus extends CI_Controller {
             $user_reg = $_SESSION['usuario'][0]['id_usuario'];
 
 
-            $parametros = array(
-                $id_version_sy,
-                $desc_sumilla,
-                $user_reg,
-                $id_sumilla
-            );
+            // $parametros = array(
+            //     $id_version_sy,
+            //     $desc_sumilla,
+            //     $user_reg,
+            //     $id_sumilla
+            // );
                    
-            $id =$this->Model_Syllabus->update_insert_sumilla($parametros);
+            // $id =$this->Model_Syllabus->update_insert_sumilla($parametros);
             
-            echo $id->ID;
+
+            $parametros = array(
+                'vACCION'        =>'SUMILLA',
+                'p_id_1'         => $id_sumilla,
+                'p_id_2'       =>  $id_version_sy,
+                'p_id_3'     => '',
+                'p_texto1' =>  $desc_sumilla,
+                'p_texto2' => '',
+                'p_texto3'    => '',
+                'p_texto4' =>  '',
+                'p_texto5' => '',
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+
+                'p_texto6' => '',
+                'p_texto7' => '',
+                'p_texto8' =>  '',
+                'p_texto9' =>  '',   
+                'p_texto10' =>  '',   
+            );
+
+            $id = $this->contenedor->procedureUpdateOrInsertTables($parametros);
+
+            // echo $id->ID;
+            echo $id[0]['ID']; 
+
+
 
         }
         else{
@@ -1407,16 +1771,41 @@ class Asyllabus extends CI_Controller {
             $user_reg = $_SESSION['usuario'][0]['id_usuario'];
 
 
-            $parametros = array(
-                $id_version_sy,
-                $desc_result_gen_apr,
-                $user_reg,
-                $id_result_gen_apr 
-            );
+            // $parametros = array(
+            //     $,
+            //     $,
+            //     $,
+            //     $ 
+            // );
                    
-            $id =$this->Model_Syllabus->update_insert_result_gen_apr($parametros);
+            // $id =$this->Model_Syllabus->update_insert_result_gen_apr($parametros);
             
-            echo $id->ID;
+            // echo $id->ID;
+
+            $parametros = array(
+                'vACCION'        =>'RESULT_GEN_APR',
+                'p_id_1'         => $id_result_gen_apr,
+                'p_id_2'       => $id_version_sy,
+                'p_id_3'     => '',
+
+                'p_texto1' =>  $desc_result_gen_apr,
+                'p_texto2' => '',
+                'p_texto3'    => '',
+                'p_texto4' =>  '',
+                'p_texto5' => '',
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+  
+                'p_texto6' => '',
+                'p_texto7' => '',
+                'p_texto8' =>  '',
+                'p_texto9' =>  '',   
+                'p_texto10' =>  '',   
+            );
+
+
+            $data=$this->contenedor->procedureUpdateOrInsertTables($parametros);
+            echo $data[0]['ID']; 
 
         }
         else{
@@ -1434,16 +1823,43 @@ class Asyllabus extends CI_Controller {
             $user_reg = $_SESSION['usuario'][0]['id_usuario'];
 
 
-            $parametros = array(
-                $id_version_sy,
-                $desc_estrateg_didact,
-                $user_reg,
-                $id_estrateg_didact
-            );
+            // $parametros = array(
+            //     $id_version_sy,
+            //     $desc_estrateg_didact,
+            //     $user_reg,
+            //     $id_estrateg_didact
+            // );
                    
-            $id =$this->Model_Syllabus->update_insert_estrategias_didactica($parametros);
+            // $id =$this->Model_Syllabus->update_insert_estrategias_didactica($parametros);
             
-            echo $id->ID;
+            // echo $id->ID;
+
+            $parametros = array(
+                'vACCION'        =>'ESTRATEGIAS_DIDACTICAS',
+                'p_id_1'         => $id_estrateg_didact,
+                'p_id_2'       => $id_version_sy,
+                'p_id_3'     => '',
+                'p_texto1' =>  $desc_estrateg_didact,
+                'p_texto2' => '',
+                'p_texto3'    => '',
+                'p_texto4' =>  '',
+                'p_texto5' => '',
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+  
+                'p_texto6' => '',
+                'p_texto7' => '',
+                'p_texto8' =>  '',
+                'p_texto9' =>  '',   
+                'p_texto10' =>  '',   
+            );
+
+
+            $data=$this->contenedor->procedureUpdateOrInsertTables($parametros);
+
+            echo $data[0]['ID']; 
+
+
 
         }
         else{
@@ -1650,22 +2066,30 @@ class Asyllabus extends CI_Controller {
             $tipo_bibliografia    = $this->input->post("tipo_bibliografia");  
 
             $parametros = array(
-                $id_version_sy,
-                $tipo_bibliografia,
-                $nom_referencias_bibliograficas,
-                $user_reg
+                'vACCION'        =>'REFERENCIAS_BIBLIOGRAFICAS',
+                'p_id_1'         => '',
+                'p_id_2'       => $id_version_sy,
+                'p_id_3'     => '',
+                'p_texto1' =>  $nom_referencias_bibliograficas,
+                'p_texto2' =>  $tipo_bibliografia,
+                'p_texto3'    => '',
+                'p_texto4' =>  '',
+                'p_texto5' => '',
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+  
+                'p_texto6' => '',
+                'p_texto7' => '',
+                'p_texto8' =>  '',
+                'p_texto9' =>  '',   
+                'p_texto10' =>  '',   
             );
 
-            /*
-            echo "<pre>";
-            print_r($parametros);
-            echo "</pre>";
 
-            exit();
-            */
-                   
-            $id =$this->Model_Syllabus->insert_referencias_bibliograficas($parametros);
-            echo $id->ID;
+            $data=$this->contenedor->procedureUpdateOrInsertTables($parametros);
+
+            echo $data[0]['ID']; 
+
         }
         else{
             redirect('/login');
@@ -1682,15 +2106,33 @@ class Asyllabus extends CI_Controller {
 
             $user_reg = $_SESSION['usuario'][0]['id_usuario'];
 
-
             $parametros = array(
-                $id_referencias_bibliograficas,
-                $nom_biblio,
-                $user_reg
+                'vACCION'        =>'REFERENCIAS_BIBLIOGRAFICAS',
+                'p_id_1'         =>  $id_referencias_bibliograficas,
+                'p_id_2'       => '',
+                'p_id_3'     => '',
+                'p_texto1' =>  $nom_biblio,
+                'p_texto2' =>  '',
+                'p_texto3'    => '',
+                'p_texto4' =>  '',
+                'p_texto5' => '',
+                'p_estado' => '2',
+                'p_user' =>  $user_reg,
+  
+                'p_texto6' => '',
+                'p_texto7' => '',
+                'p_texto8' =>  '',
+                'p_texto9' =>  '',   
+                'p_texto10' =>  '',   
             );
 
-                   
-            $this->Model_Syllabus->edit_referencias_bibliograficas($parametros);
+
+            $data=$this->contenedor->procedureUpdateOrInsertTables($parametros);
+
+            echo $data[0]['ID']; 
+
+
+
         }
         else{
             redirect('/login');
@@ -1797,6 +2239,23 @@ class Asyllabus extends CI_Controller {
             redirect('/login');
         }
     }
+
+    
+    public function Combo_plataformas_herramientas() {
+        if ($this->session->userdata('usuario')) {
+            $datos['id_version_sy']  = $this->input->post("id_version_sy");
+
+            // $this->load->library('layout');
+            // $this->layout->view();
+
+            $this->load->view($this->url_carpeta.'datos_sy/combo_herramienta.php', $datos);
+
+        }
+        else{
+            redirect('/login');
+        }
+    }
+
 
     public function Insert_Asyllabus_plataformas_herramientas(){
         if ($this->session->userdata('usuario')) {
@@ -2016,7 +2475,9 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
-                $id_version_sy
+                $id_version_sy,
+                '',
+                ''
             );
         
 
@@ -2087,7 +2548,7 @@ class Asyllabus extends CI_Controller {
             foreach ($datos as $row) {
                 $lista .="
                 <tr>
-                    <td WIDTH='90%' >   <input type='text' disabled class='form-control' value='".$row['nom_plataformas_herramientas']."'>  </td> 
+                <td WIDTH='95%' > <b>".$row['nom_recurso']."</b> :  ".$row['recurso_descrip']." </td> 
                     
                 </tr>";
             }
@@ -2163,6 +2624,11 @@ class Asyllabus extends CI_Controller {
             $datos['tituloSecundario2']  = 'Syllabus Secciones';
             $accion = 'LISTAR_SYLLABUS_ID_VERSION';
             
+            
+
+
+
+
             $parametros = array(
                 $accion,
                 $id_syllabus,
@@ -2189,11 +2655,18 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
-                $id_version_sy
+                $id_version_sy,
+                '',
+                ''
             );
         
 
             $datos["data_silabus"] = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
+
+                
+            if(empty($datos["data_silabus"] )){
+                redirect('/login');
+            }
             
             $datos["compt_asoci_curso"] = $this->Model_Syllabus->listar_compt_asoci_curso($id_version_sy);
 
@@ -2250,11 +2723,12 @@ class Asyllabus extends CI_Controller {
 
 
             $mail = new PHPMailer(true);
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+
                     try {
                         $mail->CharSet = $this->CharSet;
                         //Server settings
                         $mail->SMTPDebug =  $this->SMTPDebug;                                 // Enable verbose debug output
-                        $mail->isSMTP();                                      // Set mailer to use SMTP
                         $mail->Host = $this->Host;                  // Specify main and backup SMTP servers
                         $mail->SMTPAuth = $this->SMTPAuth;                                 // Enable SMTP authentication
                         $mail->Username = $this->Username;                // SMTP username
@@ -2263,8 +2737,9 @@ class Asyllabus extends CI_Controller {
                         $mail->Port = $this->Port;                                   // TCP port to connect to
 
                         $mail->setFrom('pupixoxd@gmail.com', 'Alerta de Syllabus'); //desde donde se envia            
-                        $mail->addAddress('acosta.pedro.juan1956@gmail.com', 'papa'); //desde donde se envia
-            
+                        $mail->addAddress('180000323@cientifica.edu.pe', 'Alerta de Syllabus'); //desde donde se envia
+                        // $mail->addAddress('Pedro.Acosta@inei.gob.pe', 'Alerta de Syllabus'); //desde donde se envia
+
                         $mail->addAddress($usu_correo_actual, $usu_nombre_correo_actual ); //desde donde se envia
 
                         foreach ($correos as $key => $valores) {
@@ -2392,12 +2867,15 @@ class Asyllabus extends CI_Controller {
             $valor_porcentajes_syllabus_ficha_eval4= ($porcentaje_syllabus_ficha_eval4->porcentaje_syllabus == null ? 0 : $porcentaje_syllabus_ficha_eval4->porcentaje_syllabus);
             $valor_porcentajes_syllabus_ficha_eval5= ($porcentaje_syllabus_ficha_eval5->porcentaje_syllabus == null ? 0 : $porcentaje_syllabus_ficha_eval5->porcentaje_syllabus);
             $valor_porcentajes_syllabus_ficha_eval6= ($porcentaje_syllabus_ficha_eval6->porcentaje_syllabus == null ? 0 : $porcentaje_syllabus_ficha_eval6->porcentaje_syllabus);
-
-
-
-
             $accion = 'LISTAR_SYLLABUS_ID';
             
+
+
+
+
+
+
+
             $parametros = array(
                 $accion,
                 $id_syllabus,
@@ -2422,6 +2900,8 @@ class Asyllabus extends CI_Controller {
                 '',
                 '',
             	'',
+                '',
+                '',
                 '',
                 '',
                 ''
@@ -2707,10 +3187,17 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
-                $id_version_sy
+                $id_version_sy,
+                '',
+                ''
             );        
 
             $datos["data_silabus"] = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
+
+                
+            if(empty($datos["data_silabus"] )){
+                redirect('/login');
+            }
 
             $datos['id_syllabus'] = $id_syllabus;
             $datos['id_version_sy'] = $id_version_sy;
@@ -2758,36 +3245,53 @@ class Asyllabus extends CI_Controller {
                 $user_reg
             );            
              $this->Model_Syllabus->upd_ficha_eval($parametro1);
-
-
-
-
-
-
-
-
-
-             
             foreach ($criterio as $row) {
-                $parametros = array(
-                    $id_ficha_eval,
-                    $row['id_compet'],
-                    $row['logrado'],
-                    $row['logrado_puntaje'],
-                    $row['en_proceso'],
-                    $row['en_proceso_puntaje'],
-                    $row['no_logrado'],
-                    $row['no_logrado_puntaje'],
-                    $user_reg,
-                    $row['id_criti'] ,
-                );            
+                // $parametros = array(
+                //     $id_ficha_eval,
+                //     $row['id_compet'],
+                //     $row['logrado'],
+                //     $row['logrado_puntaje'],
+                //     $row['en_proceso'],
+                //     $row['en_proceso_puntaje'],
+                //     $row['no_logrado'],
+                //     $row['no_logrado_puntaje'],
+                //     $user_reg,
+                //     $row['id_criti'] ,
+                // );            
 
                 // echo '<pre>';
                 // print_r( $parametros );
                 // echo '</pre>';
                 
                 // exit();
-                 $id =$this->Model_Syllabus->insert_update_eval_ficha($parametros);
+                //  $id =$this->Model_Syllabus->insert_update_eval_ficha($parametros);
+
+                 $parametros = array(
+                    'vACCION'        =>'CRITERIO_EVAL',
+                    'p_id_1'         =>  $id_ficha_eval,
+                    'p_id_2'       =>  $row['id_compet'],
+                    'p_id_3'     =>  $row['id_criti'],
+                    'p_texto1' =>  $row['logrado'],
+                    'p_texto2' => $row['logrado_puntaje'],
+                    'p_texto3'    => $row['en_proceso'],
+                    'p_texto4' =>  $row['en_proceso_puntaje'],
+                    'p_texto5' => $row['no_logrado'],
+                    'p_estado' => '2',
+                    'p_user' =>  $user_reg,
+    
+                    'p_texto6' => $row['no_logrado_puntaje'],
+                    'p_texto7' => '',
+                    'p_texto8' =>  '',
+                    'p_texto9' =>  '',   
+                    'p_texto10' =>  '',   
+                );
+
+            // echo '<pre>';
+            //     print_r( $parametros );
+            //     echo '</pre>';
+                
+
+                 $this->contenedor->procedureUpdateOrInsertTables($parametros);
 
             }
 
@@ -2812,7 +3316,6 @@ class Asyllabus extends CI_Controller {
             $datos['formulario_eval_6']             = 'formulario_eval_6';
 
             $datos['tituloSecundario2']  = 'Ficha de Evaluación Secciones';
-
           
             $accion = 'LISTAR_SYLLABUS_ID_VERSION';
             $parametros = array(
@@ -2841,7 +3344,9 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
-                $id_version_sy
+                $id_version_sy,
+                '',
+                ''
             );    
 
             $datos["data_silabus"] = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
@@ -2910,7 +3415,9 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
-                $id_version_sy
+                $id_version_sy,
+                '',
+                ''
             );      
 
             $datos["data_silabus"] = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
@@ -2944,6 +3451,13 @@ class Asyllabus extends CI_Controller {
             
             $accion = 'LISTAR_SYLLABUS_ID';
         
+
+
+
+
+
+
+
             $parametros = array(
                 $accion,
                 $id_syllabus,
@@ -2970,11 +3484,17 @@ class Asyllabus extends CI_Controller {
             	'',
                 '',
                 '',
+                '',
+                '',
                 ''
             );
          
             $data_pdf["data_silabus"] = $this->Model_Syllabus->procedureCrud_Syllabus($parametros);
 
+            
+            // if(empty($datos["data_silabus"] )){
+            //     redirect('/login');
+            // }
             // echo '<pre>';
             // print_r($data_pdf["data_silabus"][0]);
             // echo '</pre>';

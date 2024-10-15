@@ -84,11 +84,15 @@
         var inputFocus = '';
 
         /********* */
+        var datos_Generales = fnDataGeneral(); 
 
         $("#cbx_basicos_id_status").select2({
             width: 'resolve',
+            // dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+
         });
 
+     
     });
 
     function fn_limpiarPopup(){

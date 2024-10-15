@@ -136,8 +136,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
                        
             <!-- Full width modal content -->
-            <div id="modal_dicionario_curso" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-full-width">
+            <div id="modal_dicionario_curso" class="modal fade" data-backdrop="static" role="dialog"
+            
+            aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-full-width modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header modal-colored-header bg-primary">
                             <h4 class="modal-title" id="fullWidthModalLabel_titulo">COMPETENCIAS ESPECIFICAS</h4>
@@ -186,7 +188,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </form>
                         </div>
 
-
                         <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
                         </div>
@@ -198,8 +199,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
             <!-- Full width modal content -->
-            <div id="modal_dicionario_sumilla" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-full-width">
+            <div id="modal_dicionario_sumilla" class="modal fade"  data-backdrop="static" data-keyboard="false" 
+             role="dialog" 
+            aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-full-width modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header modal-colored-header bg-primary">
                             <h4 class="modal-title" id="fullWidthModalLabel_titulo_sumilla">SUMILLA DEL CURSO</h4>

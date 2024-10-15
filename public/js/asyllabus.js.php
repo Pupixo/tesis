@@ -24,11 +24,11 @@
     }
 
     function loading_tabla(flag) {
-        var objGeneral = fnDataGeneral();
-            
+        var objGeneral = fnDataGeneral();      
     }
 
     function cargarTablaAsyllabus(param= null){
+        console.log("🚀 ~ file: asyllabus.js.php:31 ~ cargarTablaAsyllabus ~ param:", param)
         var objGeneral = fnDataGeneral();
 
         $(objGeneral._tabla).dataTable().fnDestroy();
@@ -47,7 +47,11 @@
             "columns": [
                 {"data": "ID_SILABUS", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "ID_FACULTAD", "className": "never", "autoWidth": true, "orderable": false, "visible": false},
-                {"data": "NOMBRE_SILABUS" },
+                {"data": "NOMBRE_SILABUS", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
+                {"data": "NOM_CURSO" },
+
+                {"data": "NOM_CICLO"},
+
                 {"data": "PERIODO" },
 
                 {"data": "PERIODO_ANIO", "className": "never", "autoWidth": true, "orderable": false, "visible": false},
@@ -71,25 +75,10 @@
                 {"data": "USER_ACT", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "ESTADO_SILABUS_HTML" },
                 {"data": "ACCION" },
-                {"data": "NOM_CICLO", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
                 {"data": "VERSION_PRINCIPAL", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
-                {"data": "FECHA_REG", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
 
+                {"data": "FECHA_REG", "className": "never", "autoWidth": true, "orderable": false, "visible": false },
             ]
-            /*
-                "columnDefs": [
-                    {
-                        "className": "never", 
-                        "targets": [ 0],
-                        "visible": false,
-                        "searchable": false
-                    },
-                    {
-                        "targets": [ 1],
-                        "visible": false
-                    }
-                ]
-            */
         });
         return false;
     }   
@@ -101,18 +90,51 @@
 
          /**select2*/
         var datos_Generales = fnDataGeneral();
-        $(datos_Generales.modal_principal+" "+"#cbx_multiple_id_docente").select2();
+        
+        $(datos_Generales.modal_principal+" "+"#cbx_multiple_id_docente").select2({
+            width: 'resolve',
+            dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+        });
 
-        $(datos_Generales.modal_principal+" "+"#periodo_ciclo").select2();
-        $(datos_Generales.modal_principal+" "+"#cbx_basicos_periodo_anio").select2();
-        $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_depart_uni").select2();
-        $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_plan_estudios").select2();
-        $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_carrera").select2();
-        // $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_director").select2("readonly", true);
-        $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_curso").select2();
 
-        $(datos_Generales.modal_principal+" "+"#nom_ciclo").select2();
-        $(datos_Generales.modal_principal+" "+"#requisito").select2();
+        $(datos_Generales.modal_principal+" "+"#periodo_ciclo").select2({
+            width: 'resolve',
+            dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+        });
+
+        $(datos_Generales.modal_principal+" "+"#cbx_basicos_periodo_anio").select2({
+            width: 'resolve',
+            dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+        });
+
+        $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_depart_uni").select2({
+            width: 'resolve',
+            dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+        });
+
+        $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_plan_estudios").select2({
+            width: 'resolve',
+            dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+        });
+
+
+        $(datos_Generales.modal_principal+" "+"#cbx_basicos_id_curso").select2({
+            width: 'resolve',
+            dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+        });
+
+
+        $(datos_Generales.modal_principal+" "+"#nom_ciclo").select2({
+            width: 'resolve',
+            dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+        });
+
+
+        
+        $(datos_Generales.modal_principal+" "+"#requisito").select2({
+            width: 'resolve',
+            dropdownParent: $(datos_Generales.modal_principal+' '+datos_Generales.formulario_principal)
+        });
 
         $(datos_Generales.modal_principal+" "+'#cbx_basicos_id_carrera').html('<option value="0" selected="">SELECCIONE</option>');
         $(datos_Generales.modal_principal+" "+'#cbx_basicos_id_director').html('<option value="0" selected="">SELECCIONE</option>');
@@ -131,7 +153,6 @@
         $(objGeneral.modal_principal+" "+'#version_principal').val('');
         $(objGeneral.modal_principal+" "+'#cbx_basicos_id_est_syllabus').val('0');
 
-		$(objGeneral.modal_principal+" "+'#nombre_syllabus').val('');
     	$(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val(0).trigger("change");
     	$(objGeneral.modal_principal+" "+'#periodo_ciclo').val('').trigger("change");
 
@@ -191,14 +212,13 @@
                 var data = $(objGeneral._tabla).DataTable().row(fila).data();
                 console.log("🚀 ~ file: asyllabus.js.php ~ line 199 ~ fn_AbrirModal ~ data", data)
                 /* Poner data en modal */
-                $(objGeneral.modal_principal+" "+"#titulo_modal_xl").text('Actualizar Silabu '+data['NOMBRE_SILABUS']+' ' +data['PERIODO']);
+                $(objGeneral.modal_principal+" "+"#titulo_modal_xl").text('Actualizar Silabu '+data['NOM_CURSO']+' ' +data['PERIODO']);
                 /*id para actualizar */
                 $(objGeneral.modal_principal+" "+'#id_'+objGeneral._abrev).val(id_row);
                 $(objGeneral.modal_principal+" "+'#version_principal').val(data['VERSION_PRINCIPAL']);
                 $(objGeneral.modal_principal+" "+'#cbx_basicos_id_est_syllabus').val(data['ESTADO']);
-                $(objGeneral.modal_principal+" "+'#nombre_syllabus').val(data['NOMBRE_SILABUS']);
-                $(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val(data['PERIODO_ANIO']).trigger("change");
-                $(objGeneral.modal_principal+" "+'#periodo_ciclo').val(data['PERIODO_CICLO']).trigger("change");    
+                $(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val((data['PERIODO_ANIO']==null ? '0' : data['PERIODO_ANIO'])).trigger("change");
+                $(objGeneral.modal_principal+" "+'#periodo_ciclo').val((data['PERIODO_CICLO']==null ? '' : data['PERIODO_CICLO'])).trigger("change");    
                 $(objGeneral.modal_principal+" "+'#cbx_basicos_id_plan_estudios').val(data['ID_PLAN_ESTUDIOS']).trigger("change");
                 setTimeout(function(){  
                     $(objGeneral.modal_principal+" "+'#cbx_basicos_id_carrera').val(data['ID_CARRERA']).trigger("change");
@@ -213,11 +233,17 @@
                 }, 7000);
                 /*select multiple */
                     var ids_docentes = data['ID_DOCENTE'];
-                    var ids_docentes_data = ids_docentes.split(','); 
+
+                    if(ids_docentes==null || ids_docentes===''){
+
+                    }else{
+                        var ids_docentes_data = ids_docentes.split(','); 
                         $.each(ids_docentes_data, function(index, value) {
                             $(objGeneral.modal_principal+" "+"#cbx_multiple_id_docente > option[value='"+value+"']").prop("selected","selected");
                         });
                         $(objGeneral.modal_principal+" "+"#cbx_multiple_id_docente").trigger("change");
+                    }
+              
 
                 /* ¡¡¡¡¡¡¡ */
         }else{            
@@ -234,13 +260,6 @@
     function Valida_Asyllabus() {
         var objGeneral = fnDataGeneral();
    
-        if($(objGeneral.modal_principal+" "+'#nombre_syllabus').val().trim() === '') {
-            msgDate = 'Debe ingresar un nombre de silabus';
-            inputFocus =objGeneral.modal_principal+" "+ '#nombre_syllabus';
-             return false;
-
-        }
-
         if($(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val().trim() === '0') {
             msgDate = 'Debe ingresar el año de periodo';
             inputFocus =objGeneral.modal_principal+" "+ '#cbx_basicos_periodo_anio';
@@ -353,17 +372,13 @@
 
     function Insert_Update_Asyllabus(Accion){
         var objGeneral = fnDataGeneral();
-        // var dataString = $(objGeneral.modal_principal+" "+objGeneral.formulario_principal).serialize();                // console.log(dataString);
-        //   return false;
-
-
                 if (Valida_Asyllabus()) {
 
                                     var dataString = {
 
                                         'id_asyllabus': $(objGeneral.modal_principal+" "+'#id_asyllabus').val().trim() ,
                                         'cbx_basicos_id_est_syllabus': $(objGeneral.modal_principal+" "+'#cbx_basicos_id_est_syllabus').val().trim() ,
-                                        'nombre_syllabus': $(objGeneral.modal_principal+" "+'#nombre_syllabus').val().trim(),
+                                        'nombre_syllabus': '',
                                         'cbx_basicos_periodo_anio': $(objGeneral.modal_principal+" "+'#cbx_basicos_periodo_anio').val().trim(),
                                         'periodo_ciclo': $(objGeneral.modal_principal+" "+'#periodo_ciclo').val().trim() ,
 
@@ -393,12 +408,7 @@
 
                                     };
 
-
-
                     if(Accion === "A"){
-
-
-
 
                             $.ajax({
                             type  : "POST",
@@ -467,7 +477,6 @@
 
         var id = id;
         Swal.fire({
-            //title: '¿Realmente quieres eliminar el registro de '+ nombre +'?',
             title: '¿Realmente desea eliminar el registro',
             text: "El registro será eliminado permanentemente",
             type: 'warning',
@@ -589,7 +598,60 @@
 
         var estados_reservas =$('#estados_silabus').val();
       //  $( "#limpiar_tabla" ).html('');
-        $("#limpiar_tabla").html('<table id="tblasyllabus"  class="table table-striped table-bordered table-hover table-primary" style="width:100%"  role="grid" aria-describedby="example1_info"> <thead> <tr> <th class="text-center"> <b>ID_SILABUS </b></th><th class="text-center"> <b>ID_FACULTAD </b></th>  <th class="text-center"> <b>NOMBRE SILABUS </b></th> <th class="text-center"> <b>PERIODO</b></th><th class="text-center"> <b>PERIODO ANIO</b></th>  <th class="text-center"> <b>PERIODO_CICLO</b></th> <th class="text-center"> <b>ID_DEPART_UNIVER </b></th>  <th class="text-center"> <b>ID_CARRERA </b></th><th class="text-center"> <b>ID_CONDICION </b></th> <th class="text-center"> <b>CREDITOS </b></th> <th class="text-center"> <b>HORAS TEORICAS </b></th>   <th class="text-center"> <b>HORAS PRACTICAS </b></th>  <th class="text-center"> <b>ID_DIRECTOR </b></th>   <th class="text-center"> <b>ID_DOCENTE </b></th> <th class="text-center"> <b>ID_CURSO </b></th><th class="text-center"> <b>ID_PLAN_ESTUDIOS </b></th>  <th class="text-center"> <b>REQUISITO </b></th>  <th class="text-center"> <b>ESTADO </b></th>   <th class="text-center"> <b>FECHA CREACIÓN </b></th>  <th class="text-center"> <b>USER_REG </b></th>   <th class="text-center"> <b>FEC_ACT </b></th>   <th class="text-center"> <b>USER_ACT </b></th>  <th class="text-center"> <b>ESTADO SILABUS </b></th> <th class="text-center"> <b>ACCIONES</b></th></tr></thead> <tbody> </tbody> </table>');     
+        $("#limpiar_tabla").html( `    
+                                <table id="tblasyllabus"  class="table table-striped table-bordered table-hover table-primary" style="width:100%"  role="grid" aria-describedby="example1_info">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center"> <b>ID_SILABUS </b></th>
+                                            <th class="text-center"> <b>ID_FACULTAD </b></th>
+
+                                            <th class="text-center"> <b>NOMBRE SILABUS </b></th>
+                                            <th class="text-center"> <b>NOMBRE CURSO </b></th>
+
+                                            <th class="text-center"> <b>NOMBRE CICLO </b></th>
+
+                                            <th class="text-center"> <b>PERIODO</b></th>
+
+                                            <th class="text-center"> <b>PERIODO ANIO</b></th>
+                                            <th class="text-center"> <b>PERIODO_CICLO</b></th>
+
+                                            <th class="text-center"> <b>ID_DEPART_UNIVER </b></th>
+                                            <th class="text-center"> <b>ID_CARRERA </b></th>
+                                            <th class="text-center"> <b>ID_CONDICION </b></th>
+
+                                            <th class="text-center"> <b>CREDITOS </b></th>
+                                            <th class="text-center"> <b>HORAS TEORICAS </b></th>
+                                            <th class="text-center"> <b>HORAS PRACTICAS </b></th>
+
+                                            <th class="text-center"> <b>ID_DIRECTOR </b></th>
+                                            <th class="text-center"> <b>ID_DOCENTE </b></th>
+                                            <th class="text-center"> <b>ID_CURSO </b></th>
+                                            <th class="text-center"> <b>ID_PLAN_ESTUDIOS </b></th>
+                                          
+                                            <th class="text-center"> <b>REQUISITO </b></th>
+                                          
+                                            <th class="text-center"> <b>ESTADO </b></th>
+                                          
+                                            <th class="text-center"> <b>DURACIÓN DEL PROCESO DE CREACIÓN</b></th>
+                                          
+                                            <th class="text-center"> <b>USER_REG </b></th>
+                                            <th class="text-center"> <b>FEC_ACT </b></th>
+                                            <th class="text-center"> <b>USER_ACT </b></th>
+                                          
+                                            <th class="text-center"> <b>ESTADO SILABUS </b></th>
+
+                                            <th class="text-center"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACCIONES</b></th>
+
+                                            <th class="text-center"> <b>VERSION_PRINCIPAL </b></th>
+                                            <th class="text-center"> <b>FECHA_REG </b></th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+        `    );     
 
         cargarTablaAsyllabus(estados_reservas);
     }
@@ -611,14 +673,13 @@
     });
 
     function Plan_estudios(th){
-        console.log("🚀 ~ file: asyllabus.js.php:614 ~ Plan_estudios ~ th:", th)
+        
+        
         var extra_id = $(th).find(':selected').attr('data-id-extra')
 
-        console.log("🚀 ~ file: asyllabus.js.php:616 ~ Plan_estudios ~ extra_id:", extra_id)
         var objGeneral = fnDataGeneral();
 
             var id_plan_estudios = th.value;
-            console.log("plan estudios ", id_plan_estudios)
 
             if(id_plan_estudios == 0){
 
@@ -653,11 +714,14 @@
                 var parametros = {
                         "id_plan_estudios": id_plan_estudios,
                         "id_asignacion_plan_estudios":extra_id,
+
                     };
 
                     $.ajax({
                     type  : "POST",
-                    url: url_restapi+'lista_carreras_by_plan_estudios_asign_usu',
+                    // url: url_restapi+'lista_carreras_by_plan_estudios_asign_usu',
+                    url: url_restapi+'lista_carreras_by_plan_estudios',
+
                     headers: {
                                     "X-API-KEY":api_key
                     },
@@ -669,13 +733,13 @@
                         $(objGeneral.modal_principal+" "+'#cbx_basicos_id_director').html('');
                         $(objGeneral.modal_principal+" "+'#cbx_basicos_id_curso').html('');
 
-                        var carrera='<option value="" selected>'+ 'Seleccione Carrera' +'</option>';
+                        var carrera='<option value="" >'+ 'Seleccione Carrera' +'</option>';
                         $.each(data[0], function(index, value) {
                             //el cero es general en plan de estudios
                             if(value['id'] == 0){
                             // carrera += '<option value="'+value['id']+'">General</option>';
                             }else{
-                                carrera += '<option value="'+value['id']+'">'+value['nombre'] +'</option>';
+                                carrera += '<option selected value="'+value['id']+'">'+value['nombre'] +'</option>';
                             }
                         });
 
@@ -684,7 +748,6 @@
 
                         var ciclo='<option value="0" selected>'+ 'Seleccionar Ciclo' +'</option>';
                         $.each(data[1], function(index, value) {
-                            //el cero es general en plan de estudios
                                 ciclo += '<option id_extra="'+value['id_asignacion_plan_estudios']+'" value="'+value['nom_ciclo']+'">'+value['nom_ciclo'] +'</option>';
                         });
 
@@ -741,8 +804,6 @@
                 data  : parametros, 
                 })
                 .done(function(data) {
-
-                    console.log("🚀 ~ file: asyllabus.js.php ~ line 477 ~ .done ~ data", data);
 
                     $(objGeneral.modal_principal+" "+'#cbx_basicos_id_director').html('');
 
@@ -802,6 +863,7 @@
 
                         $.ajax({
                         type  : "POST",
+                        // url: url_restapi+'lista_cursos_by_ciclo_by_carrera',
                         url: url_restapi+'lista_cursos_by_ciclo_by_carrera_asing_usu',
                         headers: {
                                         "X-API-KEY":api_key
@@ -809,7 +871,6 @@
                         data  : parametros, 
                         })
                         .done(function(data) {
-                        console.log("🚀 ~ file: asyllabus.js.php:832 ~ .done ~ data:", data)
                
                             
                             var curso='<option value="0" id-ciclo="" selected>'+ 'Seleccionar' +'</option>';
@@ -870,7 +931,6 @@
                         data  : parametros, 
                         })
                         .done(function(data) {
-                        console.log("🚀 ~ file: asyllabus.js.php:885 ~ .done ~ data:", data)
 
                 
                             $(objGeneral.modal_principal+" "+'#creditos').val(data['DATAMAIN'][0]['creditos']);
@@ -911,15 +971,15 @@
     function Analizar_Enviar_Correo(){
         var valor =0;
 
-        $( ".progress-title" ).each(function( index, element ) {
+        $( ".progress-title-aceptados" ).each(function( index, element ) {
              valor += parseInt($(element).attr("valor"));         
         });
         // var valor= 1000;
-            console.log("🚀 ~ file: asyllabus.js.php:947 ~ Enviar_Correo ~ valor:", valor);
+        console.log("🚀 ~ file: asyllabus.js.php:976 ~ $ ~ valor:", valor)
 
         
             var es_principal = $("#es_principal").val();
-            if(valor >= 1500){
+            if(valor >= 1400){
 
                 if(es_principal){
                     $("#enviar_correro").attr("onclick","EnviarCorreo_syllabus_terminado()");
@@ -1056,7 +1116,6 @@
             .done(function(data){
 
                 data=$.parseJSON(data);     
-                console.log("🚀 ~ file: asyllabus.js.php:1059 ~ .done ~ data:", data)
 
                     swal.fire(
                         '¡Ahora verá la versión '+numero_version+'',

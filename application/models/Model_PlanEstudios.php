@@ -8,7 +8,7 @@ class Model_PlanEstudios extends CI_Model {
 
     function procedureCrudPlanEstudios($parametros) {
         $this->db->free_db_resource();
-        $sql = "call sp_CrudPlanEstudios(?,?,?,?,?,?,?,?,?,?,?,?);";
+        $sql = "call sp_CrudPlanEstudios(?,?,?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($sql, $parametros);
        // $array = $query->result_array();
         if ($query) {

@@ -32,7 +32,28 @@
         border-radius:20px;
     }
 
+    .spinner_seccion {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s ease infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
 </style>
+
+
 
             <div class="page-breadcrumb">
                 <div class="row">
@@ -90,7 +111,7 @@
 
 
 
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="row">
@@ -103,7 +124,7 @@
                                                 </div>
 
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <div class="form-group">
                                             <div class="row">
@@ -120,7 +141,7 @@
                                                         <label class="col-md-3 text-center">Ciclo</label>
                                                         <div class="col-md-3">
 
-                                                        <select class="form-control" disabled tabindex="-1" id="numero_ciclo" name="numero_ciclo">
+                                                        <select class="form-control"  id="numero_ciclo" name="numero_ciclo">
                                                             <option value="" <?=  (($data_silabus[0]["periodo_ciclo"] === '' ) ?  'selected' :  '' ) ?> >SELECCIONE</option>
                                                             <option value="0" <?=  (($data_silabus[0]["periodo_ciclo"] === '0') ?  'selected' :  '' ) ?> >0</option>
                                                             <option value="1"  <?=  (($data_silabus[0]["periodo_ciclo"] === '1') ?  'selected' :  '' ) ?>  >1</option>
@@ -134,22 +155,70 @@
 
                                             </div>
                                         </div>
-
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-md-12">
+                                                    <!-- 
+                                                <div class="form-group">
                                                     <div class="row">
-                                                        <label class="col-md-4 text-center">Plan Estudios </label>
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <label class="col-md-4 text-center">Plan Estudios </label>
 
-                                                        <div class="col-md-8">
+                                                                <div class="col-md-8">
 
-                                                            <?= cbx_basicos('id_plan_estudios', ((isset($data_silabus[0]["id_plan_estudios"])) ?  $data_silabus[0]["id_plan_estudios"] :  0 ) ,true,'lista_plan_estudios','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,true); ?>
+                                                                    <?= cbx_basicos('id_plan_estudios', ((isset($data_silabus[0]["id_plan_estudios"])) ?  $data_silabus[0]["id_plan_estudios"] :  0 ) ,true,'lista_plan_estudios','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,true); ?>
 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+
+
+
+
+
+                                                                        
+                                        <?php if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <label class="col-md-4 text-center">Plan Estudios </label>
+
+                                                                <div class="col-md-8">
+
+                                                                    <?= cbx_basicos_extra_element('id_plan_estudios',$_SESSION['usuario'][0]['id_usuario'],true,'lista_plan_estudios_aginado_usu','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,false,'id_asignacion_plan_estudios'); ?>
+
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+
+
+                                        <?php } ?>
+
+
+                                            
+                                        <?php if($_SESSION['usuario'][0]['id_nivel'] != 3){ ?>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <label class="col-md-4 text-center">Plan Estudios </label>
+                                                                <div class="col-md-8">
+                                                                    <?= cbx_basicos_extra_element('id_plan_estudios',0,true,'lista_plan_estudios','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,false,'id_asignacion_plan_estudios'); ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                        <?php } ?>
+
+
+
 
 
 
@@ -364,7 +433,7 @@
 
                                                         <div class="col-md-8">
 
-                                                            <?= cbx_basicos_multiple('id_docente', ((isset($data_silabus[0]["id_docente"])) ?  $data_silabus[0]["id_docente"] :  0 ) ,true,'lista_docentes',null,'id_docente','nom_docente'); ?>
+                                                            <?= cbx_basicos_multiple('id_docente', ((isset($data_silabus[0]["id_docente"])) ?  $data_silabus[0]["id_docente"] :  0 ) ,false,'lista_docentes',null,'id_usuario','nom_usu_docente'); ?>
 
                                                         </div>
                                                     </div>
@@ -397,50 +466,44 @@
                                     <input type="hidden" name="id_version_sy" id="id_version_sy" value="<?= (isset($id_version_sy)) ?  $id_version_sy :  ''  ?>">
                                     <input type="hidden" name="id_compt_asoci_curso" id="id_compt_asoci_curso" value="<?= (isset($compt_asoci_curso[0]["id_compt_asoci_curso"])) ?  $compt_asoci_curso[0]["id_compt_asoci_curso"] :  ''  ?>">
                                     <input type="hidden" name="accion" id="accion" value="<?=  (isset($compt_asoci_curso)) ? (count($compt_asoci_curso) > 0 ? 'E' : 'I' ):  '' ?>">
-                                    <div class="form-body">
+                                    <div class="form-body" id="cuerpo_aso_cur">
+
+
+
                                         <div class="form-group row">
                                             <label class="col-md-6  text-center">COMPETENCIA </label>
                                             <label class="col-md-6  text-center">DESCRIPCIÓN DEL NIVEL DE COMPETENCIA </label>
-
                                             <label class="col-md-2">General </label>
                                             <div class="col-md-10">
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <div class="form-group">
-
                                                                 <textarea class="form-control" readonly name="compt_gene" id="compt_gene" cols="30" rows="5"><?= (isset($compt_asoci_curso[0]["compt_gene"])) ?  $compt_asoci_curso[0]["compt_gene"] :  ''  ?></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="form-group">
                                                             <textarea class="form-control" readonly name="compt_gene_descr" id="compt_gene_descr" cols="30" rows="5"><?= (isset($compt_asoci_curso[0]["compt_gene_descr"])) ?  $compt_asoci_curso[0]["compt_gene_descr"] :  ''  ?></textarea>
-
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <!-- f -->
-
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <div class="form-group">
-
                                                                 <textarea class="form-control" readonly name="compt_gene_2" id="compt_gene_2" cols="30" rows="5"><?= (isset($compt_asoci_curso[0]["compt_gene_2"])) ?  $compt_asoci_curso[0]["compt_gene_2"] :  ''  ?></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="form-group">
                                                             <textarea class="form-control" readonly name="compt_gene_descr_2" id="compt_gene_descr_2" cols="30" rows="5"><?= (isset($compt_asoci_curso[0]["compt_gene_descr_2"])) ?  $compt_asoci_curso[0]["compt_gene_descr_2"] :  ''  ?></textarea>
-
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                               <!-- f -->
-
-
                                             </div>
                                         </div>
+
+
                                         <div class="form-group row">
                                             <label class="col-md-2">Especifica </label>
                                             <div class="col-md-10">
@@ -452,11 +515,9 @@
                                                         <div class="form-group">
                                                             <textarea class="form-control" readonly name="compt_espec_2" id="compt_espec_2" cols="30" rows="5"><?= (isset($compt_asoci_curso[0]["compt_espec_2"])) ?  $compt_asoci_curso[0]["compt_espec_2"] :  ''  ?></textarea>
                                                         </div>
-                                                            <!-- f -->
                                                         <div class="form-group">
                                                             <textarea class="form-control" readonly name="compt_espec_3" id="compt_espec_3" cols="30" rows="5"><?= (isset($compt_asoci_curso[0]["compt_espec_3"])) ?  $compt_asoci_curso[0]["compt_espec_3"] :  ''  ?></textarea>
                                                         </div>
-                                                            <!-- f -->
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="form-group">
@@ -465,21 +526,21 @@
                                                         <div class="form-group">
                                                             <textarea class="form-control" readonly name="compt_espec_descr_2" id="compt_espec_descr_2" cols="30" rows="5"><?= (isset($compt_asoci_curso[0]["compt_espec_descr_2"])) ?  $compt_asoci_curso[0]["compt_espec_descr_2"] :  ''  ?></textarea>
                                                         </div>
-                                                            <!-- f -->
                                                         <div class="form-group">
                                                             <textarea class="form-control" readonly name="compt_espec_descr_3" id="compt_espec_descr_3" cols="30" rows="5"><?= (isset($compt_asoci_curso[0]["compt_espec_descr_3"])) ?  $compt_asoci_curso[0]["compt_espec_descr_3"] :  ''  ?></textarea>
                                                         </div>
-                                                            <!-- f -->
                                                     </div>
-
                                                 </div>
                                             </div>
-
                                         </div>
+                                    
+                                    
                                     </div>
                                     <div class="form-actions">
                                         <div class="text-right">
-                                            <button type="button" id="boton" onclick="Insert_Update_form_2('<?= (count($compt_asoci_curso) > 0) ? 'E' : 'I' ?>')" class="btn btn-info">GUARDAR Y ACTUALIZAR</button>
+                                            <!-- <button type="button" id="boton" onclick="Insert_Update_form_2('<?= (count($compt_asoci_curso) > 0) ? 'E' : 'I' ?>')" class="btn btn-info">GUARDAR Y ACTUALIZAR</button> -->
+                                            <button type="button" id="boton" onclick="Actualizar_compet_curso()" class="btn btn-info">TRAER LAS ÚLTIMAS ACTUALIZACIONES</button>
+
                                         </div>
                                     </div>
                                 </form>
@@ -496,14 +557,16 @@
                                 <form action="#">
                                 <input type="hidden" name="id_sumilla" id="id_sumilla" value="<?= (isset($data_silabus[0]["id_sumilla"])) ?  $data_silabus[0]["id_sumilla"] :  ''  ?>">
 
-                                    <div class="form-body">
+                                    <div class="form-body" id="cuerpo_sumilla">
                           
                                         <textarea readonly class="form-control" name="desc_sumilla" id="desc_sumilla" cols="30" rows="20"><?= (isset($data_silabus[0]["desc_sumilla"])) ?  $data_silabus[0]["desc_sumilla"] :  ''  ?></textarea>
 
                                     </div>
                                     <div class="form-actions">
                                         <div class="text-right">
-                                            <button type="button" id="boton" onclick="Update_form_sumilla()" class="btn btn-info">GUARDAR Y ACTUALIZAR</button>
+                                            <!-- <button type="button" id="boton" onclick="Update_form_sumilla()" class="btn btn-info">GUARDAR Y ACTUALIZAR</button> -->
+                                            <button type="button" id="boton" onclick="Actualizar_sumilla_curso()" class="btn btn-info">TRAER LAS ÚLTIMAS ACTUALIZACIONES</button>
+
                                         </div>
                                     </div>
                                 </form>
@@ -1463,9 +1526,10 @@
                                                         <div class="row">
 
                                                             <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="form-group" id="comboboxcambiante">
                                                                     <!-- <input class="form-control" type="text" name="nom_plataformas_herramientas" id="nom_plataformas_herramientas"> -->
-                                                                    <?= cbx_basicos('nom_plataformas_herramientas',$id_version_sy,false,'lista_recursos_aula',null,'id_recursos_aula','nom_recurso'); ?>
+                                                                    <!--  c bx_ba sicos('nom_plataformas_herramientas',$id_version_sy,false,'lista_recursos_aula',null,'id_recursos_aula','nom_recurso');  -->
+
 
                                                                 </div>
                                                             </div>

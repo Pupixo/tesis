@@ -149,7 +149,8 @@ $sesion =  "eee";
     <h6 class="mayusculas" style = "font-size:18px; text-align:left;margin-bottom: 0px " >
 
 
-    <?php echo datos_sillabus($id_version_sy,'nombre_syllabus'); ?>   
+    <!-- <?php echo datos_sillabus($id_version_sy,'nombre_syllabus'); ?>    -->
+    <?php echo datos_sillabus($id_version_sy,'nom_curso'); ?>
 
 
         <p class="subtitulo" style = "font-size:12px; text-align:left;">SÍLABO <?php  echo datos_sillabus($id_version_sy,'periodo_anio'); ?>-<?php echo datos_sillabus($id_version_sy,'periodo_ciclo'); ?> / <?php echo datos_sillabus($id_version_sy,'nom_tipo_estudios'); ?> </p>
@@ -269,50 +270,55 @@ $sesion =  "eee";
             </td>
        </tr>
     </table>
-
-
+   
 
     <h5>5.	ORGANIZACIÓN DEL APRENDIZAJE </h5>
 
         <?php  foreach ($lista_org_aprendizaje as $key => $valor) { ?>
+
             <table class="tabla5" border="1">
+                    <thead >
+                        <tr>
+                            <th scope="col" colspan="1" style="width: 50%;font-size:15px;text-align:center;">#</th>
+                            <th scope="col" colspan="1" style="width: 50%;font-size:15px;text-align:center;" ><?= (isset($valor['modulo_num_orden'])) ?  $valor['modulo_num_orden'] :  '' ;  ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                        <tr>
+                            <td>MÓDULO DE APRENDIZAJE </td>
+                            <td><?= (isset($valor['modulo_aprendizaje'])) ?  $valor['modulo_aprendizaje'] :  '' ;  ?></td>
+                        </tr>
 
-                    <tr>
-                        <td>#</td>
-                        <td> <?php  echo $valor['modulo_num_orden'];  ?> </td>
-                    </tr>
-                    <tr>
-                        <td>MÓDULO DE APRENDIZAJE </td>
-                        <td> <?php  echo $valor['modulo_aprendizaje'];  ?> </td>
-                    </tr>
+                        <tr>
+                            <td>RESULTADO DE APRENDIZAJE</td>
+                            <td><?= (isset($valor['result_aprendizaje'])) ?  $valor['result_aprendizaje'] :  '' ;  ?></td>
+                        </tr>
 
-                    <tr>
-                        <td>RESULTADO DE APRENDIZAJE</td>
-                        <td>  <?php  echo $valor['result_aprendizaje'];  ?>  </td>
-                    </tr>
+                        <tr>
+                            <td>SEMANAS</td>
+                            <td>Semana:<?= (isset($valor['semanas_aprendizaje_ini'])) ?  $valor['semanas_aprendizaje_ini'] :  '' ;  ?> - Semana:<?= (isset($valor['semanas_aprendizaje_fin'])) ?  $valor['semanas_aprendizaje_fin'] :  '' ;  ?></td>
+                        </tr>
 
-                    <tr>
-                        <td>SEMANAS</td>
-                        <td>  Semana <?php  echo $valor['semanas_aprendizaje_ini'];  ?>  - Semana <?php  echo $valor['semanas_aprendizaje_fin'];  ?>  </td>
-                    </tr>
-
-                    <tr>
-                        <td>CONTENIDOS INVOLUCRADOS </td>
-                        <td> <?php  echo $valor['conten_aprendizaje'];  ?>   </td>
-                    </tr>
+                        <tr>
+                            <td>CONTENIDOS INVOLUCRADOS </td>
+                            <td><?= (isset($valor['conten_aprendizaje'])) ?  $valor['conten_aprendizaje'] :  '' ;  ?></td>
+                        </tr>
+                    </tbody>
 
             </table>
-
-            <br>
-
         <?php  } ?>
 
+
+
+        
 
     <h5>6.	ESTRATEGIAS DIDÁCTICAS </h5>
     <table id="tabla6">
        <tr>
            <td>
-           <?= (isset($data_silabus[0]["desc_estrateg_didact"])) ?  $data_silabus[0]["desc_estrateg_didact"] :  ''  ?>
+           
+                 <?= (isset($data_silabus[0]["desc_estrateg_didact"])) ?  $data_silabus[0]["desc_estrateg_didact"] :  ''  ?> 
 
             </td>
        </tr>
@@ -467,7 +473,7 @@ $sesion =  "eee";
 
     <h5>9.	PLATAFORMAS Y HERRAMIENTAS</h5>
     <table id="tabla9">
-            <tr>
+            <!-- <tr>
                 <td>
                     •	Plataforma Zoom: Plataforma online utilizada por la Universidad, que permite realizar videoconferencia, chat y pantalla compartida, entre otras opciones. Tiene almacenamiento de grabación en la nube.
                 </td>
@@ -476,14 +482,14 @@ $sesion =  "eee";
                 <td>
                 •	Plataforma Aula Virtual Moodle: Plataforma de gestión de aprendizaje usada en la Universidad para la publicación de materiales y actividades de aprendizaje online.
                 </td>
-            </tr>
+            </tr> -->
        <?php  foreach ($plataforma_herramienta as $key => $valor) { ?>
 
             <tr>
                 <td>
                     <?php if($key == 0) { ?>
 
-                        •	Herramientas: <?php  echo  $valor['nom_plataformas_herramientas'] ; ?>         
+                         <?php  echo  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>".$valor['nom_recurso'].":</b> ".$valor['recurso_descrip'] ; ?>         
                     <?php }else{ ?>
 
                     	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <?php  echo  $valor['nom_plataformas_herramientas'] ; ?>         

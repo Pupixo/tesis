@@ -21,6 +21,12 @@ if($fotogr_perf == null){
         <!-- ============================================================== -->
         <!-- Topbar header - style you can find in pages.scss -->
         <!-- ============================================================== -->
+        <input name="id_nivel_main" type="hidden" id="id_nivel_main" value="<?php echo $_SESSION['usuario'][0]['id_nivel']; ?>">        
+        <input name="id_usuario_sesion" type="hidden" id="id_usuario_sesion" value="<?php echo $_SESSION['usuario'][0]['id_usuario']; ?>">        
+
+
+        
+
         <header class="topbar" data-navbarbg="skin6">
             <nav class="navbar top-navbar navbar-expand-md">
                 <div class="navbar-header" data-logobg="skin6">
@@ -166,10 +172,9 @@ if($fotogr_perf == null){
                         <li class="nav-item d-none d-md-block">
                             <a class="nav-link" href="javascript:void(0)">
                                 <div class="customize-input">
-                                    <select
-                                        class="custom-select form-control bg-white custom-radius custom-shadow border-0">
-                                        <option selected>IDIOMA</option>
-                                        <option value="1">ES</option>
+                                    <select disabled class="custom-select form-control bg-white custom-radius custom-shadow border-0">
+                                        <option >EMPRESA</option>
+                                        <option value="1" selected>CIENTIFICA DEL SUR</option>
                                         <option value="2">EN</option>
                                     </select>
                                 </div>

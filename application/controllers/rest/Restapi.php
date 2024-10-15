@@ -146,73 +146,6 @@ class Restapi extends Rest_Controller {
       
         // BUSCAR POR TERMINOS
         $id_plan_estudios = $this->input->post('id_plan_estudios');
-
-        //Get CURSOS
-       $respuesta= $this->Contenedor_Model->get_lista_carreras_by_plan_estudios($id_plan_estudios);
-
-       $id_carreras = $respuesta[0]['id_carrera'];
-
-       $array_d = explode(",", $id_carreras);
-
-            //    echo ' <pre>';
-            //    print_r($array_d);
-            //    echo ' <echo>';
-            //    exit;
-
-       $data_final=[];
-
-       foreach ($array_d  as $key => $value) {
-        # code...
-
-
-
-                if($value==0){
-
-                    $data_final[]= [
-                        "id" => 0,
-                        "nombre" => 'GENERAL'
-                    ];
-                                     
-      
-                }else{
-
-          
-
-                    $data_iterar= $this->Contenedor_Model->get_lista_carreras($value,false);
-
-         
-
-                    $data_final[]= [
-                        "id" => $data_iterar[1]['id_carrera'],
-                        "nombre" => $data_iterar[1 ]['nom_carrera'],
-                    ];
-                }
-        
-       }
-
-        $respuesta2= $this->Contenedor_Model->get_lista_ciclos_num_by_plan_estudios($id_plan_estudios);
-
-
-        $respuesta3= $this->Contenedor_Model->get_lista_plan_estudios($id_plan_estudios,false);
-        $respuesta4= $this->Contenedor_Model->get_list_tipo_estudios($respuesta3[0]['tipo_estudios']);
-
-  
-
-       $lista = array(
-        $data_final,
-        $respuesta2,
-        $respuesta4[0]['id_tipo_estudios']
-       );
-
-        $this->response($lista);
-
-    }
-
-
-    public function lista_carreras_by_plan_estudios_asign_usu_post() {
-      
-        // BUSCAR POR TERMINOS
-        $id_plan_estudios = $this->input->post('id_plan_estudios');
         $id_asignacion_plan_estudios = $this->input->post('id_asignacion_plan_estudios');
 
         //Get CURSOS
@@ -258,6 +191,69 @@ class Restapi extends Rest_Controller {
         
        }
 
+       
+        //  $respuesta2= $this->Contenedor_Model->get_lista_ciclos_num_by_plan_estudios($id_plan_estudios,$id_asignacion_plan_estudios);
+        $respuesta2= $this->Contenedor_Model->get_lista_ciclos_num_by_plan_estudios_asign_usu($id_asignacion_plan_estudios);
+
+
+        $respuesta3= $this->Contenedor_Model->get_lista_plan_estudios($id_plan_estudios,false);
+        $respuesta4= $this->Contenedor_Model->get_list_tipo_estudios($respuesta3[0]['tipo_estudios']);
+
+  
+
+       $lista = array(
+        $data_final,
+        $respuesta2,
+        $respuesta4[0]['id_tipo_estudios']
+       );
+
+        $this->response($lista);
+
+    }
+
+
+    public function lista_carreras_by_plan_estudios_asign_usu_post() {
+      
+        // BUSCAR POR TERMINOS
+        $id_plan_estudios = $this->input->post('id_plan_estudios');
+        $id_asignacion_plan_estudios = $this->input->post('id_asignacion_plan_estudios');
+
+        //Get CURSOS
+       $respuesta= $this->Contenedor_Model->get_lista_carreras_by_plan_estudios($id_plan_estudios);
+
+       $id_carreras = $respuesta[0]['id_carrera'];
+
+       $array_d = explode(",", $id_carreras);
+
+            //    echo ' <pre>';
+            //    print_r($array_d);
+            //    echo ' <echo>';
+            //    exit;
+
+       $data_final=[];
+
+       foreach ($array_d  as $key => $value) {
+        # code...
+
+                if($value==0){
+
+                    $data_final[]= [
+                        "id" => 0,
+                        "nombre" => 'GENERAL'
+                    ];
+                                     
+                }else{
+
+                    $data_iterar= $this->Contenedor_Model->get_lista_carreras($value,false);
+
+                    $data_final[]= [
+                        "id" => $data_iterar[1]['id_carrera'],
+                        "nombre" => $data_iterar[1 ]['nom_carrera'],
+                    ];
+                }
+        
+       }
+
         $respuesta2= $this->Contenedor_Model->get_lista_ciclos_num_by_plan_estudios_asign_usu($id_asignacion_plan_estudios);
 
         $respuesta3= $this->Contenedor_Model->get_lista_plan_estudios($id_plan_estudios,false);
@@ -277,14 +273,17 @@ class Restapi extends Rest_Controller {
     
     public function lista_ciclos_by_plan_estudios_asignar_post() {
       
-       $id_plan_estudios = $this->input->post('id_plan_estudios');
+        $id_plan_estudios = $this->input->post('id_plan_estudios');
+        $id_asignacion_plan_estudios = $this->input->post('id_asignacion_plan_estudios');
 
 
-        $respuesta2= $this->Contenedor_Model->get_lista_ciclos_num_by_plan_estudios($id_plan_estudios);
-   
-       $lista = array(
+
+
+        $respuesta2= $this->Contenedor_Model->get_lista_ciclos_num_by_plan_estudios($id_plan_estudios,$id_asignacion_plan_estudios);
+
+        $lista = array(
         $respuesta2,
-       );
+        );
 
         $this->response($lista);
 
@@ -474,8 +473,36 @@ class Restapi extends Rest_Controller {
 
     }
 
+    public function data_inicio_by_anio_post() {
 
+        $anio = $this->input->post('anio');
+        $id_usuario_sesion = $this->input->post('id_usuario_sesion');
+        $id_nivel_main = $this->input->post('id_nivel_main');
 
+        $planestudio_total= $this->Contenedor_Model->planestudio_total_anio($anio,'1,2,3');
+        $planestudio_est_acti= $this->Contenedor_Model->planestudio_total_anio($anio,'3');
+        $planestudio_est_rev= $this->Contenedor_Model->planestudio_total_anio($anio,'2');
+        $planestudio_est_anul= $this->Contenedor_Model->planestudio_total_anio($anio,'1');
 
-    
+        $syllabus_total= $this->Contenedor_Model->get_total_tabla_sy_asig_anio($anio,'1,2,3', $id_usuario_sesion,$id_nivel_main );
+        $syllabus_est_aprob= $this->Contenedor_Model->get_total_tabla_sy_asig_anio($anio,'2', $id_usuario_sesion,$id_nivel_main );
+        $syllabus_est_rev= $this->Contenedor_Model->get_total_tabla_sy_asig_anio($anio,'1', $id_usuario_sesion,$id_nivel_main );
+        $syllabus_est_noaprob= $this->Contenedor_Model->get_total_tabla_sy_asig_anio($anio,'3', $id_usuario_sesion,$id_nivel_main );
+
+        $DATA = array(
+            'planestudio_total' => $planestudio_total[0]['total'],
+            'planestudio_est_acti' => $planestudio_est_acti[0]['total'] ,
+            'planestudio_est_rev' =>  $planestudio_est_rev[0]['total'] ,
+            'planestudio_est_anul' => $planestudio_est_anul[0]['total'] ,
+
+            'syllabus_total' => $syllabus_total[0]['total'],
+            'syllabus_est_aprob' => $syllabus_est_aprob[0]['total'],
+            'syllabus_est_rev' => $syllabus_est_rev[0]['total'],
+            'syllabus_est_noaprob' => $syllabus_est_noaprob[0]['total'] 
+        );
+        
+        $this->response($DATA);
+
+    }
+        
 }

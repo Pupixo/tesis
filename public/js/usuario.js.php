@@ -108,7 +108,21 @@
     $(document).ready(function() {
         cargarTablaUsuarios();
         var msgDate = '';
-        var inputFocus = '';        
+        var inputFocus = '';     
+        
+        $("#modal_asignar_plan_estudio_usu #cbx_basicos_id_plan_estudios").select2();
+        $('#modal_asignar_curso #nom_ciclo').select2();
+
+        
+        // $('#Lista_plan_estudios_usu_tbl').DataTable({
+        //         "lengthMenu": [[10, 25, 50, -1], ['10', '25', '50', 'Show all']],
+        //         "language": {"url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"},
+        //         "pageLength": 10,
+        //         "processing": false,
+        //         "serverSide": false,
+        //         "responsive": true,
+              
+        // });
     });
 
     function fn_limpiarPopup(){
@@ -402,33 +416,37 @@
         var objGeneral = fnDataGeneral();
 
         var id_usuario = $('#modal_asignar_plan_estudio_usu #id_usuario').val();
-        $.ajax({
-            type:"POST",
-            url:  objGeneral.__wurl+'Mirar_asignar_plan_estudio',
-            data: {'id_usuario':id_usuario},
-            success:function (data) {
-                $('#modal_asignar_plan_estudio_usu #lista_asignacion_plan_estudos_usu').html(data);
-            }
+     
+        $('#Lista_plan_estudios_usu_tbl').dataTable().fnDestroy();
+
+        $('#Lista_plan_estudios_usu_tbl').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], ['10', '25', '50', 'Show all']],
+                "language": {"url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"},
+                "pageLength": 10,
+                "processing": false,
+                "serverSide": false,
+                "ajax": { url : objGeneral.__wurl + "Mirar_asignar_plan_estudio/"+id_usuario,  type : 'POST' },
+                "responsive": true,
+                columns:    [   {
+                                    data: 'NOMBRE', width: "90%"
+                                }, 
+                                {
+                                    data: 'ACCION',width: "10%"
+                                }                                
+                            ],
         });
-
-
 
         $.ajax({
             type:"POST",
             url:  objGeneral.__wurl+'Combo_planes_estudios',
             data: {'id_usuario':id_usuario},
             success:function (data) {
-
                 const myArr = JSON.parse(data);
-
                     var planestudios ='<option value="0" selected>'+ 'Seleccionar Plan de Estudios' +'</option>';
                     $.each(myArr, function(index, value) {
-                            planestudios  += '<option value="'+value['id_plan_estudios']+'">'+value['nom_plan_estudios'] +'</option>';
+                            planestudios  += '<option value="'+value['id_plan_estudios']+'">'+value['nom_plan_estudios'] +' - '+value['anio'] +'</option>';
                     });
-
                     $('#modal_asignar_plan_estudio_usu #cbx_basicos_id_plan_estudios').html(planestudios);
-
-
             }
         });
 
@@ -456,14 +474,41 @@
 
         }
 
-        $.ajax({
-            type:"POST",
-            url:  objGeneral.__wurl+'Insertar_AsignacionPlanEstudios',
-            data: {'id_usuario':id_usuario,'id_plan_estudios':id_plan_estudios},
-            success:function () {
-                List_AsignarPlanEstudio();
+        Swal.fire({
+        title: '¿Esta Seguro de continuar?',
+        text: "Se agragará el plan de estudio a al usuario",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, agreguelo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    type:"POST",
+                    url:  objGeneral.__wurl+'Insertar_AsignacionPlanEstudios',
+                    data: {'id_usuario':id_usuario,'id_plan_estudios':id_plan_estudios},
+                    success:function () {
+                        List_AsignarPlanEstudio();
+                        Swal.fire(
+                        'Agregado!',
+                        'El registro ha sido agregado a la tabla',
+                        'success'
+                        )
+                    }
+                });
+
             }
-        });
+        })
+
+
+
+
+
+
+       
     }   
 
 
@@ -473,14 +518,41 @@
         var objGeneral = fnDataGeneral();
         
 
-        $.ajax({
-            type:"POST",
-            url:  objGeneral.__wurl+'Eliminar_AsignacionPlanEstudios',
-            data: {'id_asignacion_plan_estudios':id_asignacion_plan_estudios},
-            success:function () {
-                List_AsignarPlanEstudio();
+        
+        Swal.fire({
+        title: '¿Esta Seguro de continuar?',
+        text: "Se eliminará el plan de estudio a este usuario, incluyendo todos los syllabus creados que pertenezcan al plan del usuario",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, elimínelo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                
+                $.ajax({
+                    type:"POST",
+                    url:  objGeneral.__wurl+'Eliminar_AsignacionPlanEstudios',
+                    data: {'id_asignacion_plan_estudios':id_asignacion_plan_estudios},
+                    success:function () {
+                        List_AsignarPlanEstudio();
+                        Swal.fire(
+                        'Agregado!',
+                        'El registro ha sido eliminado a la tabla',
+                        'success'
+                        )
+                    }
+                });
+
             }
-        });
+        })
+
+
+
+
+        
     }   
     
     //_--------------------------------------------------------
@@ -493,9 +565,39 @@
         $('#modal_asignar_curso #id_asignacion_plan_estudios').val(id_asignacion_plan_estudios);
         $('#modal_asignar_curso #id_usuario').val(id_usuario);
         $('#modal_asignar_curso #id_plan_estudios').val(id_plan_estudios);
+        List_AsignarCurso();
+        $('#modal_asignar_curso #nom_ciclo').val(null).trigger('change');
+
+    }   
+
+
+    function List_AsignarCurso(){
+        var objGeneral = fnDataGeneral();
+
+        var id_asignacion_plan_estudios = $('#modal_asignar_curso #id_asignacion_plan_estudios').val();
+
+        $('#Lista_cursos_usu_tbl').dataTable().fnDestroy();
+
+        $('#Lista_cursos_usu_tbl').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], ['10', '25', '50', 'Show all']],
+                "language": {"url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"},
+                "pageLength": 10,
+                "processing": false,
+                "serverSide": false,
+                "ajax": { url : objGeneral.__wurl + "Mirar_asignar_curso/"+id_asignacion_plan_estudios,  type : 'POST' },
+                "responsive": true,
+                columns:    [   {
+                                    data: 'NOMBRE', width: "90%"
+                                }, 
+                                {
+                                    data: 'ACCION', width: "10%"
+                                }                                
+                            ],
+        });
 
         var parametros = {
-                        "id_plan_estudios": id_plan_estudios,
+                        "id_plan_estudios": $('#modal_asignar_curso #id_plan_estudios').val(),
+                        "id_asignacion_plan_estudios": id_asignacion_plan_estudios
         };
 
         $.ajax({
@@ -507,114 +609,29 @@
         data  : parametros, 
         })
         .done(function(data) {
-                    var ciclo='<option value="0" selected>'+ 'Seleccionar Ciclo' +'</option>';
+                    var ciclo='';
+
                     $.each(data[0], function(index, value) {
-                            ciclo += '<option value="'+value['nom_ciclo']+'">'+value['nom_ciclo'] +'</option>';
+                            ciclo += '<option  value="'+value['nom_ciclo']+'['+value['id_ciclo']+'['+value['id_curso']+'"   >'+value['nom_ciclo'] + ' - ' + value['nom_curso'] +'</option>';
                     });
 
                     $('#modal_asignar_curso #nom_ciclo').html(ciclo);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             someErrorFunction();
-        })
-        .always(function() {});    
-
+        }).always(function() {});    
     }   
 
 
-    function Ciclo(th){
-        var objGeneral = fnDataGeneral();
-
-        var nom_ciclo = th.value ;
-        console.log("🚀 ~ file: usuario.js.php:529 ~ Ciclo ~ nom_ciclo:", nom_ciclo)
-        var  id_asignacion_plan_estudios= $('#modal_asignar_curso #id_asignacion_plan_estudios').val();
-
-        var  id_plan_estudios= $('#modal_asignar_curso #id_plan_estudios').val();
-
-
-   
-
-        $.ajax({
-                type:"POST",
-                url:  objGeneral.__wurl+'Mirar_asignar_curso',
-                data: {'id_asignacion_plan_estudios':id_asignacion_plan_estudios,'nom_ciclo':nom_ciclo},
-                success:function (data) {
-                    $('#modal_asignar_curso #lista_asignacion_curso_usu').html(data);
-                }
-        });
-
-
-
-        if(nom_ciclo==0){
-            $('#modal_asignar_curso #id_curso').html('<option value="0" id-ciclo="" selected>'+ 'Seleccionar' +'</option>');
-
-        }else{
-
-            
-                var parametros = {
-                    "num_ciclo": nom_ciclo,
-                    "id_plan_estudios":id_plan_estudios,
-                    "id_asignacion_plan_estudios":id_asignacion_plan_estudios
-
-                };
-
-                $.ajax({
-                    type  : "POST",
-                    url: url_restapi+'lista_cursos_by_ciclo_by_asignar_cursos',
-                    headers: {
-                                    "X-API-KEY":api_key
-                    },
-                    data  : parametros, 
-                })
-                .done(function(data) {
-                    var curso='<option value="0" id-ciclo="" selected>'+ 'Seleccionar' +'</option>';
-                    $.each(data, function(index, value) {
-                            curso += '<option  id-ciclo="'+value['id_ciclo']+'" value="'+value['id_curso']+'" >'+value['nom_curso'] +'</option>';
-                    });
-                    $('#modal_asignar_curso #id_curso').html(curso);
-
-                })
-                .fail(function(jqXHR, textStatus, errorThrown) {
-                    someErrorFunction();
-                })
-                .always(function() {});    
-
-        }
-
-
-
-       
-    }
-
-
-    function List_AsignarCurso(){
-        var objGeneral = fnDataGeneral();
-
-        var id_asignacion_plan_estudios = $('#modal_asignar_curso #id_asignacion_plan_estudios').val();
-        var nom_ciclo= $('#modal_asignar_curso #nom_ciclo').val();
-
-        $.ajax({
-            type:"POST",
-            url:  objGeneral.__wurl+'Mirar_asignar_curso',
-            data: {'id_asignacion_plan_estudios':id_asignacion_plan_estudios,'nom_ciclo':nom_ciclo},
-            success:function (data) {
-                $('#modal_asignar_curso #lista_asignacion_curso_usu').html(data);
-            }
-        });
-
-    }   
-
-
-    
     function AddAsignarCurso(){
-        var id_curso = $('#modal_asignar_curso #id_curso').val();  
-        var id_ciclo =$('#modal_asignar_curso #id_curso').find('option:selected').attr('id-ciclo');
         var id_asignacion_plan_estudios = $('#modal_asignar_curso #id_asignacion_plan_estudios').val();
+        var nom_ciclo =$('#modal_asignar_curso #nom_ciclo').val();
+        var docente_id =$('#modal_asignar_curso #id_usuario').val();
+        
 
-        var nom_ciclo =$('#modal_asignar_curso #nom_ciclo').val();  
         var objGeneral = fnDataGeneral();
         
-        if(nom_ciclo == 0 ){
+        if(nom_ciclo.length == 0 ){
             $.toast({
                 heading: 'Error',
                 text: 'Seleccione al menos un ciclo' ,
@@ -625,49 +642,75 @@
             return false;
 
         }
+        
+        Swal.fire({
+        title: '¿Esta Seguro de continuar?',
+        text: "Se asignarán los cursos seleccionados al plan de estudio y se crearan los syllabus para el usuario respectivamente",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, agreguelo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-        if(id_curso == 0 ){
-            $.toast({
-                heading: 'Error',
-                text: 'Seleccione al menos un curso' ,
-                position: 'top-right',
-                icon: 'error',
-                stack: false
-            })
-            return false;
+                $.ajax({
+                    type:"POST",
+                    url:  objGeneral.__wurl+'Insertar_AsignacionCursos',
+                    data: {
+                        'id_asignacion_plan_estudios':id_asignacion_plan_estudios,
+                        'nom_ciclo':nom_ciclo,
+                        'docente_id':docente_id
+                    },
+                    success:function () {
+                        List_AsignarCurso();
+                        $('#modal_asignar_curso #nom_ciclo').val(null).trigger('change');
+                        Swal.fire(
+                        'Agregado!',
+                        'El registro ha sido agregado a la tabla',
+                        'success'
+                        )
+                    }
+                });
 
-        }
-
-        $.ajax({
-            type:"POST",
-            url:  objGeneral.__wurl+'Insertar_AsignacionCursos',
-            data: {'id_curso':id_curso,'id_ciclo':id_ciclo,'id_asignacion_plan_estudios':id_asignacion_plan_estudios,'nom_ciclo':nom_ciclo},
-            success:function () {
-                List_AsignarCurso();
-                $('#modal_asignar_curso #nom_ciclo').val(nom_ciclo).trigger('change');
             }
-        });
-    }   
-
-
-
+        })      
+    }
 
     function Eliminar_CursoAsignado(id_asignacion_cursos,nom_ciclo){
         var id_asignacion_cursos = id_asignacion_cursos;  
         var objGeneral = fnDataGeneral();
         
-        $.ajax({
-            type:"POST",
-            url:  objGeneral.__wurl+'Eliminar_AsignacionCurso',
-            data: {'id_asignacion_cursos':id_asignacion_cursos},
-            success:function () {
-                List_AsignarPlanEstudio();
-                $('#modal_asignar_curso #nom_ciclo').val(0).trigger('change');
-                $('#modal_asignar_curso #nom_ciclo').val(nom_ciclo).trigger('change');
+        
+        Swal.fire({
+        title: '¿Esta Seguro de continuar?',
+        text: "Se eliminará el curso del plan de estudio, al igual que el syllabu creado para el usuario",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, elimínelo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    type:"POST",
+                    url:  objGeneral.__wurl+'Eliminar_AsignacionCurso',
+                    data: {'id_asignacion_cursos':id_asignacion_cursos},
+                    success:function () {
+                        List_AsignarCurso();
+                        Swal.fire(
+                        'Agregado!',
+                        'El registro ha sido eliminado a la tabla',
+                        'success'
+                        )
+                    }
+                });
 
             }
-        });
+        })
+
     }   
-    
-    
 </script>

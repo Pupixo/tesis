@@ -7,6 +7,23 @@ class Contenedor_Model extends CI_Model {
     }
     //---------- CONSULTAS DE LOGEO-------------------------------------
 
+
+    function procedureUpdateOrInsertTables($parametros) {
+        $this->db->free_db_resource();
+        $sql = "call sp_UpdateOrInsertTables(?,?,?,?,?,?,?,?,?,?,? , ?,?,?,?,?);";
+        $query = $this->db->query($sql, $parametros);
+       // $array = $query->result_array();
+        if ($query) {
+            $data = $query->result_array();
+            $query->free_result();
+            $query->next_result();
+        }
+        return $data;
+       //return $array;
+    }
+
+
+
     function get_list_nivelusuario($id_nivel=null){
         if(isset($id_nivel) && $id_nivel > 0){
             $sql = "select * from nivel where estado=2 and id_nivel =".$id_nivel;
@@ -123,8 +140,15 @@ class Contenedor_Model extends CI_Model {
                 vs.fec_reg as 'fecha_reg_version'
             FROM 
             syllabus_det s
+
 				INNER JOIN versiones_syllabus vs on s.id_version_sy = vs.id_version_sy
+
+				INNER JOIN syllabus so on so.id_syllabus = vs.id_syllabus
+                INNER JOIN asignacion_cursos ac on so.id_asignacion_curso= ac.id_asignacion_cursos
+                INNER JOIN asignacion_plan_estudios ape on ac.id_asignacion_plan_estudios = ape.id_asignacion_plan_estudios
+
                 INNER JOIN estado_syllabus st on s.estado = st.id_est_syllabus
+
                 LEFT JOIN plan_estudios pe on s.id_plan_estudios=pe.id_plan_estudios
                 LEFT JOIN carrera c on  s.id_carrera  = c.id_carrera 
                 LEFT JOIN director d on  s.id_director   = d.id_director  
@@ -134,7 +158,7 @@ class Contenedor_Model extends CI_Model {
                 LEFT JOIN curso cur on s.id_curso = cur.id_curso
                 LEFT JOIN tipo_estudios te on s.id_tipo_estudios = te.id_tipo_estudios
             WHERE s.estado in (2,1,3) and s.id_version_sy  = " . $id_version_sy . 
-            "";
+            " and ape.estado =2 and ac.estado=2;";
 
         }
         $query = $this->db->query($sql)->result_Array();
@@ -146,37 +170,25 @@ class Contenedor_Model extends CI_Model {
 
    
     function get_list_tipo_documento(){
-        if(isset($id_tipo_documento) && $id_tipo_documento > 0){
-            $sql = "select * from tipo_documento where id_tipo_documento ='".$id_tipo_documento."' and estado=2 order by nom_tipo_documento";
-        }
-        else
-        {
+      
             $sql = "select * from tipo_documento  where  estado=2";
-        }
+
         $query = $this->db->query($sql)->result_Array();
         return $query;
     }
 
     function get_list_facultades(){
-        if(isset($id_facultad) && $id_facultad > 0){
-            $sql = "select * from facultad where id_facultad ='".$id_facultad."'  and estado=2 order by nom_facultad";
-        }
-        else
-        {
+    
             $sql = "select * from facultad where  estado=2" ;
-        }
+        
         $query = $this->db->query($sql)->result_Array();
         return $query;
     }
 
     function get_list_estado_syllabus(){
-        if(isset($id_est_syllabus) && $id_est_syllabus > 0){
-            $sql = "select * from estado_syllabus where id_est_syllabus ='".$id_est_syllabus."' order by nom_est_syllabus";
-        }
-        else
-        {
+    
             $sql = "select * from estado_syllabus";
-        }
+    
         $query = $this->db->query($sql)->result_Array();
         return $query;
     }
@@ -228,26 +240,24 @@ class Contenedor_Model extends CI_Model {
     }
     
     function get_lista_docentes(){
-        if(isset($id_docente) && $id_docente > 0){
-            $sql = "select * from docente where id_docente ='".$id_docente."'  and estado=2 order by nom_docente";
-        }
-        else
-        {
-            $sql = "select * from docente  where  estado=2";
-        }
+ 
+            $sql = "select id_usuario, CONCAT( usuario_nombres, ' ', usuario_apater , ' ' , usuario_amater )  as nom_usu_docente  from users where id_nivel= 3 and estado=2 order by usuario_nombres";
+        
         $query = $this->db->query($sql)->result_Array();
         return $query;
     }
 
-    function get_lista_docentes_id($id_docente){
-            $sql = "select * from docente where id_docente ='".$id_docente."'  and estado=2 order by nom_docente";
+    function get_lista_docentes_id($id_usuario){
+
+        $sql = "select id_usuario, CONCAT( usuario_nombres, ' ', usuario_apater , ' ' , usuario_amater )  as nom_usu_docente  from users where id_nivel= 3 and estado=2 and id_usuario ='".$id_usuario."' order by usuario_nombres";
+
         $query = $this->db->query($sql)->result_Array();
         return $query;
     }
 
     function get_lista_anios_periodo($anio_act){
 
-        $anio = date("Y");
+        $anio = 2040;
      
 
         if(isset($anio_act) && $anio_act > 0){
@@ -298,10 +308,47 @@ class Contenedor_Model extends CI_Model {
         return $query;
     }
 
+
+    
+    function get_lista_plan_estudios_asignado($id_plan_estudios=0,$id_selected){
+        if(isset($id_plan_estudios) && $id_plan_estudios > 0){
+            if($id_selected==true){
+                $sql = "
+                
+                select ape.*,pe.nom_plan_estudios from asignacion_plan_estudios ape 
+                INNER JOIN plan_estudios pe on ape.id_plan_estudios=pe.id_plan_estudios 
+                where ape.estado=2 order by ape.fec_reg DESC; 
+                              
+                ";
+            }else{
+                $sql = "
+                
+                select ape.*,pe.nom_plan_estudios from asignacion_plan_estudios ape 
+                INNER JOIN plan_estudios pe on ape.id_plan_estudios=pe.id_plan_estudios 
+                where id_plan_estudios ='".$id_plan_estudios."' and 
+                ape.estado=2 order by ape.fec_reg DESC; 
+                
+                "
+                ;
+            }
+        }
+        else
+        {
+            $sql = "
+                select ape.*,pe.nom_plan_estudios from asignacion_plan_estudios ape 
+                INNER JOIN plan_estudios pe on ape.id_plan_estudios=pe.id_plan_estudios 
+                where ape.estado=2 order by ape.fec_reg DESC; 
+            ";
+        }
+        $query = $this->db->query($sql)->result_Array();
+        return $query;
+    }
+
+
     function get_lista_cursos($id_curso,$carreras_ids)
     {
         if(isset($id_curso) && $id_curso  > 0){
-                $sql = "select * from curso where id_curso  ='".$id_curso ."'  and estado=2 order by nom_curso ASC";
+                $sql = "select * from curso where id_curso  ='".$id_curso ."'  and estado in (2,10) order by nom_curso ASC";
         }else{
             if($carreras_ids==''){
                 $sql = "select * from curso  where  estado=100000";
@@ -312,7 +359,7 @@ class Contenedor_Model extends CI_Model {
             // }
             
             else{
-                $sql = "select * from curso where  estado=2 order by nom_curso ASC";
+                $sql = "select * from curso where  estado in (2,10) order by nom_curso ASC";
                 // $sql = "select * from curso where  estado=2 and id_carrera in (".$carreras_ids.",0) order by nom_curso ASC";
 
             }
@@ -334,7 +381,7 @@ class Contenedor_Model extends CI_Model {
                 SELECT 
                 `id_curso`,
                 `nom_curso` 
-                FROM CURSO WHERE ESTADO in (2,10) ORDER BY id_curso ASC
+                FROM CURSO WHERE ESTADO in (2,10,9) ORDER BY id_curso ASC
         ";            
  
 
@@ -349,7 +396,7 @@ class Contenedor_Model extends CI_Model {
                 `id_curso`,
                 `nom_curso` 
                 FROM CURSO 
-                WHERE ESTADO in (2,10) 
+                WHERE ESTADO in (2,10,9) 
                 AND id_curso IN (".$ids.")
                 
                 ORDER BY id_curso ASC
@@ -711,7 +758,7 @@ class Contenedor_Model extends CI_Model {
                             select * from curso 
                             where 
                             nom_curso  like '%".$searchTerm."%' 
-                            and  estado=2 
+                            and  estado in (10,2)
                             and id_carrera in (".$carreras_ids."); 
                         ";
 
@@ -719,7 +766,7 @@ class Contenedor_Model extends CI_Model {
                         $sql = "
                             select * from curso 
                             where 
-                            estado=2 
+                            estado in (10,2)
                             and id_carrera in (".$carreras_ids."); 
                         ";
 
@@ -861,25 +908,23 @@ class Contenedor_Model extends CI_Model {
     }
 
 
-    function get_lista_ciclos_num_by_plan_estudios($id_plan_estudios=null)
-    { 
+    function get_lista_ciclos_num_by_plan_estudios($id_plan_estudios=null,$id_asignacion_plan_estudios){ 
+        $sql = "          
 
-            $sql = "
-
-           
-            SELECT DISTINCT nom_ciclo  FROM ciclo c
-            INNER JOIN plan_estudios p ON c.id_plan_estudios= p.id_plan_estudios
-            INNER JOIN curso cur on c.id_curso= cur.id_curso
-            where p.id_plan_estudios in (".$id_plan_estudios.")
-            AND c.estado=2
-            
-            
-            " ;
-
+                SELECT c.nom_ciclo,cur.nom_curso,
+                c.id_curso,c.id_ciclo,p.id_plan_estudios 
+                FROM ciclo c 
+                INNER JOIN plan_estudios p ON c.id_plan_estudios= p.id_plan_estudios 
+                INNER JOIN curso cur on c.id_curso= cur.id_curso 
+                where p.id_plan_estudios in (".$id_plan_estudios.") 
+                AND c.estado=2 AND
+                c.id_ciclo not in ((select ac.id_ciclo from asignacion_cursos ac where ac.id_asignacion_plan_estudios=".$id_asignacion_plan_estudios." and ac.estado=2 ))
+                order by ciclo_electivo,ciclo_num ASC; 
+        
+                " ;
             
             $query = $this->db->query($sql)->result_Array();
             return $query;
-
     }
 
 
@@ -939,11 +984,11 @@ class Contenedor_Model extends CI_Model {
                     FROM `curso` 
                     WHERE 
                     id_curso  ='".$id_curso ."' and 
-                    estado=2 
+                    estado IN (2,10,9)
                     order by nom_curso ASC
 
                 ";
-        }else if(isset($id_curso ) && $id_curso ==0){
+        }else if(isset($id_curso) && $id_curso ==0){
 
             $sql = "
                     SELECT
@@ -1057,9 +1102,7 @@ class Contenedor_Model extends CI_Model {
                 " ;
                 $query = $this->db->query($sql)->result_Array();
                 return $query;
-    }
-    
-    
+    }    
     
     function update_comentarios_ficha_eval($coment_eval,$id_ficha_eval){
         $id_usuario= $_SESSION['usuario'][0]['id_usuario'];
@@ -1075,8 +1118,6 @@ class Contenedor_Model extends CI_Model {
 
     }
 
-
-    
     function get_total_tabla($nombre_tabla,$campo_id,$ids ){
 
         if($ids==='todos'){
@@ -1085,6 +1126,34 @@ class Contenedor_Model extends CI_Model {
         }else{
             $sql = "select count(*) as total from ".$nombre_tabla." where ".$campo_id." in ($ids)";
 
+        }
+
+        $query = $this->db->query($sql)->result_Array();
+        return $query;
+    }
+
+
+    function get_total_tabla_sy_asig($campo_id,$ids ){
+
+        if($ids==='todos'){
+            $sql = "
+                        select count(*) as total from syllabus  s
+                        INNER JOIN asignacion_cursos ac on s.id_asignacion_curso= ac.id_asignacion_cursos
+                        INNER JOIN asignacion_plan_estudios ape on ac.id_asignacion_plan_estudios = ape.id_asignacion_plan_estudios
+                        INNER JOIN plan_estudios pe on ape.id_plan_estudios = pe.id_plan_estudios
+
+                        where s.".$campo_id." in (1,2,3) and ape.estado =2 and ac.estado=2 and pe.estado=3;
+                    ";
+
+        }else{
+            $sql =  "
+                        select count(*) as total from syllabus  s
+                        INNER JOIN asignacion_cursos ac on s.id_asignacion_curso= ac.id_asignacion_cursos
+                        INNER JOIN asignacion_plan_estudios ape on ac.id_asignacion_plan_estudios = ape.id_asignacion_plan_estudios
+                        INNER JOIN plan_estudios pe on ape.id_plan_estudios = pe.id_plan_estudios
+
+                        where s.".$campo_id." in ($ids) and ape.estado =2 and ac.estado=2 and pe.estado=3;    
+                    ";
         }
 
         $query = $this->db->query($sql)->result_Array();
@@ -1110,7 +1179,30 @@ class Contenedor_Model extends CI_Model {
     }
 
 
+      
+    function get_total_tabla_usu_sy_asig($campo_id,$ids,$reg_usu,$campo_usu ){
 
+        if($ids==='todos'){
+            $sql = "select count(*) as total from syllabus  s
+            INNER JOIN asignacion_cursos ac on s.id_asignacion_curso= ac.id_asignacion_cursos
+            INNER JOIN asignacion_plan_estudios ape on ac.id_asignacion_plan_estudios = ape.id_asignacion_plan_estudios
+            INNER JOIN plan_estudios pe on ape.id_plan_estudios = pe.id_plan_estudios
+
+            where s.".$campo_id." in (1,2,3) and s.".$campo_usu." = ".$reg_usu." and ape.estado =2 and ac.estado=2 and pe.estado=3;" ;
+
+        }else{
+            $sql = "select count(*) as total from syllabus s
+            INNER JOIN asignacion_cursos ac on s.id_asignacion_curso= ac.id_asignacion_cursos
+            INNER JOIN asignacion_plan_estudios ape on ac.id_asignacion_plan_estudios = ape.id_asignacion_plan_estudios
+            INNER JOIN plan_estudios pe on ape.id_plan_estudios = pe.id_plan_estudios
+
+             where s.".$campo_id." in ($ids) and s.".$campo_usu." = ".$reg_usu ." and ape.estado =2 and ac.estado=2 and pe.estado=3;" ;
+
+        }
+
+        $query = $this->db->query($sql)->result_Array();
+        return $query;
+    }
     
     function get_sumilla_by_version($id_version_sy){
 
@@ -1143,4 +1235,118 @@ class Contenedor_Model extends CI_Model {
         $query = $this->db->query($sql)->result_Array();
         return $query;
     }
+
+
+    function get_lista_like_print($texto,$campo,$tlb,$id)
+    {
+        $estados_ids = array(10,2,9);
+
+            $this->db->select('*');
+            $this->db->from($tlb);
+            // $this->db->where('estado', 10);
+            // $this->db->where('estado', 2);
+            $this->db->where_in('estado', $estados_ids);
+            $this->db->like($campo, $texto);
+            $this->db->order_by($id, "asc");
+            $this->db->limit(1);
+            $query = $this->db->get();
+
+            $data = $query->result_array();
+            return $data;
+    }
+
+
+    
+    function get_lista_like_print_none($texto,$campo,$tlb,$id)
+    {
+        $estados_ids = array(10,2,9);
+
+            $this->db->select('*');
+            $this->db->from($tlb);
+            // $this->db->where('estado', 10);
+            // $this->db->where('estado', 2);
+            $this->db->where_in('estado', $estados_ids);
+            $this->db->like($campo, $texto, 'none');
+            $this->db->order_by($id, "asc");
+            $this->db->limit(1);
+            $query = $this->db->get();
+
+            $data = $query->result_array();
+             print_r($data);
+            return $data;
+    }
+    
+    function get_lista_ciclo_planEstudios_by_id($id_ciclo)
+    { 
+
+            $sql = "
+
+                SELECT c.*, p.tipo_estudios,p.id_carrera as 'id_carrera_plan',car.id_director,p.anio
+                FROM ciclo c 
+                INNER JOIN plan_estudios p ON c.id_plan_estudios= p.id_plan_estudios
+                INNER JOIN carrera car ON p.id_carrera= p.id_carrera 
+                where 
+                c.id_ciclo in (".$id_ciclo.") 
+                AND c.estado=2 LIMIT 1; 
+
+            " ;
+
+            
+            $query = $this->db->query($sql)->result_Array();
+            return $query;
+
+    }
+
+    
+    function planestudio_total_anio( $anio,$estado ){
+
+        $sql = "
+        
+                select count(*) as total 
+                from plan_estudios            
+                where estado in (".$estado.")
+
+                " ;
+
+        if($anio!=0){
+            $sql .= "
+                    and anio = ".$anio."
+                    " ;
+        }
+    
+        $query = $this->db->query($sql)->result_Array();
+        return $query;
+    }
+    
+
+    function get_total_tabla_sy_asig_anio($anio,$estado , $id_usuario_sesion,$id_nivel_main ){
+
+        $sql =  "
+                    select count(*) as total from syllabus  s
+                    INNER JOIN asignacion_cursos ac on s.id_asignacion_curso= ac.id_asignacion_cursos
+                    INNER JOIN asignacion_plan_estudios ape on ac.id_asignacion_plan_estudios = ape.id_asignacion_plan_estudios
+                    INNER JOIN plan_estudios pe on ape.id_plan_estudios = pe.id_plan_estudios
+
+                    where s.estado in (".$estado.") and ape.estado =2 and ac.estado=2 and pe.estado=3
+                ";
+
+        if($anio!=0){
+            $sql .= "
+                    and  pe.anio=".$anio."  
+                    " ;
+        }
+
+        if($id_nivel_main ==3){
+            $sql .= "
+                    and  s.id_usuario=".$id_usuario_sesion."  
+                    " ;
+        }
+                
+
+        $query = $this->db->query($sql)->result_Array();
+        return $query;
+    }
+
+
+
 }

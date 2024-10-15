@@ -69,7 +69,8 @@ $sesion =  "eee";
 <div class="container"  style = "width: 450px">
     <h6 class="mayusculas" style = "font-size:18px; text-align:left;margin-bottom: 0px " >
 
-    <?php echo datos_sillabus($id_version_sy,'nombre_syllabus'); ?>   
+    <!-- <?php echo datos_sillabus($id_version_sy,'nombre_syllabus'); ?>    -->
+    <?php echo datos_sillabus($id_version_sy,'nom_curso'); ?>
 
 
     <p class="subtitulo" style = "font-size:12px; text-align:left;">Ficha de Evaluación <?php  echo datos_sillabus($id_version_sy,'periodo_anio'); ?>-<?php echo datos_sillabus($id_version_sy,'periodo_ciclo'); ?>  / <?php  echo datos_sillabus($id_version_sy,'nom_tipo_estudios'); ?> </p>

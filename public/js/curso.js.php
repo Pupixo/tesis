@@ -62,7 +62,7 @@
             lengthMenu: [[5,10, 25, 50, -1], ['5','10', '25', '50', 'Show all']],
             "pageLength": 10,
             "language": {"url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"},
-            "order": [[1, "desc"]],
+            "order": [[0, "desc"]],
             "aProcessing": true, //Activamos el procesamiento del datatables
             "aServerSide": true, //Paginación y filtrado realizados por el servidor
             // "dom": '<"top d-flex justify-content-center""B><"top"lf>rt<"bottom"ip><"clear">',
@@ -233,8 +233,8 @@
 
         /********* */
 
-        
-        $(objGeneral_exec.modal_principal+" "+'#cbx_basicos_id_carrera').select2({});
+        // $(objGeneral_exec.modal_principal+" "+'#cbx_basicos_id_carrera').select2();
+
         $(objGeneral_exec.modal_principal+" "+"#cbx_multiple_id_curso").select2();
 
     });
@@ -246,18 +246,18 @@
     	$(objGeneral.modal_principal+" "+'#codigo').val('');
 
 		$(objGeneral.modal_principal+" "+'#creditos').val('');
-    	$(objGeneral.modal_principal+" "+'#horas_teoricas').val('');
+    	$(objGeneral.modal_principal+" "+'#horas_teoricas').val(0);
 
-        $(objGeneral.modal_principal+" "+'#horas_sincronas_teoricas').val('');
-    	$(objGeneral.modal_principal+" "+'#horas_asincronas_teoricas').val('');
-    	$(objGeneral.modal_principal+" "+'#horas_teoricas_presencial').val('');
+        $(objGeneral.modal_principal+" "+'#horas_sincronas_teoricas').val(0);
+    	$(objGeneral.modal_principal+" "+'#horas_asincronas_teoricas').val(0);
+    	$(objGeneral.modal_principal+" "+'#horas_teoricas_presencial').val(0);
 
 
-        $(objGeneral.modal_principal+" "+'#horas_practicas').val('');
+        $(objGeneral.modal_principal+" "+'#horas_practicas').val(0);
 
-        $(objGeneral.modal_principal+" "+'#horas_sincronas_practicas').val('');
-    	$(objGeneral.modal_principal+" "+'#horas_asincronas_practicas').val('');
-    	$(objGeneral.modal_principal+" "+'#horas_practicas_presencial').val('');
+        $(objGeneral.modal_principal+" "+'#horas_sincronas_practicas').val(0);
+    	$(objGeneral.modal_principal+" "+'#horas_asincronas_practicas').val(0);
+    	$(objGeneral.modal_principal+" "+'#horas_practicas_presencial').val(0);
 
 
         $(objGeneral.modal_principal+" "+'#horas_totales').val('');
@@ -460,11 +460,14 @@
             return false;
         }
 
-        if($(objGeneral.modal_principal+" "+'#cbx_multiple_id_curso').val().length == 0) {
-                msgDate = 'Debe ingresar los requisitos del curso';
-                inputFocus = '#cbx_multiple_id_curso';
-                return false;
+        if($(objGeneral.modal_principal+" "+'#cbx_basicos_id_curso_importancia').val().trim() === '1'){
+            if($(objGeneral.modal_principal+" "+'#cbx_multiple_id_curso').val().length == 0) {
+                    msgDate = 'Debe ingresar los requisitos del curso';
+                    inputFocus = '#cbx_multiple_id_curso';
+                    return false;
             }
+        }
+           
 
         if($(objGeneral.modal_principal+" "+'#cbx_basicos_id_tipo_curso').val().trim() === '0') {
             msgDate = 'Debe seleccionar el tipo de curso';
@@ -504,7 +507,11 @@
     function Insert_Update_<?php echo $opcion; ?>(Accion){
         var objGeneral = fnDataGeneral();
         var dataString = $(objGeneral.modal_principal+" "+objGeneral.formulario_principal).serialize();
-        console.log(objGeneral.modal_principal+" "+objGeneral.formulario_principal);
+        $(objGeneral.modal_principal+" "+'#boton_guardar_manage').attr("disabled", true);	
+
+        if($(objGeneral.modal_principal+" "+'#cbx_multiple_id_curso').val().length == 0) {
+            var dataString = dataString + "&cbx_multiple_id_curso=null"
+        }        
 
            console.log(dataString);
                 if (Valida_<?php echo $opcion; ?>()) {
@@ -521,6 +528,8 @@
                                     'success'
                                     ).then(function() {
                                         window.location = objGeneral.__wurl;
+                                        $(objGeneral.modal_principal+" "+'#boton_guardar_manage').attr("disabled", false);	
+
                                     });
                             })
                             .fail(function(jqXHR, textStatus, errorThrown) {
@@ -540,6 +549,8 @@
                                         'success'
                                     ).then(function() {
                                         window.location = objGeneral.__wurl;
+                                        $(objGeneral.modal_principal+" "+'#boton_guardar_manage').attr("disabled", false);	
+
                                     });
                             })
                             .fail(function(jqXHR, textStatus, errorThrown) {
@@ -619,10 +630,14 @@
 
         }else if(valor==2){
             $(objGeneral.modal_principal+" "+'.tip_carrera').css({"display": ""});
-      
-        }else{
-            $(objGeneral.modal_principal+" "+'.tip_carrera').css({"display": "none"});
+            console.log("🚀 ~ file: curso.js.php:627 ~ TIPO_CURSO ~ objGeneral.modal_principal:", objGeneral.modal_principal)
+            
+            // $(objGeneral.modal_principal+" "+'#cbx_basicos_id_carrera').select2('destroy');
 
+            $(objGeneral.modal_principal+" "+'#cbx_basicos_id_carrera').select2();
+
+        }else{
+            $(objGeneral.modal_principal+" "+'.tip_carrera').css({"display": "none"});       
         }
       
     }   
@@ -824,92 +839,121 @@
     
     function Agregar_competencia(tabla){
 
-        Swal.fire(
-            'Fila Especifica agregada!',
+
+
+        Swal.fire({
+        title: '¿Esta Seguro de continuar?',
+        text: "",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+            'Fila agregada!',
             'correctamente ',
             'success'
         ).then(function() {
 
+                    var tbl_general = $("#modal_dicionario_curso #tbl_tabla tbody tr"); 
+                    var cantidad_filas = tbl_general.length +1;
+                                                    
+                        $("#modal_dicionario_curso #tbl_tabla tbody").append(`  
 
-            var tbl_general = $("#modal_dicionario_curso #tbl_tabla tbody tr"); 
-            var cantidad_filas = tbl_general.length +1;
-                                            
-                $("#modal_dicionario_curso #tbl_tabla tbody").append(`  
+                            <tr>
+                                <td scope="row" tipo_compt="${(tabla ==='G' ? 1 : 2)}">
+                                    ${cantidad_filas} </br>
 
-                    <tr>
-                        <td scope="row" tipo_compt="${(tabla ==='G' ? 1 : 2)}">
-                            ${cantidad_filas} </br>
+                                        <button type="button"  id="guardar"  onclick="Guardar_fila(this,'')" class="btn btn-secondary btn-circle"><i class="fas fa-save"></i></button>
+                                        <button type="button"  onclick="Eliminar_fila(this,'')"  class="btn btn-secondary btn-circle"><i class="fa fa-trash-o"></i></button>
 
-                                <button type="button"  id="guardar"  onclick="Guardar_fila(this,'')" class="btn btn-secondary btn-circle"><i class="fas fa-save"></i></button>
-                                <button type="button"  onclick="Eliminar_fila(this,'')"  class="btn btn-secondary btn-circle"><i class="fa fa-trash-o"></i></button>
+                                </td>
+                                <td>
+                                    <textarea name="" id="" cols="40" rows="5"></textarea>
+                                </td>
+                                <td>
+                                    <textarea name="" id="" cols="50" rows="10"></textarea>
+                                </td>
+                                <td>
+                                    <textarea name="" id="" cols="50" rows="10"></textarea>
+                                </td>
+                                <td>
+                                    <textarea name="" id="" cols="50" rows="10"></textarea>
+                                </td>
+                
+                            </tr>
 
-                        </td>
-                        <td>
-                            <textarea name="" id="" cols="40" rows="5"></textarea>
-                        </td>
-                        <td>
-                            <textarea name="" id="" cols="50" rows="10"></textarea>
-                        </td>
-                        <td>
-                            <textarea name="" id="" cols="50" rows="10"></textarea>
-                        </td>
-                        <td>
-                            <textarea name="" id="" cols="50" rows="10"></textarea>
-                        </td>
-        
-                    </tr>
+                        ` );
 
-                ` );
-        });
+                });
     
+            }
+        }) 
     }
     
     function Guardar_fila(th,id){
-            var objGeneral = fnDataGeneral();
+ 
+        Swal.fire({
+        title: '¿Esta Seguro de continuar?',
+        text: "",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, guardar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                        var objGeneral = fnDataGeneral();
     
-            var id_diccionario_competen = id;
-            var fila_tr =$(th).parent().parent();
-            var compt_gene=$(fila_tr).find("td").eq(1).find("textarea").val();
-            var nivel_uno=$(fila_tr).find("td").eq(2).find("textarea").val();
-            var nivel_dos=$(fila_tr).find("td").eq(3).find("textarea").val();
-            var nivel_tres=$(fila_tr).find("td").eq(4).find("textarea").val();
+                        var id_diccionario_competen = id;
+                        var fila_tr =$(th).parent().parent();
+                        var compt_gene=$(fila_tr).find("td").eq(1).find("textarea").val();
+                        var nivel_uno=$(fila_tr).find("td").eq(2).find("textarea").val();
+                        var nivel_dos=$(fila_tr).find("td").eq(3).find("textarea").val();
+                        var nivel_tres=$(fila_tr).find("td").eq(4).find("textarea").val();
 
-            var id_curso = $('#modal_dicionario_curso #id_curso').val();
+                        var id_curso = $('#modal_dicionario_curso #id_curso').val();
 
-            var tipo_compt=$(fila_tr).find("td").eq(0).attr('tipo_compt');
+                        var tipo_compt=$(fila_tr).find("td").eq(0).attr('tipo_compt');
 
 
-            $.ajax({
-                type:"POST",
-                url:  objGeneral.__wurl+'Guardar_Diccionario_Compt',
-                data: {
-                    'id_diccionario_competen':id_diccionario_competen,
-                    'compt_gene':compt_gene,
-                    'nivel_uno':nivel_uno,
-                    'nivel_dos':nivel_dos,
-                    'nivel_tres':nivel_tres,
-                    'id_curso':id_curso,
-                    'tipo_compt':tipo_compt
+                        $.ajax({
+                            type:"POST",
+                            url:  objGeneral.__wurl+'Guardar_Diccionario_Compt',
+                            data: {
+                                'id_diccionario_competen':id_diccionario_competen,
+                                'compt_gene':compt_gene,
+                                'nivel_uno':nivel_uno,
+                                'nivel_dos':nivel_dos,
+                                'nivel_tres':nivel_tres,
+                                'id_curso':id_curso,
+                                'tipo_compt':tipo_compt
 
-                },success:function (id_tabla) {
-                    console.log("🚀 ~ file: curso.js.php:895 ~ Guardar_fila ~ data:", id_tabla);
+                            },success:function (id_tabla) {
 
-                    Swal.fire(
-                    (id_diccionario_competen ==='' ? 'Guardado!' : 'Actualizado'),
-                        'El registro ha sido '+(id_diccionario_competen ==='' ? 'guardado' : 'actualizado')+' satisfactoriamente.',
-                        'success'
-                    ).then(function() {
-                 
-                        $(fila_tr).find("td").eq(0).html( `
+                                Swal.fire(
+                                (id_diccionario_competen ==='' ? 'Guardado!' : 'Actualizado'),
+                                    'El registro ha sido '+(id_diccionario_competen ==='' ? 'guardado' : 'actualizado')+' satisfactoriamente.',
+                                    'success'
+                                ).then(function() {
+                            
+                                    $(fila_tr).find("td").eq(0).html( `
 
-<button type="button"  id="guardar"  onclick="Guardar_fila(this,${(id_diccionario_competen ==='' ? id_tabla : id_diccionario_competen)})" class="btn btn-secondary btn-circle"><i class="fa fa-pencil"></i></i></button>
-<button type="button"  onclick="Eliminar_fila(this,${(id_diccionario_competen ==='' ? id_tabla : id_diccionario_competen)})"  class="btn btn-secondary btn-circle"><i class="fa fa-trash-o"></i></button>
+                                            <button type="button"  id="guardar"  onclick="Guardar_fila(this,${(id_diccionario_competen ==='' ? id_tabla : id_diccionario_competen)})" class="btn btn-secondary btn-circle"><i class="fa fa-pencil"></i></i></button>
+                                            <button type="button"  onclick="Eliminar_fila(this,${(id_diccionario_competen ==='' ? id_tabla : id_diccionario_competen)})"  class="btn btn-secondary btn-circle"><i class="fa fa-trash-o"></i></button>
 
-                        `);
+                                    `);
 
-                    });
-                }
-            });
+                                });
+                            }
+                        });
+            }
+        }) 
 
     }   
     
@@ -987,62 +1031,117 @@
     }   
     //-----------------------------------------------------------------
     function Sumilla_data(id){
-        $('#modal_dicionario_sumilla').modal('show');       
-        var objGeneral = fnDataGeneral();
-        var id_curso = id;
-        $( '#modal_dicionario_sumilla'+' #id_curso_sumilla').val(id_curso);
-        
 
-        $.ajax({
-            type:"POST",
-            url:  objGeneral.__wurl+'Mirar_sumilla_curso',
-            data: {'id_curso':id_curso},
-            success:function (data) {
-                var data = JSON.parse(data);
-                console.log("🚀 ~ file: curso.js.php:993 ~ Sumilla_data ~ data:", data);
-                console.log("🚀 ~ file: curso.js.php:993 ~ Sumilla_data ~ data:",  data.length);
 
-                var filas = data.length;
+                $('#modal_dicionario_sumilla').modal('show');       
+                var objGeneral = fnDataGeneral();
+                var id_curso = id;
+                $( '#modal_dicionario_sumilla'+' #id_curso_sumilla').val(id_curso);
+                
 
-                $('#modal_dicionario_sumilla #botonagregar_sumilla').attr("onClick", "Agregar_sumilla_curso('"+(filas == 0 ? "G" : "E")+"')");
+                $.ajax({
+                    type:"POST",
+                    url:  objGeneral.__wurl+'Mirar_sumilla_curso',
+                    data: {'id_curso':id_curso},
+                    success:function (data) {
+                        var data = JSON.parse(data);
+                        console.log("🚀 ~ file: curso.js.php:993 ~ Sumilla_data ~ data:", data);
+                        console.log("🚀 ~ file: curso.js.php:993 ~ Sumilla_data ~ data:",  data.length);
 
-                if(filas == 0){
-                    $('#modal_dicionario_sumilla #descrip_sumilla_curso').val('');
-                    $('#modal_dicionario_sumilla #id_sumilla_curso').val('');
-                }else{
-                    $('#modal_dicionario_sumilla #descrip_sumilla_curso').val(data[0]['descrip_sumilla']);
-                    $('#modal_dicionario_sumilla #id_sumilla_curso').val(data[0]['id_sumilla_curso']);
-                }
-            }
-        });
+                        var filas = data.length;
+
+                        $('#modal_dicionario_sumilla #botonagregar_sumilla').attr("onClick", "Agregar_sumilla_curso('"+(filas == 0 ? "G" : "E")+"')");
+
+                        if(filas == 0){
+                            $('#modal_dicionario_sumilla #descrip_sumilla_curso').val('');
+                            $('#modal_dicionario_sumilla #id_sumilla_curso').val('');
+                        }else{
+                            $('#modal_dicionario_sumilla #descrip_sumilla_curso').val(data[0]['descrip_sumilla']);
+                            $('#modal_dicionario_sumilla #id_sumilla_curso').val(data[0]['id_sumilla_curso']);
+                        }
+                    }
+                });
+
     }   
 
     function Agregar_sumilla_curso(accion){
-        var objGeneral = fnDataGeneral();
-        var id_sumilla_curso =$('#modal_dicionario_sumilla #id_sumilla_curso').val();
-        var descrip_sumilla =$('#modal_dicionario_sumilla #descrip_sumilla_curso').val();
-        var id_curso_sumilla =$('#modal_dicionario_sumilla #id_curso_sumilla').val();
 
-        $.ajax({
-                type:"POST",
-                url:  objGeneral.__wurl+'Guardar_Sumilla_Curso',
-                data: {
-                    'id_sumilla_curso':id_sumilla_curso,
-                    'descrip_sumilla':descrip_sumilla,
-                    'id_curso_sumilla':id_curso_sumilla,
 
-                },success:function () {
-                    Swal.fire(
-                    (id_sumilla_curso ==='' ? 'Guardado!' : 'Actualizado'),
-                        'El registro ha sido '+(id_sumilla_curso ==='' ? 'guardado' : 'actualizado')+' satisfactoriamente.',
-                        'success'
-                    ).then(function() {
-                        $('#modal_dicionario_sumilla').modal('hide');       
 
-                    });
-                }
-            });
+         
+        Swal.fire({
+        title: '¿Esta Seguro de continuar?',
+        text: "",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, guardar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
 
+                        $('#modal_dicionario_sumilla').modal('show');       
+                        var objGeneral = fnDataGeneral();
+                        var id_curso = id;
+                        $( '#modal_dicionario_sumilla'+' #id_curso_sumilla').val(id_curso);
+                        
+
+                        $.ajax({
+                            type:"POST",
+                            url:  objGeneral.__wurl+'Mirar_sumilla_curso',
+                            data: {'id_curso':id_curso},
+                            success:function (data) {
+                                var data = JSON.parse(data);
+                                console.log("🚀 ~ file: curso.js.php:993 ~ Sumilla_data ~ data:", data);
+                                console.log("🚀 ~ file: curso.js.php:993 ~ Sumilla_data ~ data:",  data.length);
+
+                                var filas = data.length;
+
+                                $('#modal_dicionario_sumilla #botonagregar_sumilla').attr("onClick", "Agregar_sumilla_curso('"+(filas == 0 ? "G" : "E")+"')");
+
+                                if(filas == 0){
+                                    $('#modal_dicionario_sumilla #descrip_sumilla_curso').val('');
+                                    $('#modal_dicionario_sumilla #id_sumilla_curso').val('');
+                                }else{
+                                    $('#modal_dicionario_sumilla #descrip_sumilla_curso').val(data[0]['descrip_sumilla']);
+                                    $('#modal_dicionario_sumilla #id_sumilla_curso').val(data[0]['id_sumilla_curso']);
+                                }
+                            }
+                        });
+
+
+                        var objGeneral = fnDataGeneral();
+                        var id_sumilla_curso =$('#modal_dicionario_sumilla #id_sumilla_curso').val();
+                        var descrip_sumilla =$('#modal_dicionario_sumilla #descrip_sumilla_curso').val();
+                        var id_curso_sumilla =$('#modal_dicionario_sumilla #id_curso_sumilla').val();
+
+                        $.ajax({
+                                type:"POST",
+                                url:  objGeneral.__wurl+'Guardar_Sumilla_Curso',
+                                data: {
+                                    'id_sumilla_curso':id_sumilla_curso,
+                                    'descrip_sumilla':descrip_sumilla,
+                                    'id_curso_sumilla':id_curso_sumilla,
+
+                                },success:function () {
+                                    Swal.fire(
+                                    (id_sumilla_curso ==='' ? 'Guardado!' : 'Actualizado'),
+                                        'El registro ha sido '+(id_sumilla_curso ==='' ? 'guardado' : 'actualizado')+' satisfactoriamente.',
+                                        'success'
+                                    ).then(function() {
+                                        $('#modal_dicionario_sumilla').modal('hide');       
+
+                                    });
+                                }
+                            });
+
+
+            }
+        }) 
+
+
+     
 
     }
 

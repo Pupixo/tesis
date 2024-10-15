@@ -70,9 +70,7 @@
                     $objeto    = $CI->contenedor->get_lista_plan_estudios_aginado_usu($valor,$id_selected);
                     break;   
 
-                case 'lista_recursos_aula':
-                    $objeto    = $CI->contenedor->get_recursos_aula($valor,$id_selected);
-                    break;   
+              
             }
 
             $disabled = ($bool) ? ' disabled="disabled"' : "";
@@ -81,7 +79,7 @@
 
 
             $selected = ($valor == 0) ? " selected" : "";
-            echo '<select '.$readonly_.' class="'.$clase_css.'" tabindex="-1" id="cbx_basicos_' . $abrev . '" name="cbx_basicos_' . $abrev . '" ' . $disabled . ' ' .  (($function == null) ? "" : "onchange=".  $function ."(this)"  ) .' >';
+            echo '<select '.$readonly_.' class="'.$clase_css.'" id="cbx_basicos_' . $abrev . '" name="cbx_basicos_' . $abrev . '" ' . $disabled . ' ' .  (($function == null) ? "" : "onchange=".  $function ."(this)"  ) .' >';
             echo '<option value="0"  ' . $selected . '>'.$placeholder.'</option>';
 
             // print($objeto);
@@ -93,6 +91,8 @@
             echo '</select>';
         }
     }
+
+
 
 
 
@@ -111,6 +111,13 @@
                     $objeto    = $CI->contenedor->get_lista_plan_estudios_aginado_usu($valor,$id_selected);
                     break;   
 
+                case 'lista_recursos_aula':
+                    $objeto    = $CI->contenedor->get_recursos_aula($valor,$id_selected);
+                    break;
+                case 'lista_plan_estudios':
+                    $objeto    = $CI->contenedor->get_lista_plan_estudios_asignado($valor,$id_selected);
+                    break;     
+
             }
 
             $disabled = ($bool) ? ' disabled="disabled"' : "";
@@ -119,13 +126,13 @@
 
 
             $selected = ($valor == 0) ? " selected" : "";
-            echo '<select '.$readonly_.' class="'.$clase_css.'" tabindex="-1" id="cbx_basicos_' . $abrev . '" name="cbx_basicos_' . $abrev . '" ' . $disabled . ' ' .  (($function == null) ? "" : "onchange=".  $function ."(this)"  ) .' >';
+            echo '<select '.$readonly_.' class="'.$clase_css.'" id="cbx_basicos_' . $abrev . '" name="cbx_basicos_' . $abrev . '" ' . $disabled . ' ' .  (($function == null) ? "" : "onchange=".  $function ."(this)"  ) .' >';
             echo '<option value="0"  ' . $selected . '>'.$placeholder.'</option>';
 
             // print($objeto);
             foreach ($objeto as $key => $value) {
             // $selected = ($valor == $value[$id_db]) ? " selected" : "";
-            echo '<option data-id-extra="'.$value[$id_extra].'" value="' . $value[$id_db] . '" '. $selected .'>' . $value[$nomb_db] . '</option>';
+            echo '<option data-id-extra="'.$value[$id_extra].'" value="' . $value[$id_db] . '" >' . $value[$nomb_db] . '</option>';
 
             }
             echo '</select>';
@@ -172,8 +179,7 @@
 
             $disabled = ($bool) ? ' disabled="disabled"' : "";
             $selected = "";
-            echo '<select  multiple="multiple" class="js-example-basic-multiple '.$clase_css.' " tabindex="-1" id="cbx_multiple_' . $abrev . '" name="cbx_multiple_' . $abrev . '[]" ' . $disabled . ' ' .  (($function == null) ? "" : "onchange=".  $function ."(this)"  ) .' >';
-        // echo '<option value="0" >'.$placeholder.'</option>';
+            echo '<select  multiple="multiple" class="js-example-basic-multiple '.$clase_css.' " id="cbx_multiple_' . $abrev . '" name="cbx_multiple_' . $abrev . '[]" ' . $disabled . ' ' .  (($function == null) ? "" : "onchange=".  $function ."(this)"  ) .' >';
 
         if($valor ==0){
                 foreach ($objeto as $key => $value) {
@@ -200,18 +206,19 @@
         return  ob_get_clean();
     }
 
-    if (!function_exists('modal_largo')) 
+
+    if (!function_exists('modal_xl_largo_full')) 
     {
-        function modal_largo($abrev, $ocultar = false,$ruta,$funcion,$formulario,$modal_nombre='modal_data')
+        function modal_xl_largo_full($abrev, $ocultar = false,$ruta,$funcion,$formulario,$modal_nombre='modal_data',$bool=true)
         {
             $display = ($ocultar) ? ' style="display:none' : '';
-            $modal = '<div id="modal_largo_' . $abrev . '" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="titulo_modal_lg" aria-hidden="true" ' . $display . ' >';
-            $modal .= '<div class="modal-dialog modal-lg">';
+            $modal = '<div id="modal_xl_largo_' . $abrev . '" class="modal fade " role="dialog" aria-labelledby="titulo_modal_xl"  data-backdrop="static" data-keyboard="false" aria-hidden="true" ' . $display . ' >';
+            $modal .= '<div class="modal-dialog  modal-dialog-scrollable modal-full-width">';
             $modal .= '<div class="modal-content">';
 
 
                 $modal .= '<div class="modal-header">';
-                $modal .= '<h5 class="modal-title h4" id="titulo_modal_lg">Extra large modal</h5>';
+                $modal .= '<h5 class="modal-title h4" id="titulo_modal_xl_full">Large modal</h5>';
                 $modal .= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
                 $modal .= '<span aria-hidden="true">×</span>';
                 $modal .= '</button>';
@@ -224,13 +231,19 @@
 
                 $modal .=  generar_html($ruta.'/'.$modal_nombre.'.php');
 
-
                 $modal .= '</form>';
                 $modal .= '</div>';
 
                 $modal.= '<div class="modal-footer">';
-                $modal.= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>';
-                $modal.= '<button type="button" class="btn btn-primary" onclick="'.$funcion.'();">Guardar</button>';
+                
+                if($bool ==true){
+                    $modal.= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>';
+                    $modal.= '<button type="button" class="btn btn-primary" onclick="'.$funcion.'();">Guardar</button>';
+                }else{
+                    $modal.= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>';
+                }
+
+           
                 $modal.= ' </div>';
 
 
@@ -241,14 +254,13 @@
         }
     }
 
-
     if (!function_exists('modal_xl_largo')) 
     {
         function modal_xl_largo($abrev, $ocultar = false,$ruta,$funcion,$formulario,$modal_nombre='modal_data',$bool=true)
         {
             $display = ($ocultar) ? ' style="display:none' : '';
-            $modal = '<div id="modal_xl_largo_' . $abrev . '" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="titulo_modal_xl" aria-hidden="true" ' . $display . ' >';
-            $modal .= '<div class="modal-dialog modal-xl">';
+            $modal = '<div id="modal_xl_largo_' . $abrev . '" class="modal fade " role="dialog"  data-backdrop="static" data-keyboard="false" aria-labelledby="titulo_modal_xl" aria-hidden="true" ' . $display . ' >';
+            $modal .= '<div class="modal-dialog modal-dialog-scrollable modal-xl">';
             $modal .= '<div class="modal-content">';
 
 
@@ -290,12 +302,57 @@
     }
 
 
+    if (!function_exists('modal_largo')) 
+    {
+        function modal_largo($abrev, $ocultar = false,$ruta,$funcion,$formulario,$modal_nombre='modal_data')
+        {
+            $display = ($ocultar) ? ' style="display:none' : '';
+            $modal = '<div id="modal_largo_' . $abrev . '" class="modal fade " role="dialog"  data-backdrop="static" data-keyboard="false" aria-labelledby="titulo_modal_lg" aria-hidden="true" ' . $display . ' >';
+            $modal .= '<div class="modal-dialog modal-dialog-scrollable modal-lg">';
+            $modal .= '<div class="modal-content">';
+
+
+                $modal .= '<div class="modal-header">';
+                $modal .= '<h5 class="modal-title h4" id="titulo_modal_lg">Extra large modal</h5>';
+                $modal .= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                $modal .= '<span aria-hidden="true">×</span>';
+                $modal .= '</button>';
+                $modal .= '</div>';
+
+
+                $modal .= '<div class="modal-body">';
+                $modal .= '<form id="' . $formulario . '"  method="POST" enctype="multipart/form-data">';
+                $modal .= '<input name="id_'.$abrev.'" type="hidden" id="id_'.$abrev.'"  value="">';
+
+                $modal .=  generar_html($ruta.'/'.$modal_nombre.'.php');
+
+
+                $modal .= '</form>';
+                $modal .= '</div>';
+
+                $modal.= '<div class="modal-footer">';
+                $modal.= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>';
+                $modal.= '<button type="button" id="boton_guardar_manage" class="btn btn-primary" onclick="'.$funcion.'();">Guardar</button>';
+                $modal.= ' </div>';
+
+
+            $modal .= '</div>';
+            $modal .= '</div>';
+            $modal .= '</div>';
+            echo $modal;
+        }
+    }
+
+
+    
+
+
     if (!function_exists('modal_peque')) 
     {
         function modal_peque($abrev, $ocultar = false,$ruta,$funcion,$formulario,$modal_nombre='modal_data')
         {
             $display = ($ocultar) ? ' style="display:none' : '';
-            $modal = '<div id="modal_peque_' . $abrev . '" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="titulo_modal_peque" aria-hidden="true" ' . $display . ' >';
+            $modal = '<div id="modal_peque_' . $abrev . '" class="modal fade"  data-backdrop="static" data-keyboard="false"  role="dialog" aria-labelledby="titulo_modal_peque" aria-hidden="true" ' . $display . ' >';
             $modal .= '<div class="modal-dialog  modal-sm">';
             $modal .= '<div class="modal-content">';
 
@@ -396,8 +453,6 @@
         $CI->load->model('Contenedor_model','contenedor');
         $user    = $CI->contenedor->datos_sillabus($id_version_sy);
 
-
-
         if (empty($user)) {
             return '';
         } else {
@@ -440,8 +495,53 @@
         }
     }
 
-    function obtenerDatosIndexNuevo($th)
-    {
+    function print_lista_like($texto,$campo,$tlb,$id) {
+        $CI = & get_instance();
+        $CI->load->model('Contenedor_model','contenedor');
+        $data_mostrar    = $CI->contenedor->get_lista_like_print($texto,$campo,$tlb,$id);
+      
+        $datos=null;
+        foreach ($data_mostrar as $key => $value) {
+                $datos =$value[$id];
+        }
+            
+            
+        return $datos;
+        
+    }
+
+
+
+    
+    function print_lista_like_none($texto,$campo,$tlb,$id) {
+        $CI = & get_instance();
+        $CI->load->model('Contenedor_model','contenedor');
+        $data_mostrar    = $CI->contenedor->get_lista_like_print_none($texto,$campo,$tlb,$id);
+        echo "<pre> data_mostrar>";
+        print_r($data_mostrar);
+        echo "</pre>";
+
+        $datos=null;
+        foreach ($data_mostrar as $key => $value) {
+                $datos =$value[$id];
+        }
+            
+            
+        return $datos;
+        
+    }
+    
+    function print_lista_like_count($texto,$campo,$tlb,$id) {
+        $CI = & get_instance();
+        $CI->load->model('Contenedor_model','contenedor');
+        $data_mostrar    = count($CI->contenedor->get_lista_like_print($texto,$campo,$tlb,$id));
+
+            
+        return $data_mostrar;
+        
+    }
+    
+    function obtenerDatosIndexNuevo($th){
         $datos = array();
         $datos['modulo']            = $th->modulo;
         //$datos['widop']             = $th->widop;
@@ -461,7 +561,6 @@
         $datos['abrev']             = $th->abrev;
         return $datos;
     }
-
 
     function Agrupar_array_por_keyvalue($array,$groupkey)
     {
@@ -501,7 +600,6 @@
         }
     }
 
-
     function formato_resta($df) {
 
         $str = '';
@@ -529,7 +627,6 @@
         return $str;
     }
 
-
     function contar_filas_tabla($nombre_tabla,$campo_id,$ids ) {
         $CI = & get_instance();
         $CI->load->model('Contenedor_model','contenedor');
@@ -537,7 +634,6 @@
 
         return $data_total[0]['total'];
     }
-
 
     function contar_filas_tabla_usu($nombre_tabla,$campo_id,$ids,$reg_usu,$campo_usu ) {
         $CI = & get_instance();
@@ -547,5 +643,22 @@
         return $data_total[0]['total'];
     }
 
+    //-----------------------------------------------------------------
+
+    function contar_filas_tabla_sy_asig($campo_id,$ids ) {
+        $CI = & get_instance();
+        $CI->load->model('Contenedor_model','contenedor');
+        $data_total    = $CI->contenedor->get_total_tabla_sy_asig($campo_id,$ids);
+
+        return $data_total[0]['total'];
+    }
+
+    function contar_filas_tabla_usu_sy_asig($campo_id,$ids,$reg_usu,$campo_usu ) {
+        $CI = & get_instance();
+        $CI->load->model('Contenedor_model','contenedor');
+        $data_total    = $CI->contenedor->get_total_tabla_usu_sy_asig($campo_id,$ids,$reg_usu,$campo_usu);
+
+        return $data_total[0]['total'];
+    }
 
     

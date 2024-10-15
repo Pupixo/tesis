@@ -20,13 +20,12 @@ class Model_Usuario extends CI_Model {
        //return $array;
     }
 
-
     //_-------------------------------------------------------------
     function listar_asignacion_plan_estudios($id_usuario){
         $sql = "
         select ape.* ,pe.nom_plan_estudios from asignacion_plan_estudios ape
         INNER JOIN plan_estudios pe on ape.id_plan_estudios =pe.id_plan_estudios
-        where ape.id_usuario=".$id_usuario." and ape.estado=2
+        where ape.id_usuario=".$id_usuario." and ape.estado=2 and pe.estado=3
         ";
         $query = $this->db->query($sql)->result_Array();
         return $query;
@@ -72,10 +71,7 @@ class Model_Usuario extends CI_Model {
         ";
 
         $this->db->query($sql);
-
     }
-   
-  
 
     function eliminar_asignacion_plan_estudios($id_asignacion_plan_estudios,$user_reg ){
         $sql = "
@@ -91,26 +87,23 @@ class Model_Usuario extends CI_Model {
         $this->db->query($sql);
     }
 
-
     //_-------------------------------------------------------------
 
-
-
-
-    
-    function listar_asignacion_curso($id_asignacion_plan_estudios,$nom_ciclo){
+    function listar_asignacion_curso($id_asignacion_plan_estudios){
         $sql = "
         select ac.* ,c.nom_curso from asignacion_cursos ac
-        INNER JOIN curso c on c.id_curso =ac.id_curso
+
+        INNER JOIN asignacion_plan_estudios ape on ac.id_asignacion_plan_estudios = ape.id_asignacion_plan_estudios
+        INNER JOIN plan_estudios pe on ape.id_plan_estudios = pe.id_plan_estudios
+
+        INNER JOIN curso c on ac.id_curso = c.id_curso
         where ac.id_asignacion_plan_estudios=".$id_asignacion_plan_estudios." and
-        ac.nom_ciclo='".$nom_ciclo."' and
-         ac.estado=2
+        ac.estado=2  and pe.estado=3
         ";
         $query = $this->db->query($sql)->result_Array();
         return $query;
     }
-  
-        
+   
     function insert_asignacion_curso($id_curso,$id_ciclo, $id_asignacion_plan_estudios,  $nom_ciclo ,$user_reg ){
 
         $sql = "      
@@ -141,6 +134,10 @@ class Model_Usuario extends CI_Model {
         ";
 
         $this->db->query($sql);
+
+        $sql2 = " SELECT LAST_INSERT_ID() as ultimo_id; ";
+        $query = $this->db->query($sql2)->result_Array();
+        return $query;
 
     }
    

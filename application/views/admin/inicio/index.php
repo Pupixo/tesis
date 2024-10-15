@@ -1,6 +1,6 @@
 <?php 
 $sesion =  $_SESSION['usuario'][0];
-$user_reg= $_SESSION['usuario'][0]['id_usuario'];
+$id_usuario= $_SESSION['usuario'][0]['id_usuario'];
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 //$rol = $_SESSION['usuario'][0]['ROLASISTENCIA'];
@@ -20,15 +20,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </nav>
                         </div>
                     </div>
-                    <!-- <div class="col-5 align-self-center">
-                        <div class="customize-input float-right">
-                            <select class="custom-select custom-select-set form-control bg-white border-0 custom-shadow custom-radius">
+                    <div class="col-5 align-self-center">
+                        <div class="customize-input float-right w-100 ">
+                            <!-- <select class="custom-select custom-select-set form-control bg-white border-0 custom-shadow custom-radius">
                                 <option selected>Ciclo 0 2021</option>
                                 <option value="1">July 19</option>
                                 <option value="2">Jun 19</option>
-                            </select>
+                            </select> -->
+                            <?= cbx_basicos('periodo_anio','0',false,'lista_anios_periodo','Anio_data_ini','periodo_anio','nom_periodo_anio','w-100  custom-select custom-select-set form-control bg-white border-0 custom-shadow custom-radius','SELECCIONE'); ?>
+
+
+
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <!-- ============================================================== -->
@@ -45,191 +49,152 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                 <div class="card-group">
                
-                <?php  if($_SESSION['usuario'][0]['id_nivel'] != 3){ ?>
+                    <?php  if($_SESSION['usuario'][0]['id_nivel'] != 3){ ?>
 
-
-                    <div class="card border-right">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <h2 class="text-dark mb-1 font-weight-medium">
-                                        
-                                
-                                        <?php echo contar_filas_tabla('plan_estudios','estado','todos'); ?>
-
-                                
-                                </h2>
-                                    
-            
-                                    
-                                    
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Cantidad Total de Planes de Estudios Creados</h6>
-                                </div>
-                                <div class="ml-auto mt-md-3 mt-lg-0">
-                                    <span class="opacity-7 text-muted"> <i  style="font-size: 50px;" class="icon-book-open"></i>  <!-- i data-feather="globe"></i>--> </span> 
+                        <div class="card border-right">
+                            <div class="card-body">
+                                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium"  id="num_plan_estudios">
+                                            <?php echo contar_filas_tabla('plan_estudios','estado','todos'); ?>
+                                        </h2>                                    
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Cantidad Total </br> de Planes de </br> Estudios Creados</h6>
+                                    </div>
+                                    <div class="ml-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"> 
+                                            <i style="font-size: 50px;" class="icon-book-open"></i> 
+                                        </span> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    
-                    <div class="card border-right">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <h2 class="text-dark mb-1 font-weight-medium">
-                                        
-                                
-                                    <?php echo contar_filas_tabla('syllabus','estado','todos'); ?>
-
-                                
-                                </h2>
-                                    
-            
-                                    
-                                    
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Cantidad Total de Sillabus Creados</h6>
-                                </div>
-                                <div class="ml-auto mt-md-3 mt-lg-0">
-                                    <span class="opacity-7 text-muted"> <i  style="font-size: 50px;" class="icon-book-open"></i>  <!-- i data-feather="globe"></i>--> </span> 
+                        <div class="card border-right">
+                            <div class="card-body">
+                                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium"  id="num_total_sy">
+                                            <?php echo contar_filas_tabla_sy_asig('estado','todos'); ?>
+                                        </h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Cantidad Total </br> de Sillabus </br> Creados</h6>
+                                    </div>
+                                    <div class="ml-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"> 
+                                            <i style="font-size: 50px;" class="icon-book-open"></i> 
+                                        </span> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                    <?php } ?>
 
 
-                <?php } ?>
+                    <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
 
-
-                <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
-
-
-                    <div class="card border-right">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <h2 class="text-dark mb-1 font-weight-medium">
-                                        
-                                
-                                    <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
-                                        <?php echo contar_filas_tabla_usu('syllabus','estado','todos',$user_reg,'user_reg' ); ?>
-
-                                    <?php }else{ ?>
-                                        <?php echo contar_filas_tabla('syllabus','estado','todos'); ?>
-
-                                    <?php } ?>
-
-                                
-                                    </h2>
-                                    
-                                    
-                                    
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Cantidad Total de Sillabus creados por usted</h6>
-                                </div>
-                                <div class="ml-auto mt-md-3 mt-lg-0">
-                                    <span class="opacity-7 text-muted"><i style="font-size: 50px;" class="fas fa-file-alt"></i></span>
+                        <div class="card border-right">
+                            <div class="card-body">
+                                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium" id="num_total_sy"><?php echo contar_filas_tabla_usu_sy_asig('estado','todos',$id_usuario,'id_usuario' ); ?></h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">
+                                            <a class="sidebar-link" href="<?= site_url('admin/usuarios/Asyllabus') ?>"  aria-expanded="false">
+                                            Cantidad Total de </br>  Silabus asignados </br>para usted
+                                            </a>
+                                        </h6>
+                                    </div>
+                                    <div class="ml-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"><i style="font-size: 50px;" class="fas fa-file-alt"></i></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                <?php } ?>
-
-                    
-                   
-
-                    
-                    
-<!--                      
-                    <div class="card border-right">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <h2 class="text-dark mb-1 font-weight-medium">864</h2>
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Fichas de Evaluación</h6>
-                                </div>
-                                <div class="ml-auto mt-md-3 mt-lg-0">
-                                    <span class="opacity-7 text-muted"><i style="font-size: 50px;" class="fas fa-clipboard-list"></i></span>
+                    <?php } ?>
+               
+                    <!-- 
+                        <div class="card border-right">
+                            <div class="card-body">
+                                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">864</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Fichas de Evaluación</h6>
+                                    </div>
+                                    <div class="ml-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"><i style="font-size: 50px;" class="fas fa-clipboard-list"></i></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div> -->
-
-                    
+                     -->
                 </div>
 
                 <!-- 
-                <div class="card-group">
-                    <div class="card border-right">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <div class="d-inline-flex align-items-center">
-                                        <h2 class="text-dark mb-1 font-weight-medium">236</h2>
-                                        <span
-                                            class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">+18.33%</span>
+                    <div class="card-group">
+                        <div class="card border-right">
+                            <div class="card-body">
+                                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                    <div>
+                                        <div class="d-inline-flex align-items-center">
+                                            <h2 class="text-dark mb-1 font-weight-medium">236</h2>
+                                            <span
+                                                class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">+18.33%</span>
+                                        </div>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Clients</h6>
                                     </div>
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Clients</h6>
-                                </div>
-                                <div class="ml-auto mt-md-3 mt-lg-0">
-                                    <span class="opacity-7 text-muted"><i data-feather="user-plus"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card border-right">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"><sup
-                                            class="set-doller">$</sup>18,306</h2>
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Earnings of Month
-                                    </h6>
-                                </div>
-                                <div class="ml-auto mt-md-3 mt-lg-0">
-                                    <span class="opacity-7 text-muted"><i data-feather="dollar-sign"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="card border-right">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <div class="d-inline-flex align-items-center">
-                                        <h2 class="text-dark mb-1 font-weight-medium">1538</h2>
-                                        <span
-                                            class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">-18.33%</span>
+                                    <div class="ml-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"><i data-feather="user-plus"></i></span>
                                     </div>
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Projects</h6>
-                                </div>
-                                <div class="ml-auto mt-md-3 mt-lg-0">
-                                    <span class="opacity-7 text-muted"><i data-feather="file-plus"></i></span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-
-
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <h2 class="text-dark mb-1 font-weight-medium">864</h2>
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Projects</h6>
-                                </div>
-                                <div class="ml-auto mt-md-3 mt-lg-0">
-                                    <span class="opacity-7 text-muted"><i data-feather="globe"></i></span>
+                        <div class="card border-right">
+                            <div class="card-body">
+                                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"><sup
+                                                class="set-doller">$</sup>18,306</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Earnings of Month
+                                        </h6>
+                                    </div>
+                                    <div class="ml-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"><i data-feather="dollar-sign"></i></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-
-                </div> -->
+                        <div class="card border-right">
+                            <div class="card-body">
+                                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                    <div>
+                                        <div class="d-inline-flex align-items-center">
+                                            <h2 class="text-dark mb-1 font-weight-medium">1538</h2>
+                                            <span
+                                                class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">-18.33%</span>
+                                        </div>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Projects</h6>
+                                    </div>
+                                    <div class="ml-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"><i data-feather="file-plus"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">864</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Projects</h6>
+                                    </div>
+                                    <div class="ml-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"><i data-feather="globe"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                -->
                 <!-- *************************************************************** -->
                 <!-- End First Cards -->
                 <!-- *************************************************************** -->
@@ -249,18 +214,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <li>
                                         <i class="fas fa-circle text-primary font-10 mr-2"></i>
                                         <span class="text-muted">Activo</span>
-
-                                        <span class="text-dark float-right font-weight-medium aprob" id=""><?php echo contar_filas_tabla('plan_estudios','estado',3); ?></span>
+                                        <span class="text-dark float-right font-weight-medium aprob" id="activo_planestu"><?php echo contar_filas_tabla('plan_estudios','estado',3); ?></span>
                                     </li>
                                     <li class="mt-3">
                                         <i class="fas fa-circle text-cyan font-10 mr-2"></i>
                                         <span class="text-muted">En Revisión</span>
-                                        <span class="text-dark float-right font-weight-medium en_revi" id=""><?php echo contar_filas_tabla('plan_estudios','estado',2); ?></span>
+                                        <span class="text-dark float-right font-weight-medium en_revi" id="revi_planestu"><?php echo contar_filas_tabla('plan_estudios','estado',2); ?></span>
                                     </li>
                                     <li class="mt-3">
                                         <i class="fas fa-circle text-danger font-10 mr-2"></i>
                                         <span class="text-muted">Anulado</span>
-                                        <span class="text-dark float-right font-weight-medium no_aprob" id=""><?php echo contar_filas_tabla('plan_estudios','estado',1); ?></span>
+                                        <span class="text-dark float-right font-weight-medium no_aprob" id="anul_planestu"><?php echo contar_filas_tabla('plan_estudios','estado',1); ?></span>
                                     </li>
                                 </ul>
                             </div>
@@ -276,47 +240,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <li>
                                         <i class="fas fa-circle text-primary font-10 mr-2"></i>
                                         <span class="text-muted">Aprobado</span>
-
-                                        <span class="text-dark float-right font-weight-medium aprob" id="">
-                                            <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
-                                                <?php echo contar_filas_tabla_usu('syllabus','estado',2,$user_reg,'user_reg' ); ?>
-
-                                            <?php }else{ ?>
-                                                <?php echo contar_filas_tabla('syllabus','estado',2 );?>
-
-                                            <?php } ?>
-                                                                                    
-                                        </span>
+                                        <span class="text-dark float-right font-weight-medium aprob" > <?php echo contar_filas_tabla_sy_asig('estado',2 );?>   </span>
                                     </li>
                                     <li class="mt-3">
                                         <i class="fas fa-circle text-cyan font-10 mr-2"></i>
                                         <span class="text-muted">En revisión</span>
-                                        <span class="text-dark float-right font-weight-medium en_revi" id="">
-                                            
-                                            <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
-                                                <?php echo contar_filas_tabla_usu('syllabus','estado',1,$user_reg,'user_reg' ); ?>
-
-                                            <?php }else{ ?>
-                                                <?php echo contar_filas_tabla('syllabus','estado',1 );?>
-
-                                            <?php } ?>
-                                        </span>
+                                        <span class="text-dark float-right font-weight-medium en_revi" >  <?php echo contar_filas_tabla_sy_asig('estado',1 );?> </span>
                                     </li>
                                     <li class="mt-3">
                                         <i class="fas fa-circle text-danger font-10 mr-2"></i>
 
                                         <span class="text-muted">No aprobado</span>
-                                        <span class="text-dark float-right font-weight-medium no_aprob" id="">
-                                        
-                                            <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
-                                                <?php echo contar_filas_tabla_usu('syllabus','estado',3,$user_reg,'user_reg' ); ?>
-
-                                            <?php }else{ ?>
-                                                <?php echo contar_filas_tabla('syllabus','estado',3 );?>
-
-                                            <?php } ?>                      
-                                        
-                                        </span>
+                                        <span class="text-dark float-right font-weight-medium no_aprob" > <?php echo contar_filas_tabla_sy_asig('estado',3 );?></span>
                                     </li>
                                 </ul>
                             </div>
@@ -324,8 +259,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
 
                 <?php } ?>
-
-
 
                 <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
 
@@ -338,46 +271,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <li>
                                         <i class="fas fa-circle text-primary font-10 mr-2"></i>
                                         <span class="text-muted">Aprobado</span>
+                                        <span class="text-dark float-right font-weight-medium aprob">  <?php echo contar_filas_tabla_usu_sy_asig('estado',2,$id_usuario,'id_usuario' ); ?> </span>
+                                    </li>
+                                    <li class="mt-3">
+                                     <i class="fas fa-circle text-cyan font-10 mr-2"></i>
 
-                                        <span class="text-dark float-right font-weight-medium aprob" id="">
-                                            <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
-                                                <?php echo contar_filas_tabla_usu('syllabus','estado',2,$user_reg,'user_reg' ); ?>
-
-                                            <?php }else{ ?>
-                                                <?php echo contar_filas_tabla('syllabus','estado',2 );?>
-
-                                            <?php } ?>
-                                                                                    
-                                        </span>
+                                        <span class="text-muted">En revisión</span>
+                                        <span class="text-dark float-right font-weight-medium en_revi" > <?php echo contar_filas_tabla_usu_sy_asig('estado',1,$id_usuario,'id_usuario' ); ?> </span>
                                     </li>
                                     <li class="mt-3">
                                         <i class="fas fa-circle text-danger font-10 mr-2"></i>
-                                        <span class="text-muted">En revisión</span>
-                                        <span class="text-dark float-right font-weight-medium en_revi" id="">
-                                            
-                                            <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
-                                                <?php echo contar_filas_tabla_usu('syllabus','estado',1,$user_reg,'user_reg' ); ?>
 
-                                            <?php }else{ ?>
-                                                <?php echo contar_filas_tabla('syllabus','estado',1 );?>
-
-                                            <?php } ?>
-                                        </span>
-                                    </li>
-                                    <li class="mt-3">
-                                        <i class="fas fa-circle text-cyan font-10 mr-2"></i>
                                         <span class="text-muted">No aprobado</span>
-                                        <span class="text-dark float-right font-weight-medium no_aprob" id="">
-                                        
-                                            <?php  if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
-                                                <?php echo contar_filas_tabla_usu('syllabus','estado',3,$user_reg,'user_reg' ); ?>
-
-                                            <?php }else{ ?>
-                                                <?php echo contar_filas_tabla('syllabus','estado',3 );?>
-
-                                            <?php } ?>                      
-                                        
-                                        </span>
+                                        <span class="text-dark float-right font-weight-medium no_aprob" >  <?php echo contar_filas_tabla_usu_sy_asig('estado',3,$id_usuario,'id_usuario' ); ?></span>
                                     </li>
                                 </ul>
                             </div>

@@ -13,7 +13,7 @@
             <label>Codigo Local Sede:</label>
         </div>            
         <div class="form-group col-md-12">
-            <select class="form-control" tabindex="-1" id="codigo_local" name="codigo_local">
+            <select class="form-control"  id="codigo_local" name="codigo_local">
                 <option value="0" >SELECCIONE</option>
                 <option value="1" >SL01</option>
                 <option value="2" >SL02</option>
@@ -51,7 +51,7 @@
             <label>TIPO DE RECURSO:</label>
         </div>            
         <div class="form-group col-md-12">
-            <select class="form-control"  tabindex="-1" id="tipo_recurso" name="tipo_recurso">
+            <select class="form-control"   id="tipo_recurso" name="tipo_recurso">
                 <option value="0" >SELECCIONE</option>
                 <option value="1" >Herramienta Digital</option>
                 <option value="2" >Otros Software</option>
@@ -64,7 +64,7 @@
             <label>TIPO DE LICENCIA:</label>
         </div>            
         <div class="form-group col-md-12">
-            <select class="form-control"  tabindex="-1" id="tipo_licencia" name="tipo_licencia">
+            <select class="form-control"   id="tipo_licencia" name="tipo_licencia">
                 <option value="0" >SELECCIONE</option>
                 <option value="1" >Contrato</option>
                 <option value="2" >Libre</option>

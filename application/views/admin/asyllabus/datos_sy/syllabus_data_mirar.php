@@ -31,6 +31,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         background-color:  #ffffff ;
         border-radius:20px;
     }
+
+    
+    .spinner_seccion {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s ease infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
    
 </style>
 
@@ -87,7 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
                                     
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="row">
@@ -100,7 +120,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 </div>
                                 
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <div class="form-group">
                                             <div class="row">
@@ -118,7 +138,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                         <label class="col-md-3 text-center">Ciclo</label>
                                                         <div class="col-md-3">
 
-                                                        <select class="form-control" tabindex="-1" id="numero_ciclo" name="numero_ciclo" disabled>
+                                                        <select class="form-control"  id="numero_ciclo" name="numero_ciclo" disabled>
                                                             <option value="" <?=  (($data_silabus[0]["periodo_ciclo"] === '' ) ?  'selected' :  '' ) ?> >SELECCIONE</option>
                                                             <option value="0" <?=  (($data_silabus[0]["periodo_ciclo"] === '0') ?  'selected' :  '' ) ?> >0</option>
                                                             <option value="1"  <?=  (($data_silabus[0]["periodo_ciclo"] === '1') ?  'selected' :  '' ) ?>  >1</option>
@@ -133,6 +153,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             </div>
                                         </div>
                         
+                                        
+
+                                                                        
+                                        <?php if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
+
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -140,14 +165,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                         <label class="col-md-4 text-center">Plan Estudios </label>
 
                                                         <div class="col-md-8">
-                                                    
-                                                            <?= cbx_basicos('id_plan_estudios', ((isset($data_silabus[0]["id_plan_estudios"])) ?  $data_silabus[0]["id_plan_estudios"] :  0 ) ,true,'lista_plan_estudios','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,true); ?>
+
+                                                            <?= cbx_basicos_extra_element('id_plan_estudios',$_SESSION['usuario'][0]['id_usuario'],true,'lista_plan_estudios_aginado_usu','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,false,'id_asignacion_plan_estudios'); ?>
 
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
+
+                                        <?php } ?>
+
+
+
+                                        <?php if($_SESSION['usuario'][0]['id_nivel'] != 3){ ?>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <label class="col-md-4 text-center">Plan Estudios </label>
+                                                        <div class="col-md-8">
+                                                            <?= cbx_basicos_extra_element('id_plan_estudios',0,true,'lista_plan_estudios','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,false,'id_asignacion_plan_estudios'); ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <?php } ?>
+
+
 
                                         <div class="form-group">
                                             <div class="row">
@@ -369,7 +418,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                         
                                                         <div class="col-md-8">
                                                             
-                                                            <?= cbx_basicos_multiple('id_docente', ((isset($data_silabus[0]["id_docente"])) ?  $data_silabus[0]["id_docente"] :  0 ) ,true,'lista_docentes',null,'id_docente','nom_docente'); ?>
+                                                            <?= cbx_basicos_multiple('id_docente', ((isset($data_silabus[0]["id_docente"])) ?  $data_silabus[0]["id_docente"] :  0 ) ,false,'lista_docentes',null,'id_usuario','nom_usu_docente'); ?>
 
                                                         </div>
                                                     </div>
@@ -1261,18 +1310,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <for action="#">
                                     <div class="form-body">
                                         <label> 
-                                            ·	Plataforma Zoom: Plataforma online utilizada por la Universidad, 
+                                            <!-- ·	Plataforma Zoom: Plataforma online utilizada por la Universidad, 
                                                 que permite realizar videoconferencia, chat y pantalla compartida, entre otras opciones. Tiene almacenamiento de grabación en la nube.
                                                 <br>
                                                 <br>
                                             ·	Plataforma Aula Virtual Moodle: Plataforma de gestión de aprendizaje usada en la Universidad
-                                                 para la publicación de materiales y actividades de aprendizaje online.
+                                                 para la publicación de materiales y actividades de aprendizaje online. -->
 
                                         </label>
 
 
                                         <br>
-                                        <label for="">HERRAMIENTAS</label>
+                                        <!-- <label for="">HERRAMIENTAS</label> -->
 
 
 

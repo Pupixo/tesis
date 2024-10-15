@@ -57,14 +57,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </select>
                             </div>
                         </div>
-                        <div class="customize-input float-right">
+
+
+                        <!-- <div class="customize-input float-right">
                             <?php  if($_SESSION['usuario'][0]['id_nivel'] != 4){ ?>
                             <button type="button"  class="btn btn-primary btn-icon-text btn-rounded" onclick="fn_AbrirModal('I','','','Insert_Update_<?php echo $opcion; ?>')" >     
                             <i class="fa fa-plus-square-o" aria-hidden="true"></i>
                                             Nueva Syllabus
                             </button>
                             <?php } ?>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -91,6 +93,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                             <th class="text-center"> <b>ID_FACULTAD </b></th>
 
                                             <th class="text-center"> <b>NOMBRE SILABUS </b></th>
+                                            <th class="text-center"> <b>NOMBRE CURSO </b></th>
+
+                                            <th class="text-center"> <b>NOMBRE CICLO </b></th>
+
                                             <th class="text-center"> <b>PERIODO</b></th>
 
                                             <th class="text-center"> <b>PERIODO ANIO</b></th>
@@ -123,7 +129,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                             <th class="text-center"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACCIONES</b></th>
 
-                                            <th class="text-center"> <b>NOM_CICLO </b></th>
                                             <th class="text-center"> <b>VERSION_PRINCIPAL </b></th>
                                             <th class="text-center"> <b>FECHA_REG </b></th>
 

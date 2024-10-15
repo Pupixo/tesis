@@ -9,7 +9,7 @@ class Model_Syllabus extends CI_Model {
 
     function procedureCrud_Syllabus($parametros) {
         $this->db->free_db_resource();
-        $sql = "call sp_Crud_Syllabus(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        $sql = "call sp_Crud_Syllabus(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         $query = $this->db->query($sql, $parametros);
        // $array = $query->result_array();
         if ($query) {
@@ -48,7 +48,7 @@ class Model_Syllabus extends CI_Model {
                     es.nom_est_syllabus,
                     concat(u.usuario_nombres, ' ', u.usuario_apater ,' ',u.usuario_amater) as nombre_reg 
                     FROM 
-                    `versiones_syllabus` vs 
+                    versiones_syllabus vs 
                     LEFT JOIN syllabus_det sd on vs.id_version_sy=sd.id_version_sy 
                     LEFT join estado_syllabus es on vs.estado=es.id_est_syllabus
                     LEFT JOIN users u on vs.user_reg=u.id_usuario
@@ -148,356 +148,332 @@ class Model_Syllabus extends CI_Model {
         return $query;
     }
 
-    function insert_update_compt_asoci_curso($parametros){
-
-        if($parametros[0] ==='I'){
-            $sql = "      
-                INSERT INTO compt_asoci_curso
-                (
-                        id_version_sy,
-                        compt_gene,
-                        compt_gene_descr,
-                
-                        compt_espec_1,
-                        compt_espec_descr_1,
-                        compt_espec_2,
-                        compt_espec_descr_2,
-
-                        estado,
-                        fec_reg,
-                        user_reg,
-                                
-                        compt_gene_2,
-                        compt_gene_descr_2,
-                        compt_espec_3,
-                        compt_espec_descr_3
-                ) 
-                VALUES 
-                (
-                    ".$parametros[1].",
-                    '".$parametros[2]."',
-                    '".$parametros[3]."',
-                    '".$parametros[4]."',
-                    '".$parametros[5]."',
-                    '".$parametros[6]."',
-                    '".$parametros[7]."',
-                    1,
-                    NOW(),
-                    ".$parametros[8].",
-                    ".$parametros[9].",
-                    ".$parametros[10].",
-                    ".$parametros[11].",
-                    ".$parametros[12].",
-        
-                );
-            ";
-            $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
-        }else if($parametros[0] ==='E'){
-            $sql = "    
-                UPDATE 
-                compt_asoci_curso 
-                SET 
-                compt_gene = '".$parametros[2]."',
-                compt_gene_descr  = '".$parametros[3]."',
-                compt_espec_1 = '".$parametros[4]."',
-                compt_espec_descr_1 = '".$parametros[5]."',
-                compt_espec_2 = '".$parametros[6]."',
-                compt_espec_descr_2  = '".$parametros[7]."',            
-                estado = 1,
-                fec_act = NOW(),
-                user_act  = ".$parametros[8].",
-
-                compt_gene_2='".$parametros[10]."',
-                compt_gene_descr_2='".$parametros[11]."',
-                compt_espec_3='".$parametros[12]."',
-                compt_espec_descr_3='".$parametros[13]."'
-
-                WHERE 
-                 id_compt_asoci_curso  = ".$parametros[9].";
-            ";
-            $sql_data = "SELECT ROW_COUNT() AS 'ID';";
-        }else{
-            $sql = "    
-                UPDATE 
-                compt_asoci_curso 
-                SET 
-                compt_gene = '".$parametros[2]."',
-                compt_gene_descr  = '".$parametros[3]."',
-                compt_espec_1 = '".$parametros[4]."',
-                compt_espec_descr_1 = '".$parametros[5]."',
-                compt_espec_2 = '".$parametros[6]."',
-                compt_espec_descr_2  = '".$parametros[7]."',            
-                estado = 1,
-                fec_act = NOW(),
-                user_act  = ".$parametros[8].",
-
-                compt_gene_2='".$parametros[10]."',
-                compt_gene_descr_2='".$parametros[11]."',
-                compt_espec_3='".$parametros[12]."',
-                compt_espec_descr_3='".$parametros[13]."'
-
-                WHERE 
-                id_version_sy = ".$parametros[1]."
-            ";
-            $sql_data = "SELECT ROW_COUNT() AS 'ID';";
-        }
-          
-       $this->db->query($sql);
-
-       $query=$this->db->query($sql_data);
-
-       if ($query->num_rows() == 1)
-            return $query->row();
-            /*
-                    return $query->num_fields();
-
-                    return $query->row();
-                    row(5)
-                    if (isset($row))
-                    {
-                            echo $row['title'];
-                            echo $row['name'];
-                            echo $row['body'];
-                    }
-
-                    $row = $query->row_array();
-                    $row = $query->row_array(5);
-
-                    if (isset($row))
-                    {
-                            echo $row['title'];
-                            echo $row['name'];
-                            echo $row['body'];
-                    }
-
-                    return $query->result();
-
-                    foreach ($query->result() as $row)
-                        {
-                                echo $row->title;
-                                echo $row->name;
-                                echo $row->body;
-                        }
-
-
-                    return $query->free_result();
-                    return $query->row_array();
-                    return $query->result_array() 
-
-                    $row = $query->first_row()
-                    $row = $query->last_row()
-                    $row = $query->next_row()
-                    $row = $query->previous_row()
-
-                    $row = $query->first_row(‘array’)
-                    $row = $query->last_row(‘array’)
-                    $row = $query->next_row(‘array’)
-                    $row = $query->previous_row(‘array’)
-
-                    $query->data_seek(5); // Skip the first 5 rows combine ubuffe
-
-                    $query->unbuffered_row();               // object
-                    $query->unbuffered_row('object');       // object
-                    $query->unbuffered_row('array');
-                    while ($row = $query->unbuffered_row())
-                    {
-                            echo $row->title;
-                            echo $row->name;
-                            echo $row->body;
-                    }
-
-            */
-        return FALSE;
-        /*
-            $query = $this->db->query($sql_data)->result_Array();
-            return $query;
-        */
-       
+    
+    function listar_sumilla_sy($id_version_sy){
+        $sql = "select * from sumilla where  id_version_sy=".$id_version_sy;
+        $query = $this->db->query($sql)->result_Array();
+        return $query;
     }
+
+    // function insert_update_compt_asoci_curso($parametros){
+
+    //     if($parametros[0] ==='I'){
+    //         $sql = "      
+    //             INSERT INTO compt_asoci_curso
+    //             (
+    //                     id_version_sy,
+    //                     compt_gene,
+    //                     compt_gene_descr,
+                
+    //                     compt_espec_1,
+    //                     compt_espec_descr_1,
+    //                     compt_espec_2,
+    //                     compt_espec_descr_2,
+
+    //                     estado,
+    //                     fec_reg,
+    //                     user_reg,
+                                
+    //                     compt_gene_2,
+    //                     compt_gene_descr_2,
+    //                     compt_espec_3,
+    //                     compt_espec_descr_3
+    //             ) 
+    //             VALUES 
+    //             (
+    //                 ".$parametros[1].",
+    //                 '".$parametros[2]."',
+    //                 '".$parametros[3]."',
+    //                 '".$parametros[4]."',
+    //                 '".$parametros[5]."',
+    //                 '".$parametros[6]."',
+    //                 '".$parametros[7]."',
+    //                 1,
+    //                 NOW(),
+    //                 ".$parametros[8].",
+    //                 ".$parametros[9].",
+    //                 ".$parametros[10].",
+    //                 ".$parametros[11].",
+    //                 ".$parametros[12].",
+        
+    //             );
+    //         ";
+    //         $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
+    //     }else if($parametros[0] ==='E'){
+    //         $sql = "    
+    //             UPDATE 
+    //             compt_asoci_curso 
+    //             SET 
+    //             compt_gene = '".$parametros[2]."',
+    //             compt_gene_descr  = '".$parametros[3]."',
+    //             compt_espec_1 = '".$parametros[4]."',
+    //             compt_espec_descr_1 = '".$parametros[5]."',
+    //             compt_espec_2 = '".$parametros[6]."',
+    //             compt_espec_descr_2  = '".$parametros[7]."',        
+                
+                
+
+    //             estado = 1,
+    //             fec_act = NOW(),
+    //             user_act  = ".$parametros[8].",
+
+    //             compt_gene_2='".$parametros[10]."',
+    //             compt_gene_descr_2='".$parametros[11]."',
+    //             compt_espec_3='".$parametros[12]."',
+    //             compt_espec_descr_3='".$parametros[13]."'
+
+    //             WHERE 
+    //              id_compt_asoci_curso  = ".$parametros[9].";
+    //         ";
+    //         $sql_data = "SELECT ROW_COUNT() AS 'ID';";
+    //     }else{
+    //         $sql = "    
+    //             UPDATE 
+    //             compt_asoci_curso 
+    //             SET 
+    //             compt_gene = '".$parametros[2]."',
+    //             compt_gene_descr  = '".$parametros[3]."',
+    //             compt_espec_1 = '".$parametros[4]."',
+    //             compt_espec_descr_1 = '".$parametros[5]."',
+    //             compt_espec_2 = '".$parametros[6]."',
+    //             compt_espec_descr_2  = '".$parametros[7]."',            
+    //             estado = 1,
+    //             fec_act = NOW(),
+    //             user_act  = ".$parametros[8].",
+
+    //             compt_gene_2='".$parametros[10]."',
+    //             compt_gene_descr_2='".$parametros[11]."',
+    //             compt_espec_3='".$parametros[12]."',
+    //             compt_espec_descr_3='".$parametros[13]."'
+
+    //             WHERE 
+    //             id_version_sy = ".$parametros[1]."
+    //         ";
+    //         $sql_data = "SELECT ROW_COUNT() AS 'ID';";
+    //     }
+          
+    //    $this->db->query($sql);
+
+    //    $query=$this->db->query($sql_data);
+
+    //    if ($query->num_rows() == 1)
+    //         return $query->row();
+    //         /*
+    //                 return $query->num_fields();
+
+    //                 return $query->row();
+    //                 row(5)
+    //                 if (isset($row))
+    //                 {
+    //                         echo $row['title'];
+    //                         echo $row['name'];
+    //                         echo $row['body'];
+    //                 }
+
+    //                 $row = $query->row_array();
+    //                 $row = $query->row_array(5);
+
+    //                 if (isset($row))
+    //                 {
+    //                         echo $row['title'];
+    //                         echo $row['name'];
+    //                         echo $row['body'];
+    //                 }
+
+    //                 return $query->result();
+
+    //                 foreach ($query->result() as $row)
+    //                     {
+    //                             echo $row->title;
+    //                             echo $row->name;
+    //                             echo $row->body;
+    //                     }
+
+
+    //                 return $query->free_result();
+    //                 return $query->row_array();
+    //                 return $query->result_array() 
+
+    //                 $row = $query->first_row()
+    //                 $row = $query->last_row()
+    //                 $row = $query->next_row()
+    //                 $row = $query->previous_row()
+
+    //                 $row = $query->first_row(‘array’)
+    //                 $row = $query->last_row(‘array’)
+    //                 $row = $query->next_row(‘array’)
+    //                 $row = $query->previous_row(‘array’)
+
+    //                 $query->data_seek(5); // Skip the first 5 rows combine ubuffe
+
+    //                 $query->unbuffered_row();               // object
+    //                 $query->unbuffered_row('object');       // object
+    //                 $query->unbuffered_row('array');
+    //                 while ($row = $query->unbuffered_row())
+    //                 {
+    //                         echo $row->title;
+    //                         echo $row->name;
+    //                         echo $row->body;
+    //                 }
+
+    //         */
+    //     return FALSE;
+    //     /*
+    //         $query = $this->db->query($sql_data)->result_Array();
+    //         return $query;
+    //     */
+       
+    // }
 
 
     //----------------------------------
 
-    function update_insert_sumilla($parametros){
+    // function update_insert_sumilla($parametros){
+    //     if($parametros[3] ===''){
 
-        if($parametros[3] ===''){
+    //         $sql = "      
+    //                     INSERT INTO sumilla
+    //                     (
+    //                         id_version_sy,
+    //                         desc_sumilla,
 
-            $sql = "      
-                        INSERT INTO sumilla
-                        (
-                            id_version_sy,
-                            desc_sumilla,
-
-                                estado,
-                                fec_reg,
-                                user_reg
-                        ) 
-                        VALUES 
-                        (
-                            ".$parametros[0].",
-                            '".$parametros[1]."',
+    //                             estado,
+    //                             fec_reg,
+    //                             user_reg
+    //                     ) 
+    //                     VALUES 
+    //                     (
+    //                         ".$parametros[0].",
+    //                         '".$parametros[1]."',
                             
-                            2,
-                            NOW(),
-                            ".$parametros[2]."
-                        );
-            ";
-
-            $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
-
-
-        }else{
-
-                $sql = "    
-                            UPDATE sumilla SET 
-
-                            desc_sumilla = '".$parametros[1]."',       
-                            estado = 1,
-                            fec_act = NOW(),
-                            user_act  = ".$parametros[2]."
-
-                            WHERE 
-                            id_sumilla  = ".$parametros[3].";";
-
-                            $sql_data = "SELECT ROW_COUNT() AS 'ID';";
+    //                         2,
+    //                         NOW(),
+    //                         ".$parametros[2]."
+    //                     );
+    //         ";
+    //         $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
 
 
-        }
+    //     }else{
+
+    //             $sql = "    
+    //                         UPDATE sumilla SET 
+
+    //                         desc_sumilla = '".$parametros[1]."',       
+    //                         estado = 2,
+    //                         fec_act = NOW(),
+    //                         user_act  = ".$parametros[2]."
+
+    //                         WHERE 
+    //                         id_sumilla  = ".$parametros[3].";";
+
+    //                         $sql_data = "SELECT ROW_COUNT() AS 'ID';";
 
 
-    
-       $this->db->query($sql);
+    //     }
+    //    $this->db->query($sql);
 
-       $query=$this->db->query($sql_data);
+    //    $query=$this->db->query($sql_data);
 
-       if ($query->num_rows() == 1)
-            return $query->row();
+    //    if ($query->num_rows() == 1)
+    //         return $query->row();
 
-        return FALSE;
+    //     return FALSE;
+    // }
 
-    }
 
-    function update_insert_result_gen_apr($parametros){
 
+
+
+    // function update_insert_result_gen_apr($parametros){
         
-                    if($parametros[3] ===''){
+    //     if($parametros[3] ===''){
+    //         $sql = "      
+    //                 INSERT INTO result_general_apren
+    //                     (
+    //                         id_version_sy,
+    //                         desc_result_gen_apr,
+    //                         estado,
+    //                         fec_reg,
+    //                         user_reg
+    //                     ) 
+    //                     VALUES 
+    //                     (
+    //                         ".$parametros[0].",
+    //                         '".$parametros[1]."',
+                            
+    //                         2,
+    //                         NOW(),
+    //                         ".$parametros[2]."
+    //                     );
+    //         ";
 
+    //         $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
+    //     }else{
 
-                                        
-                                $sql = "      
-                                INSERT INTO result_general_apren
-                                                    (
-                                                        id_version_sy,
-                                                        desc_result_gen_apr,
+    //         $sql = "    
+    //         UPDATE result_general_apren SET 
+    //             desc_result_gen_apr = '".$parametros[1]."',       
+    //             estado = 1,
+    //             fec_act = NOW(),
+    //             user_act  = ".$parametros[2]."
+    //         WHERE 
+    //             id_result_gen_apr   = ".$parametros[3].";";
 
-                                                            estado,
-                                                            fec_reg,
-                                                            user_reg
-                                                    ) 
-                                                    VALUES 
-                                                    (
-                                                        ".$parametros[0].",
-                                                        '".$parametros[1]."',
-                                                        
-                                                        2,
-                                                        NOW(),
-                                                        ".$parametros[2]."
-                                                    );
-                                        ";
+    //         $sql_data = "SELECT ROW_COUNT() AS 'ID';";
 
-                                        $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
+    //     }
+    //    $this->db->query($sql);
+    //    $query=$this->db->query($sql_data);
 
+    //    if ($query->num_rows() == 1)
+    //         return $query->row();
 
-                    }else{
+    //     return FALSE;
+    // }
 
-                        $sql = "    
-                        UPDATE result_general_apren SET 
-                        desc_result_gen_apr = '".$parametros[1]."',       
-                        estado = 1,
-                        fec_act = NOW(),
-                        user_act  = ".$parametros[2]."
-                        WHERE 
-                        id_result_gen_apr   = ".$parametros[3].";";
+    // function update_insert_estrategias_didactica($parametros){
+    //     if($parametros[3] ===''){
+    //                 $sql = "      
+    //                 INSERT INTO estrategias_didacticas
+    //                                     (
+    //                                         id_version_sy,
+    //                                         desc_estrateg_didact,
 
-
-                        $sql_data = "SELECT ROW_COUNT() AS 'ID';";
-
-    
-                    }
-
-
-
-    
-       $this->db->query($sql);
-
-       $query=$this->db->query($sql_data);
-
-       if ($query->num_rows() == 1)
-            return $query->row();
-
-        return FALSE;
-
-    }
-
-    function update_insert_estrategias_didactica($parametros){
-
-        
-  
-        if($parametros[3] ===''){
-
-
-                                        
-                    $sql = "      
-                    INSERT INTO estrategias_didacticas
-                                        (
-                                            id_version_sy,
-                                            desc_estrateg_didact,
-
-                                                estado,
-                                                fec_reg,
-                                                user_reg
-                                        ) 
-                                        VALUES 
-                                        (
-                                            ".$parametros[0].",
-                                            '".$parametros[1]."',
+    //                                             estado,
+    //                                             fec_reg,
+    //                                             user_reg
+    //                                     ) 
+    //                                     VALUES 
+    //                                     (
+    //                                         ".$parametros[0].",
+    //                                         '".$parametros[1]."',
                                             
-                                            2,
-                                            NOW(),
-                                            ".$parametros[2]."
-                                        );
-                            ";
+    //                                         2,
+    //                                         NOW(),
+    //                                         ".$parametros[2]."
+    //                                     );
+    //                         ";
+    //                         $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
+    //     }else{
+    //         $sql = "    
+    //         UPDATE estrategias_didacticas SET 
+    //             desc_estrateg_didact = '".$parametros[1]."',       
+    //             estado = 1,
+    //             fec_act = NOW(),
+    //             user_act  = ".$parametros[2]."
+    //         WHERE 
+    //         id_estrateg_didact  = ".$parametros[3].";
+    //     ";
+    //     $sql_data = "SELECT ROW_COUNT() AS 'ID';";
+    //     }
+    //    $this->db->query($sql);
+    //    $query=$this->db->query($sql_data);
+    //    if ($query->num_rows() == 1)
+    //         return $query->row();
 
-                            $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
-
-
-        }else{
-
-            $sql = "    
-            UPDATE estrategias_didacticas SET 
-            desc_estrateg_didact = '".$parametros[1]."',       
-            estado = 1,
-            fec_act = NOW(),
-            user_act  = ".$parametros[2]."
-            WHERE 
-            id_estrateg_didact  = ".$parametros[3].";
-        ";
-
-        $sql_data = "SELECT ROW_COUNT() AS 'ID';";
-
-
-        }
-    
-       $this->db->query($sql);
-
-       $query=$this->db->query($sql_data);
-
-       if ($query->num_rows() == 1)
-            return $query->row();
-
-        return FALSE;
-
-    }
+    //     return FALSE;
+    // }
 
     //-----------------------
 
@@ -524,7 +500,8 @@ class Model_Syllabus extends CI_Model {
                     estado,
                     fec_reg,
                     user_reg,
-                    modulo_num_orden
+                    modulo_num_orden,
+                    id_modulo
             ) 
             VALUES 
             (
@@ -537,7 +514,8 @@ class Model_Syllabus extends CI_Model {
                 2,
                 NOW(),
                 ".$parametros[7].",
-                ".$parametros[9]."
+                ".$parametros[9].",
+                0
             );
             ";
 
@@ -987,44 +965,6 @@ LEFT JOIN recursos_aula ra on pl.nom_plataformas_herramientas= ra.id_recursos_au
 
     //------------------------------
 
-
-    function insert_referencias_bibliograficas($parametros){
-
-            $sql = "      
-            INSERT INTO referencias_bibliograficas
-            (
-                    id_version_sy,
-                    tipo_bibliografia,
-                    nom_referencias_bibliograficas,
-                    estado,
-                    fec_reg,
-                    user_reg
-            ) 
-            VALUES 
-            (
-                ".$parametros[0].",
-                '".$parametros[1]."',
-                '".$parametros[2]."',
-                2,
-                NOW(),
-                ".$parametros[3]."
-
-            );
-            ";
-
-            $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
-                
-            $this->db->query($sql);
-
-            $query=$this->db->query($sql_data);
-
-            if ($query->num_rows() == 1)
-                    return $query->row();
-                
-                return FALSE;
-            
-    }
-
     function listar_referencias_bibliograficas($id_version_sy,$tipo_bibliografia){
         $sql = "select * from referencias_bibliograficas where id_version_sy=".$id_version_sy."  and  tipo_bibliografia='".$tipo_bibliografia."' and estado=2";
         $query = $this->db->query($sql)->result_Array();
@@ -1047,21 +987,21 @@ LEFT JOIN recursos_aula ra on pl.nom_plataformas_herramientas= ra.id_recursos_au
     }
 
 
-    function edit_referencias_bibliograficas($parametros){
+    // function edit_referencias_bibliograficas($parametros){
 
-        $sql = "      
-        UPDATE referencias_bibliograficas
-        SET
-        nom_referencias_bibliograficas='$parametros[1]',
-        fec_act =  NOW(),
-        user_act= $parametros[2]
-        WHERE
-        id_referencias_bibliograficas = $parametros[0];
-        ";
+    //     $sql = "      
+    //     UPDATE referencias_bibliograficas
+    //     SET
+    //     nom_referencias_bibliograficas='$parametros[1]',
+    //     fec_act =  NOW(),
+    //     user_act= $parametros[2]
+    //     WHERE
+    //     id_referencias_bibliograficas = $parametros[0];
+    //     ";
 
-        $this->db->query($sql);
+    //     $this->db->query($sql);
 
-    }
+    // }
 
 
 
@@ -1260,67 +1200,117 @@ LEFT JOIN recursos_aula ra on pl.nom_plataformas_herramientas= ra.id_recursos_au
     }
 
     
-    function insert_update_eval_ficha($parametros){
+    // function insert_update_eval_ficha($parametros){
 
-        if($parametros[9] =='0'){
-            $sql = "      
-                INSERT INTO criterios_eval
-                (
-                    id_ficha_eval,
-                    id_compet,
-                    logrado,
-                    puntaje_1,
-                    en_proceso,
-                    puntaje_2,
-                    no_logrado,
-                    puntaje_3,
-                    estado,
-                    fec_reg,
-                    user_reg
-                ) 
-                VALUES 
-                (
-                    ".$parametros[0].",
-                    '".$parametros[1]."',
-                    '".$parametros[2]."',
-                    '".$parametros[3]."',
-                    '".$parametros[4]."',
-                    '".$parametros[5]."',
-                    '".$parametros[6]."',
-                    '".$parametros[7]."',
-                    2,  
-                    NOW(),
-                    '".$parametros[8]."'        
-                );
-            ";
-            $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
-        }else{
-            $sql = "    
-                UPDATE  criterios_eval   SET 
-                id_compet = '".$parametros[1]."',
-                logrado  = '".$parametros[2]."',
-                puntaje_1 = '".$parametros[3]."',
-                en_proceso = '".$parametros[4]."',
-                puntaje_2 = '".$parametros[5]."',
-                no_logrado  = '".$parametros[6]."',    
-                puntaje_3  = '".$parametros[7]."',                    
-                fec_act = NOW(),
-                user_act  = ".$parametros[8]."
-                WHERE 
-                id_criterio_eval  = ".$parametros[9].";
-            ";
-            $sql_data = "SELECT ROW_COUNT() AS 'ID';";
-        }
+    //     if($parametros[9] =='0'){
+    //         $sql = "      
+    //             INSERT INTO criterios_eval
+    //             (
+    //                 id_ficha_eval,
+    //                 id_compet,
+    //                 logrado,
+    //                 puntaje_1,
+    //                 en_proceso,
+    //                 puntaje_2,
+    //                 no_logrado,
+    //                 puntaje_3,
+    //                 estado,
+    //                 fec_reg,
+    //                 user_reg
+    //             ) 
+    //             VALUES 
+    //             (
+    //                 ".$parametros[0].",
+    //                 '".$parametros[1]."',
+    //                 '".$parametros[2]."',
+    //                 '".$parametros[3]."',
+    //                 '".$parametros[4]."',
+    //                 '".$parametros[5]."',
+    //                 '".$parametros[6]."',
+    //                 '".$parametros[7]."',
+    //                 2,  
+    //                 NOW(),
+    //                 '".$parametros[8]."'        
+    //             );
+    //         ";
+
+
+    //         $sql = "      
+    //             INSERT INTO criterios_eval
+    //             (
+    //                 id_ficha_eval,
+    //                 id_compet,
+    //                 logrado,
+    //                 puntaje_1,
+    //                 en_proceso,
+    //                 puntaje_2,
+    //                 no_logrado,
+    //                 puntaje_3,
+    //                 estado,
+    //                 fec_reg,
+    //                 user_reg
+    //             ) 
+    //             VALUES 
+    //             (
+    //                 p_id_1,
+    //                 p_id_2,
+    //                 p_texto1,
+    //                 p_texto2,
+    //                 p_texto3,
+    //                 p_texto4,
+    //                 p_texto5,
+    //                 p_texto6,
+    //                 2,  
+    //                 NOW(),
+    //                 p_user        
+    //             );
+    //         ";
+
+
+    //         $sql_data = " SELECT LAST_INSERT_ID() AS 'ID'";
+    //     }else{
+    //         $sql = "    
+    //             UPDATE  criterios_eval   SET 
+    //             id_compet = '".$parametros[1]."',
+    //             logrado  = '".$parametros[2]."',
+    //             puntaje_1 = '".$parametros[3]."',
+    //             en_proceso = '".$parametros[4]."',
+    //             puntaje_2 = '".$parametros[5]."',
+    //             no_logrado  = '".$parametros[6]."',    
+    //             puntaje_3  = '".$parametros[7]."',                    
+    //             fec_act = NOW(),
+    //             user_act  = ".$parametros[8]."
+    //             WHERE 
+    //             id_criterio_eval  = ".$parametros[9].";
+    //         ";
+
+    //         $sql = "    
+    //         UPDATE  criterios_eval   SET 
+    //         id_compet = p_id_2,
+    //         logrado  = p_texto1,
+    //         puntaje_1 = p_texto2,
+    //         en_proceso = p_texto3,
+    //         puntaje_2 = p_texto4,
+    //         no_logrado  = p_texto5,    
+    //         puntaje_3  = p_texto6,                    
+    //         fec_act = NOW(),
+    //         user_act  = p_user
+    //         WHERE 
+    //         id_criterio_eval  = p_id_3;
+    //     ";
+
+    //         $sql_data = "SELECT ROW_COUNT() AS 'ID';";
+    //     }
           
-       $this->db->query($sql);
+    //    $this->db->query($sql);
 
-       $query=$this->db->query($sql_data);
+    //    $query=$this->db->query($sql_data);
 
-        if ($query->num_rows() == 1)
-            return $query->row();
-        return FALSE;
+    //     if ($query->num_rows() == 1)
+    //         return $query->row();
+    //     return FALSE;
        
-    }
+    // }
 
     //-----------------------------------------------------------------------------------------
 

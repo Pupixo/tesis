@@ -47,13 +47,7 @@
                                                         </span>
                                                     </a>
                                             </li>
-                                            <li class="sidebar-item">
-                                                    <a href="<?= site_url('admin/maestros/Docente') ?>" class="sidebar-link">
-                                                        <span
-                                                            class="hide-menu"><i class="fad fa-users-class"></i> Docentes
-                                                        </span>
-                                                    </a>
-                                            </li>
+                                          
                                             <li class="sidebar-item">
                                                     <a href="<?= site_url('admin/maestros/Nivel') ?>" class="sidebar-link">
                                                         <span
@@ -78,25 +72,25 @@
                                   
                                     <li class="nav-small-cap"><span class="hide-menu">Administrador</span></li>
 
-                                                <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Usuarios') ?>"
-                                                        aria-expanded="false"><i  class="icon-user"></i><span
-                                                            class="hide-menu">Módulo de Usuarios
-                                                        </span></a>
-                                                </li>
+                                              
                                                 <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/PlanEstudios') ?>"
                                                         aria-expanded="false">
                                                         
                                                         <i data-feather="sidebar" class="feather-icon"></i><span
-                                                            class="hide-menu">Módulo de Plan de Estudios
+                                                            class="hide-menu">Plan de Estudios
                                                         </span>
 
                                                       
                                                     </a>
                                                 </li>
-                                                <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Asyllabus') ?>"
-                                                        aria-expanded="false">
+                                                <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Usuarios') ?>"
+                                                        aria-expanded="false"><i  class="icon-user"></i><span
+                                                            class="hide-menu">Usuarios
+                                                        </span></a>
+                                                </li>
+                                                <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Asyllabus') ?>"  aria-expanded="false">
                                                         <i data-feather="file-text" class="feather-icon"></i><span
-                                                            class="hide-menu">Módulo de Sillabus
+                                                            class="hide-menu">Sillabus
                                                         </span></a>
                                                 </li>
                                                
@@ -113,7 +107,12 @@
                                     
                             ?>
                                     
-                                    <!-- <li class="list-divider"></li> -->
+                                   
+                                    <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="<?= site_url('admin/usuarios/Inicioadmin') ?>"
+                                            aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
+                                                class="hide-menu">Inicio</span></a></li>
+                                    <li class="list-divider"></li>
+
                                     <li class="nav-small-cap"><span class="hide-menu">Datos Maestros</span></li>
 
                                     <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)"
@@ -143,13 +142,7 @@
                                                         </span>
                                                     </a>
                                             </li>
-                                            <li class="sidebar-item">
-                                                    <a href="<?= site_url('admin/maestros/Docente') ?>" class="sidebar-link">
-                                                        <span
-                                                            class="hide-menu"><i class="fad fa-users-class"></i> Docentes
-                                                        </span>
-                                                    </a>
-                                            </li>
+                                          
                                             <li class="sidebar-item">
                                                     <a href="<?= site_url('admin/maestros/Nivel') ?>" class="sidebar-link">
                                                         <span
@@ -157,10 +150,43 @@
                                                         </span>
                                                     </a>
                                             </li>
-                                        
+
+                                            <li class="sidebar-item">
+                                                    <a href="<?= site_url('admin/maestros/RecursoAula') ?>" class="sidebar-link">
+                                                        <span
+                                                            class="hide-menu"><i class="fab fa-connectdevelop"></i> Recursos Aula
+                                                        </span>
+                                                    </a>
+                                            </li>
                                         
                                         </ul>
                                     </li>
+
+                                    <li class="list-divider"></li>
+
+                                  
+                                    <li class="nav-small-cap"><span class="hide-menu">Administrador</span></li>
+
+                                              
+                                                <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/PlanEstudios') ?>"
+                                                        aria-expanded="false">
+                                                        <i data-feather="sidebar" class="feather-icon"></i><span
+                                                            class="hide-menu">Plan de Estudios
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Usuarios') ?>"
+                                                        aria-expanded="false"><i  class="icon-user"></i><span
+                                                            class="hide-menu">Usuarios
+                                                        </span></a>
+                                                </li>
+                                                <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Asyllabus') ?>"  aria-expanded="false">
+                                                        <i data-feather="file-text" class="feather-icon"></i><span
+                                                            class="hide-menu">Sillabus
+                                                        </span></a>
+                                                </li>
+                                               
+                                    <li class="list-divider"></li>
 
 
                             <?php
@@ -177,11 +203,11 @@
                                     <li class="list-divider"></li>
   				
                                     <li class="list-divider"></li>
-                                    <li class="nav-small-cap"><span class="hide-menu">Administrador</span></li>
+                                    <li class="nav-small-cap"><span class="hide-menu">Documentos</span></li>
                                                 <li class="sidebar-item">   
                                                     <a class="sidebar-link" href="<?= site_url('admin/usuarios/Asyllabus') ?>"
                                                         aria-expanded="false"><i data-feather="file-text" class="feather-icon"></i><span
-                                                            class="hide-menu">Módulo de Sillabus
+                                                            class="hide-menu">Sillabus
                                                         </span>
                                                     </a>
                                                 </li>    
@@ -227,13 +253,13 @@
                                                         </span>
                                                     </a>
                                             </li>
-                                            <li class="sidebar-item">
+                                            <!-- <li class="sidebar-item">
                                                     <a href="<?= site_url('admin/maestros/Docente') ?>" class="sidebar-link">
                                                         <span
                                                             class="hide-menu"><i class="fad fa-users-class"></i> Docentes
                                                         </span>
                                                     </a>
-                                            </li>
+                                            </li> -->
                                             <li class="sidebar-item">
                                                     <a href="<?= site_url('admin/maestros/Nivel') ?>" class="sidebar-link">
                                                         <span
@@ -242,6 +268,13 @@
                                                     </a>
                                             </li>
                                         
+                                            <li class="sidebar-item">
+                                                    <a href="<?= site_url('admin/maestros/RecursoAula') ?>" class="sidebar-link">
+                                                        <span
+                                                            class="hide-menu"><i class="fab fa-connectdevelop"></i> Recursos Aula
+                                                        </span>
+                                                    </a>
+                                            </li>
                                         
                                         </ul>
                                     </li>
@@ -250,26 +283,29 @@
 
                                     <li class="nav-small-cap"><span class="hide-menu">Administrador</span></li>
 
-   						<li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Usuarios') ?>"
-                                                        aria-expanded="false"><i  class="icon-user"></i><span
-                                                            class="hide-menu">Módulo de Usuarios
-                                                        </span></a>
-                                                </li>
-
 
                                                 <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/PlanEstudios') ?>"
                                                         aria-expanded="false">
                                                         
                                                         <i data-feather="sidebar" class="feather-icon"></i><span
-                                                            class="hide-menu">Módulo de Plan de Estudios
+                                                            class="hide-menu">Plan de Estudios
                                                         </span>
                                                     
                                                     </a>
                                                 </li>
 
+   						                        <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Usuarios') ?>"
+                                                        aria-expanded="false"><i  class="icon-user"></i><span
+                                                            class="hide-menu">Usuarios
+                                                        </span></a>
+                                                </li>
+
+
+                                             
+
                                                 <li class="sidebar-item"> <a class="sidebar-link" href="<?= site_url('admin/usuarios/Asyllabus') ?>"
                                                         aria-expanded="false"><i data-feather="file-text" class="feather-icon"></i><span
-                                                            class="hide-menu">Módulo de Sillabus
+                                                            class="hide-menu">Sillabus
                                                         </span></a>
                                                 </li>
                                                 

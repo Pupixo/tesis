@@ -30,6 +30,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     }
 
 
+    .table-dark {
+    color: #141313!important;
+    }
+
    
 </style>
 
@@ -65,11 +69,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <!-- ============================================================== -->
             <div class="page-breadcrumb">
                 <div class="row">
-                    <div class="col-7 align-self-center">
+                    <div class="col-5 align-self-center">
                         <h4 class="page-title text-truncate text-dark font-weight-medium mb-1"><?php echo $tituloSecundario1; ?>  
 
                         </h4>
                     </div>
+                    <div class="col-1 align-self-center">
+                        <h4 class="page-title text-truncate text-dark font-weight-medium mb-1" >
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#info-excel">
+                                <i data-toggle="tooltip" data-placement="top" title="Información especifica sobre la importación excel de los planes de estudio" class="fas fa-info-circle"></i> 
+                            </button>
+                        </h4>
+                    </div>
+
+
                     <div class="col-5 align-self-center">
                         <div class="customize-input float-right">
                         
@@ -82,6 +95,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                         </div>
                     </div>
+
+                    <div class="col-12">
+                        <div class="customize-input">
+                        
+                                <form method="post" enctype="multipart/form-data" class="mt-4">
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file"    onchange="checkfile(this);" class="custom-file-input" id="import_file_excel">
+                                            <label class="custom-file-label" id="import_file_excel_title" for="import_file_excel">Escoger archivo Excel</label>
+                                        </div>
+                                    </div>
+                                </form>
+
+                        </div>
+                    </div>
+
+                    <div class="col-5">
+                       
+                    </div>
+
+                    <div class="col-2">
+                        <div class="customize-input">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" onclick="fn_ImportarExcel(this)" id="import_form" type="button">Subir</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-5">
+                       
+                    </div>
+
                 </div>
             </div>
             <!-- ============================================================== -->
@@ -106,10 +151,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                            
                                             <td align="center" ><b>ID_PLAN_ESTUDIOS</b></td>
                                             <td align="center" ><b>NOMBRE DE PLAN ESTUDIOS</b></td>
+                                            <td align="center" ><b>AÑO</b></td>
+
                                             <td align="center" ><b>FACULTAD</b></td>
                                             <td align="center"><b>CARRERA</b></td>
                                             <td align="center"><b>CÓDIGO</b></td>
-                                            <td align="center"><b>CURSO</b></td>
+                                            <!-- <td align="center"><b>CURSO</b></td> -->
                                             <td align="center"><b>MODALIDAD</b></td>
                                             <td align="center"><b>GRADO OTORGADO</b></td>
                                             <td align="center"><b>TITULO PROFESIONAL</b></td>
@@ -144,8 +191,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             
             <!-- Full width modal content -->
-            <div id="cursos_electivos_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-full-width">
+            <div id="cursos_electivos_modal" class="modal fade"  data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+                <div class="modal-dialog  modal-dialog-scrollable modal-full-width">
                     <div class="modal-content">
                         <div class="modal-header modal-colored-header bg-primary">
                             <h4 class="modal-title" id="fullWidthModalLabel_titulo"> Cursos Electivos</h4>
@@ -221,10 +268,99 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
-            <?php modal_xl_largo( $abrev ,false, __DIR__ ,'Insert_Update_'.$opcion,$formPrincipal,'modal_data',true); ?> 
+            <?php modal_xl_largo_full( $abrev ,false, __DIR__ ,'Insert_Update_'.$opcion,$formPrincipal,'modal_data',true); ?> 
 
 
-            <?php modal_xl_largo( $abrev.'_articulacion' ,false, __DIR__ ,'Insert_Update_'.$opcion,$formPrincipal.'_articulacion','articulacion_modal',false); ?> 
+            <?php modal_xl_largo_full( $abrev.'_articulacion' ,false, __DIR__ ,'Insert_Update_'.$opcion,$formPrincipal.'_articulacion','articulacion_modal',false); ?> 
 
+
+            <!-- Long Content Scroll Modal -->
+            <div class="modal fade" id="info-excel" role="dialog"  data-backdrop="static" data-keyboard="false"
+                aria-labelledby="scrollableModalTitle" aria-hidden="true">
+                <div class="modal-dialog  modal-full-width modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="scrollableModalTitle">Información sobre la subida del excel</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>TRATE DE ESCRIBIR TAL CUAL LOS DATOS EN EL ESTOS CAMPOS ESPECIFICOS DEL EXCEL.</p>
+                            <hr>
+
+                            <form action="#" class="pl-3 pr-3">
+
+                                <div class="form-group">
+                                    <label for="emailaddress1">TIPOS DE ESTUDIOS</label>
+                                    <input class="form-control" type="text"
+                                    disabled value="CPE">
+                                    <br>
+                                    <input class="form-control" type="text"
+                                    disabled value="PRE-GRADO">
+                                    <br>
+                                    <input class="form-control" type="text"
+                                    disabled value="POST-GRADO">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="emailaddress1">MODALIDAD</label>
+                                    <input class="form-control" type="text"
+                                    disabled value="PRESENCIAL">
+                                    <br>
+                                    <input class="form-control" type="text"
+                                    disabled value="A DISTANCIA">
+                                    <br>
+                                    <input class="form-control" type="text"
+                                    disabled value="SEMI-PRESENCIAL">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="emailaddress1">CARRERAS</label>
+
+                                    <div class="form-group col-md-12">
+                                        <?= cbx_basicos('id_carrera_info','0',false,'lista_carreras',null,'id_carrera','nom_carrera'); ?>
+                                    </div>
+                                </div>
+
+                            </form>
+                                <p>RECOMENDACIONES:</p>
+                            <hr>
+
+                            <div class="text-center mt-2 mb-4">
+                                <img class="img-fluid" src="<?= base_url() ?>assets/images/plan_estudios/excel-data.PNG" alt="" height="18">
+                                <p>Escriba los nombres tal cual lo especifica para evitar errores</p>
+
+                            </div>
+                            <div class="text-center mt-2 mb-4">
+                                <img class="img-fluid" src="<?= base_url() ?>assets/images/plan_estudios/horas_cred_auto.PNG" alt="" height="18">
+                            </div>
+                            
+                            <div class="text-center mt-2 mb-4">
+                                <img class="img-fluid" src="<?= base_url() ?>assets/images/plan_estudios/req-data.PNG" alt="" height="18">
+                                <p>Los requisitos son en si cursos de ciclos anteriores.Escriba los nombres de los requisitos tal como lo escribieron en los cursos de los ciclos anteriores</p>
+                            </div>
+                            <div class="text-center mt-2 mb-4">
+                                <img class="img-fluid" src="<?= base_url() ?>assets/images/plan_estudios/elect.PNG" alt="" height="18">
+                            </div>
+
+                            <div class="text-center mt-2 mb-4">
+                                <a class="btn waves-effect waves-light btn-success" href="<?= base_url() ?>assets/images/plan_estudios/formato_plan_estudios.xlsx"
+                                download="modelo-plan-estudios.xlsx" role="button">Descargar Excel</a>
+                            
+                            </div>
+
+                           
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
 
                                 

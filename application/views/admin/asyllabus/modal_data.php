@@ -9,22 +9,21 @@
         <?= cbx_basicos('id_est_syllabus','0',true,'listado_estado_syllabus',null,'id_est_syllabus','nom_est_syllabus' ,'form-control','SELECCIONE',false); ?>
         </div>
 
-        <div class="form-group col-md-2">
+        <!-- <div class="form-group col-md-2">
             <label>Nombre de Syllabus:</label>
         </div>            
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-10">
             <input type="text" class="form-control" id="nombre_syllabus" name="nombre_syllabus" placeholder="Ingresar nombre de silabus" autofocus>
         </div>
-        
+         -->
         <div class="form-group col-md-2">
             <label>Año de periodo:</label>
         </div>
-        <div class="form-group col-md-2">
-            <?= cbx_basicos('periodo_anio','0',false,'lista_anios_periodo',null,'periodo_anio','nom_periodo_anio'); ?>
-
+        <div class="form-group col-md-5">
+            <?= cbx_basicos('periodo_anio','0',true,'lista_anios_periodo',null,'periodo_anio','nom_periodo_anio'); ?>
         </div>
-        <div class="form-group col-md-2">
-            <select class="form-control" tabindex="-1" id="periodo_ciclo" name="periodo_ciclo">
+        <div class="form-group col-md-5">
+            <select class="form-control"  id="periodo_ciclo" name="periodo_ciclo">
                 <option value="" selected="">SELECCIONE</option>
                 <option value="0">0</option>
                 <option value="1">1</option>
@@ -32,12 +31,35 @@
             </select>
         </div>
 
+
+        
+        <?php if($_SESSION['usuario'][0]['id_nivel'] == 3){ ?>
+
         <div class="form-group col-md-2">
-            <label>Plan Estudios: </label>
+            <label>Plan Estudios : </label>
         </div>
         <div class="form-group col-md-4">
-            <?= cbx_basicos_extra_element('id_plan_estudios',$_SESSION['usuario'][0]['id_usuario'],false,'lista_plan_estudios_aginado_usu','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,false,'id_asignacion_plan_estudios'); ?>
+            <?= cbx_basicos_extra_element('id_plan_estudios',$_SESSION['usuario'][0]['id_usuario'],true,'lista_plan_estudios_aginado_usu','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,false,'id_asignacion_plan_estudios'); ?>
         </div>
+
+        <?php } ?>
+
+
+            
+        <?php if($_SESSION['usuario'][0]['id_nivel'] != 3){ ?>
+
+        <div class="form-group col-md-2">
+            <label>Plan Estudios : </label>
+        </div>
+     
+       
+
+            <div class="form-group col-md-4">
+                <?= cbx_basicos_extra_element('id_plan_estudios',0,true,'lista_plan_estudios','Plan_estudios','id_plan_estudios','nom_plan_estudios','form-control','SELECCIONE',false,false,'id_asignacion_plan_estudios'); ?>
+            </div>
+
+        <?php } ?>
+
 
         <div class="form-group col-md-2">
             <label>Tipo de estudios:</label>
@@ -54,7 +76,7 @@
         </div>
         <div class="form-group col-md-4">
 
-            <?= cbx_basicos('id_carrera','0',false,'lista_carreras','Carrera','id_carrera','nom_carrera'); ?>
+            <?= cbx_basicos('id_carrera','0',true,'lista_carreras','Carrera','id_carrera','nom_carrera'); ?>
 
         </div>
 
@@ -129,7 +151,7 @@
         <div class="form-group col-md-4">
 
         
-            <select class="form-control" id="requisito" name="requisito[]" readonly multiple >
+            <select class="form-control" id="requisito" name="requisito[]" disabled multiple >
             </select>
             
         </div>
@@ -165,8 +187,8 @@
         <div class="form-group col-md-2">
             <label>Docente : </label>
         </div>
-        <div class="form-group col-md-4">
-            <?= cbx_basicos_multiple('id_docente', 0 ,false,'lista_docentes',null,'id_docente','nom_docente'); ?>
+        <div class="form-group col-md-10">
+            <?= cbx_basicos_multiple('id_docente', 0 ,false,'lista_docentes',null,'id_usuario','nom_usu_docente'); ?>
         </div>
 
     </div>  	           	                	        

@@ -1,13 +1,19 @@
     <div class="col-md-12 row">
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-1">
+                    <label>Año:</label>
+                </div>
+                <div class="form-group col-md-2">
+                    <?= cbx_basicos('periodo_anio','0',false,'lista_anios_periodo',null,'periodo_anio','nom_periodo_anio'); ?>
+                </div>
+
+                <div class="form-group col-md-2">
                     <label>TIPO DE ESTUDIOS :</label>
                 </div>            
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-7">
                     <!-- <input type="text" class="form-control" id="modalidad" name="modalidad" placeholder="Ingresar Modalidad" autofocus> -->
 
                     <?= cbx_basicos('id_tipo_estudios','0',false,'tipo_estudios',null,'id_tipo_estudios','nom_tipo_estudios'); ?>
-
                 
                 </div>
 
@@ -33,8 +39,8 @@
                 <div class="form-group col-md-12">
                     <!-- <input type="text" class="form-control" id="modalidad" name="modalidad" placeholder="Ingresar Modalidad" autofocus> -->
 
-                    <select class="form-control" tabindex="-1" id="modalidad" name="modalidad">
-                        <option value="" selected="">SELECCIONE</option>
+                    <select class="form-control"  id="modalidad" name="modalidad">
+                        <option value="0" selected="">SELECCIONE</option>
                         <option value="PRESENCIAL">PRESENCIAL</option>
                         <option value="A DISTANCIA">A DISTANCIA</option>
                         <option value="SEMI-PRESENCIAL">SEMI-PRESENCIAL</option>
@@ -80,6 +86,8 @@
                 </div>
 
 
+
+            
 
 
                 <div class="form-group col-md-12">

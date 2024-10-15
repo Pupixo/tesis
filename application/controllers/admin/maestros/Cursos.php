@@ -173,7 +173,14 @@ class Cursos extends CI_Controller {
             $horas_teoricas         = $this->input->post("horas_teoricas");
             $horas_practicas               = $this->input->post("horas_practicas");
             $horas_totales                 = $this->input->post("horas_totales");
-            $requisitos              = implode(",", $this->input->post("cbx_multiple_id_curso"));
+
+            if($this->input->post("cbx_multiple_id_curso") == null || $this->input->post("cbx_multiple_id_curso") === ''){
+                $requisitos   = '';
+
+            }else{
+                $requisitos              = implode(",", $this->input->post("cbx_multiple_id_curso"));
+
+            }
 
             $id_tipo_curso              = $this->input->post("cbx_basicos_id_tipo_curso");
 
@@ -263,7 +270,14 @@ class Cursos extends CI_Controller {
             $horas_practicas               = $this->input->post("horas_practicas");
             $horas_totales                 =  $this->input->post("horas_totales");
 
-            $requisitos              = implode(",", $this->input->post("cbx_multiple_id_curso"));
+
+            if($this->input->post("cbx_multiple_id_curso") == null || $this->input->post("cbx_multiple_id_curso") === ''){
+                $requisitos   = '';
+
+            }else{
+                $requisitos              = implode(",", $this->input->post("cbx_multiple_id_curso"));
+
+            }
 
             $id_tipo_curso              = $this->input->post("cbx_basicos_id_tipo_curso");
 
@@ -424,19 +438,29 @@ class Cursos extends CI_Controller {
             $user_actual = $_SESSION['usuario'][0]['id_usuario'];
 
                 $parametros = array(
-                    $id_diccionario_competen,
-                    $compt_gene,
-                    $nivel_uno,
-                    $nivel_dos,
-                    $nivel_tres,
-                    $user_actual,
-                    $id_curso,
-                    $tipo_compt
+                    'vACCION'        =>'DICCIONARIO_COMPET',
+                    'p_id_1'         => $id_diccionario_competen,
+                    'p_id_2'       => $id_curso,
+                    'p_id_3'     => '',
+                    'p_texto1' =>  $compt_gene,
+                    'p_texto2' => $nivel_uno,
+                    'p_texto3'    => $nivel_dos,
+                    'p_texto4' =>  $nivel_tres,
+                    'p_texto5' => $tipo_compt,
+                    'p_estado' => '2',
+                    'p_user' =>  $user_actual,
+      
+                    'p_texto6' => '',
+                    'p_texto7' => '',
+                    'p_texto8' =>  '',
+                    'p_texto9' =>  '',   
+                    'p_texto10' =>  '',   
                 );
 
-                $data=$this->Model_Cursos->guardar_dicci_compt($parametros);        
 
-                echo $data->ID;
+                $data=$this->contenedor->procedureUpdateOrInsertTables($parametros);
+
+                echo $data[0]['ID']; 
 
         }
         else{
@@ -489,14 +513,33 @@ class Cursos extends CI_Controller {
             $id_curso =$this->input->post("id_curso_sumilla");
             $user_actual = $_SESSION['usuario'][0]['id_usuario'];
 
+               
+
                 $parametros = array(
-                    $id_sumilla_curso,
-                    $texto,
-                    $user_actual,
-                    $id_curso,
+                    'vACCION'        =>'SUMILLA_CURSO',
+                    'p_id_1'         => $id_sumilla_curso,
+                    'p_id_2'       => $id_curso,
+                    'p_id_3'     => '',
+                    'p_texto1' =>  $texto,
+                    'p_texto2' => '',
+                    'p_texto3'    => '',
+                    'p_texto4' => '',
+                    'p_texto5' => '',
+                    'p_estado' => '2',
+                    'p_user' =>  $user_actual,
+
+                    
+                    'p_texto6' => '',
+                    'p_texto7' => '',
+                    'p_texto8' =>  '',
+                    'p_texto9' =>  '',   
+                    'p_texto10' =>  '',   
+
+
                 );
 
-                $data=$this->Model_Cursos->guardar_sumilla_curso($parametros);        
+
+                $this->contenedor->procedureUpdateOrInsertTables($parametros);
 
         }
         else{

@@ -80,7 +80,7 @@ $CI->load->library('fechaespanol');
 
                                                 
                                                     <li class="contacts-block__item mt-3">
-                                                        <b>Nombre Sílabus:</b> <br>  <?= $data_silabus[0]['nombre_syllabus'];  ?>
+                                                        <b>Nombre Sílabus:</b> <br>  <?= $data_silabus[0]['nom_curso'];  ?>
                                                     </li>
                                                     <li class="contacts-block__item mt-3">
                                                         <b>Fecha de creación:</b>   <br> 
@@ -277,7 +277,7 @@ $CI->load->library('fechaespanol');
 
                     <div class="col-sm-12 col-md-4">
                             <div class="card-body text-right">
-                                <h4 class="card-title"> <b>Sillabus</b> </h4>
+                                <h4 class="card-title"> <b></b> </h4>
                             </div>
                     </div>
 
@@ -291,7 +291,7 @@ $CI->load->library('fechaespanol');
                            
                     <div class="col-sm-12 col-md-4">
                             <div class="card-body text-left">
-                                <h4 class="card-title"> <b>Ficha de Evaluación</b> </h4>
+                                <h4 class="card-title"> <b></b> </h4>
                             </div>
                     </div>
                     
@@ -300,7 +300,7 @@ $CI->load->library('fechaespanol');
                             <div class="card-body" id="seccion_version_sy" >
                                
 
-                                <h4 class="card-title">SECCIONES     
+                                <h4 class="card-title">SECCIONES    SYLLABUS  </br>
 
                                     <?php 
                                                 $botones='';
@@ -372,7 +372,7 @@ $CI->load->library('fechaespanol');
                                                             <div class="progress-bar bg-primary" role="progressbar" id="datos_gene"
                                                                  style="width: <?=   $valor_porcentajes_syllabus_dg."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
 
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_dg ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_dg ?>">
                                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=   $valor_porcentajes_syllabus_dg."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -388,7 +388,7 @@ $CI->load->library('fechaespanol');
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar"  id="comp_aso_cur"
                                                             style="width: <?=   $valor_porcentajes_syllabus_ac."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ac ?>">
+                                                                <div class="progress-title " valor="<?= $valor_porcentajes_syllabus_ac ?>">
                                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?=   $valor_porcentajes_syllabus_ac."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -400,11 +400,11 @@ $CI->load->library('fechaespanol');
                                             <div class="row">
                                                 <div class="col-md-12 ml-auto">
                                                     <div class="form-group">
-                                                        <h6 class="col-md-12 text-rigth ">SUMILLA (Más de 100 palabras sera el 100%)</h6>
+                                                        <h6 class="col-md-12 text-rigth ">SUMILLA  (No se cuenta en la sumatoria)</h6>
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar"  id="sumilla"
                                                                 style="width: <?=   $valor_porcentajes_syllabus_sumilla."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_sumilla ?>">
+                                                                <div class="progress-title " valor="<?= $valor_porcentajes_syllabus_sumilla ?>">
                                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <?=   $valor_porcentajes_syllabus_sumilla."%"  ?></span>
                                                                 </div>
                                                             </div>
@@ -421,7 +421,7 @@ $CI->load->library('fechaespanol');
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar"  id="result_gene_apr"
                                                                 style="width: <?=   $valor_porcentajes_syllabus_result_ga."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_result_ga ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_result_ga ?>">
                                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <?=   $valor_porcentajes_syllabus_result_ga."%"  ?></span>
                                                                 </div>
                                                             </div>
@@ -437,7 +437,7 @@ $CI->load->library('fechaespanol');
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar"  id="org_apre"
                                                                 style="width: <?=   $valor_porcentajes_syllabus_oa."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_oa ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_oa ?>">
                                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?=   $valor_porcentajes_syllabus_oa."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -454,7 +454,7 @@ $CI->load->library('fechaespanol');
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar"  id="estra_didac"
                                                                 style="width: <?=   $valor_porcentajes_syllabus_estrate_didac."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_estrate_didac ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_estrate_didac ?>">
                                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <?=   $valor_porcentajes_syllabus_estrate_didac."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -470,7 +470,7 @@ $CI->load->library('fechaespanol');
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar" id="form_herr"
                                                              style="width: <?=   $valor_porcentajes_syllabus_fhe."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_fhe ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_fhe ?>">
                                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?=   $valor_porcentajes_syllabus_fhe."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -486,7 +486,7 @@ $CI->load->library('fechaespanol');
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar" id="act_prin"
                                                             style="width: <?=   $valor_porcentajes_syllabus_ap."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ap ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_ap ?>">
                                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?=   $valor_porcentajes_syllabus_ap."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -502,7 +502,7 @@ $CI->load->library('fechaespanol');
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar" id="plataf_herra" 
                                                             style="width: <?=   $valor_porcentajes_syllabus_ph."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ph ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_ph ?>">
                                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?=   $valor_porcentajes_syllabus_ph."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -518,7 +518,7 @@ $CI->load->library('fechaespanol');
                                                         <div class="progress br-30" style="background-color: rgb(0 0 0 / 25%);">
                                                             <div class="progress-bar bg-primary" role="progressbar" id="refer_bibli"  
                                                                 style="width: <?=   $valor_porcentajes_syllabus_bibli."%"  ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_bibli ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_bibli ?>">
                                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?=   $valor_porcentajes_syllabus_bibli."%"  ?></span>
                                                                 </div>
                                                             </div>
@@ -537,8 +537,7 @@ $CI->load->library('fechaespanol');
                         <div class="card">
                             <div class="card-body" id="seccion_version_ficha">
                               
-                                <h4 class="card-title">SECCIONES     
-
+                                <h4 class="card-title">SECCIONES   FICHA DE EVALUACIÒN   </br>
                                     <?php 
                                             
                                             $botones='';
@@ -610,7 +609,7 @@ $CI->load->library('fechaespanol');
                                                             <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
                                                                 role="progressbar" id="ficha_evaluno" style="width: <?=   $valor_porcentajes_syllabus_ficha_eval1."%"  ?>" 
                                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ficha_eval1 ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_ficha_eval1 ?>">
                                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=   $valor_porcentajes_syllabus_ficha_eval1."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -625,7 +624,7 @@ $CI->load->library('fechaespanol');
                                                             <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
                                                                 role="progressbar" id="ficha_evaldos"  style="width: <?=   $valor_porcentajes_syllabus_ficha_eval2."%"  ?>" 
                                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ficha_eval2 ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_ficha_eval2 ?>">
                                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=   $valor_porcentajes_syllabus_ficha_eval2."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -640,7 +639,7 @@ $CI->load->library('fechaespanol');
                                                             <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
                                                                 role="progressbar"  id="ficha_evaltres"  style="width: <?=   $valor_porcentajes_syllabus_ficha_eval3."%"  ?>" 
                                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ficha_eval3 ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_ficha_eval3 ?>">
                                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=   $valor_porcentajes_syllabus_ficha_eval3."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -656,7 +655,7 @@ $CI->load->library('fechaespanol');
                                                             <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
                                                                 role="progressbar" id="ficha_evalcuatro"  style="width: <?=   $valor_porcentajes_syllabus_ficha_eval4."%"  ?>" 
                                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ficha_eval4 ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_ficha_eval4 ?>">
                                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=   $valor_porcentajes_syllabus_ficha_eval4."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -674,7 +673,7 @@ $CI->load->library('fechaespanol');
                                                             <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
                                                                 role="progressbar"  id="ficha_evalcinco"  style="width: <?=   $valor_porcentajes_syllabus_ficha_eval5."%"  ?>" 
                                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ficha_eval5 ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_ficha_eval5 ?>">
                                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=   $valor_porcentajes_syllabus_ficha_eval5."%"  ?></span> 
                                                                 </div>
                                                             </div>
@@ -690,7 +689,7 @@ $CI->load->library('fechaespanol');
                                                             <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
                                                                 role="progressbar"   id="ficha_evalseis" style="width: <?=   $valor_porcentajes_syllabus_ficha_eval6."%"  ?>" 
                                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-title" valor="<?= $valor_porcentajes_syllabus_ficha_eval6 ?>">
+                                                                <div class="progress-title progress-title-aceptados" valor="<?= $valor_porcentajes_syllabus_ficha_eval6 ?>">
                                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=   $valor_porcentajes_syllabus_ficha_eval6."%"  ?></span> 
                                                                 </div>
                                                             </div>
